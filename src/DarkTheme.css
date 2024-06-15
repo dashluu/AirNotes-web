@@ -1,0 +1,14 @@
+:root {
+    --nav-background: transparent;
+    --nav-link-color: #e0e0e0;
+    --nav-div-color-hover: white;
+    --title-nav-link-color: white;
+
+    --page-background: linear-gradient(#212121, black);
+
+    --editor-page-toolbar-button-background: #424242;
+    --editor-page-toolbar-button-background-hover: #616161;
+    --editor-page-toolbar-button-color: #e0e0e0;
+    --editor-page-title-color: white;
+    --editor-page-tiptap-color: white;
+}

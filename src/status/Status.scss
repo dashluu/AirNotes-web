@@ -1,0 +1,26 @@
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0,
+  'wght' 200,
+  'GRAD' 0,
+  'opsz' 20;
+  padding-top: 2px;
+}
+
+.status-container {
+  display: none;
+  align-items: center;
+}
+
+.status-message {
+  font-size: 14px;
+  font-family: var(--app-font);
+  padding-top: 0;
+}
+
+.valid-icon, .valid-message {
+  color: var(--valid-input-color);
+}
+
+.error-icon, .error-message {
+  color: var(--error-input-color);
+}

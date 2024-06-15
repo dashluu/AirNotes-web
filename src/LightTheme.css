@@ -1,0 +1,28 @@
+:root {
+    --nav-background: transparent;
+    --nav-link-color: #757575;
+    --nav-div-color-hover: black;
+    --title-nav-link-color: black;
+
+    --page-background: linear-gradient(white, #eeeeee);
+
+    --editor-page-toolbar-button-background: #eeeeee;
+    --editor-page-toolbar-button-background-hover: #e0e0e0;
+    --editor-page-toolbar-button-color: #757575;
+    --editor-page-title-color: black;
+    --editor-page-tiptap-color: black;
+
+    --auth-form-input-background: #eeeeee;
+    --auth-form-input-border: #eeeeee;
+    --auth-form-input-background-hover: #e0e0e0;
+    --auth-form-input-border-hover: #e0e0e0;
+    --auth-form-input-color: #212121;
+    --auth-form-button-background: #eeeeee;
+    --auth-form-button-border: #eeeeee;
+    --auth-form-button-color: #757575;
+    --auth-form-button-background-hover: black;
+    --auth-form-button-border-hover: black;
+    --auth-form-button-color-hover: white;
+    --auth-form-valid-input-color: #009a4f;
+    --auth-form-error-input-color: #fd0031;
+}
