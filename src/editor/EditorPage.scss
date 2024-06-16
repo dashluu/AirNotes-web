@@ -23,6 +23,10 @@
     padding: 5px 0 5px 0;
   }
 
+  .document-id-container {
+    display: none;
+  }
+
   .toolbar {
     width: 100%;
     padding: 5px 12px 5px 12px;
@@ -32,19 +36,49 @@
   .toolbar-button {
     margin-right: 10px;
     background-color: var(--editor-page-toolbar-button-background);
-    border: 1px solid var(--editor-page-toolbar-button-background);
-    border-radius: 4px;
+    border: 1px solid var(--editor-page-toolbar-button-border);
+    border-radius: 5px;
     color: var(--editor-page-toolbar-button-color);
-    width: 50px;
-    padding: 5px 5px 3px;
-    font-weight: 500;
-    font-size: 14px;
+    padding: 3px 4px 0 4px;
   }
 
-  .toolbar-button:hover {
+  .toolbar-button:disabled {
+    color: var(--editor-page-toolbar-button-color-disabled);
+    background-color: var(--editor-page-toolbar-button-background-disabled);
+    border: 1px solid var(--editor-page-toolbar-button-border-disabled);
+  }
+
+  .toolbar-button:hover:not([disabled]) {
     cursor: pointer;
+    color: var(--editor-page-toolbar-button-color-hover);
     background-color: var(--editor-page-toolbar-button-background-hover);
-    border: 1px solid var(--editor-page-toolbar-button-background-hover);
+    border: 1px solid var(--editor-page-toolbar-button-border-hover);
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+  }
+
+  .status-container {
+    display: none;
+    align-items: center;
+    margin-left: 10px;
+  }
+
+  .valid-message, .error-message {
+    font-size: 14px;
+    padding-top: 0;
+  }
+
+  .valid-icon, .valid-message {
+    color: var(--valid-input-color);
+  }
+
+  .error-icon, .error-message {
+    color: var(--error-input-color);
   }
 
   .title {

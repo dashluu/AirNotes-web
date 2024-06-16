@@ -1,7 +1,7 @@
 import './SignUpPage.scss'
 import NavBar from "../navbar/NavBar.jsx";
 import {useNavigate} from "react-router-dom";
-import {useRef} from "react";
+import {useEffect, useRef} from "react";
 import {auth} from "../firebase.js"
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import SignUpChecker from "./SignUpChecker.ts";
@@ -92,6 +92,7 @@ function navigateToSignIn(e, navigate) {
 }
 
 function SignUpPage() {
+    const pageBackground = useRef(null);
     const emailInput = useRef(null);
     const emailValidityContainer = useRef(null);
     const emailValidityMessage = useRef(null);
@@ -102,26 +103,37 @@ function SignUpPage() {
     const passwordValidityIcon = useRef(null);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        if (pageBackground.current) {
+            if (window.scrollY < pageBackground.current.offsetTop) {
+                pageBackground.current.classList.remove("page-background-sticky");
+            } else {
+                pageBackground.current.classList.add("page-background-sticky");
+            }
+        }
+    });
+
     return (
         <div className="sign-up-page">
             <NavBar/>
+            <div className="page-background" ref={pageBackground}></div>
             <form className="sign-up-form">
                 <div className="form-title">Sign Up</div>
                 <div className="input-container">
-                    <input type="email" placeholder="Email" className="email-input" required
+                    <input type="email" placeholder="Email" className="auth-input email-input" required
                            ref={emailInput}
                            onChange={
                                (e) => validateEmail(
                                    e.target, emailValidityContainer.current,
                                    emailValidityIcon.current, emailValidityMessage.current)
                            }/>
-                    <div className="validity" ref={emailValidityContainer}>
+                    <div className="validity-container" ref={emailValidityContainer}>
                         <span ref={emailValidityIcon} className={`material-symbols-outlined ${errorIconClass}`}></span>
                         <span ref={emailValidityMessage} className={`${errorMessageClass}`}></span>
                     </div>
                 </div>
                 <div className="input-container">
-                    <input type="password" placeholder="Password" className="password-input"
+                    <input type="password" placeholder="Password" className="auth-input password-input"
                            required
                            minLength="6" maxLength="4096" ref={passwordInput}
                            onChange={
@@ -129,7 +141,7 @@ function SignUpPage() {
                                    e.target, passwordValidityContainer.current,
                                    passwordValidityIcon.current, passwordValidityMessage.current)
                            }/>
-                    <div className="validity" ref={passwordValidityContainer}>
+                    <div className="validity-container" ref={passwordValidityContainer}>
                         <span ref={passwordValidityIcon}
                               className={`material-symbols-outlined ${errorIconClass}`}></span>
                         <span ref={passwordValidityMessage} className={`${errorMessageClass}`}></span>
@@ -149,7 +161,7 @@ function SignUpPage() {
                             onClick={(e) => {
                                 navigateToSignIn(e, navigate);
                             }}>
-                        Sign in
+                        Log in
                     </button>
                 </div>
             </form>

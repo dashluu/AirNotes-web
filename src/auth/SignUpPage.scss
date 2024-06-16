@@ -1,6 +1,16 @@
 @use "../LightTheme.css";
 
 .sign-up-page {
+  .page-background {
+    position: fixed;
+    z-index: -1000;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: var(--page-background);
+  }
+
   .sign-up-form {
     width: 360px;
     position: absolute;
@@ -23,18 +33,16 @@
     padding: 0;
   }
 
-  .email-input,
-  .password-input {
+  .auth-input {
     width: 100%;
-    margin-bottom: 3px;
-    border-radius: 4px;
-    border: var(--auth-form-input-border);
+    border-radius: 5px;
+    border: 1px solid var(--auth-form-input-border);
     background-color: var(--auth-form-input-background);
     color: var(--auth-form-input-color);
     font-family: var(--app-font);
     font-size: 16px;
-    font-weight: normal;
-    padding: 3px 5px 3px 5px;
+    font-weight: 500;
+    padding: 5px 5px 5px 5px;
     outline: none;
   }
 
@@ -46,7 +54,7 @@
     padding-top: 2px;
   }
 
-  .validity {
+  .validity-container {
     display: none;
     align-items: center;
   }
@@ -54,22 +62,19 @@
   .valid-message,
   .error-message {
     font-size: 14px;
-    font-family: var(--app-font);
     padding-top: 0;
   }
 
   .valid-icon, .valid-message {
-    color: var(--auth-form-valid-input-color);
+    color: var(--valid-input-color);
   }
 
   .error-icon, .error-message {
-    color: var(--auth-form-error-input-color);
+    color: var(--error-input-color);
   }
 
-  .email-input:hover,
-  .password-input:hover {
-    border: var(--auth-form-input-border-hover);
-    background-color: var(--auth-form-input-background-hover);
+  .auth-input:focus {
+    outline: 1px solid var(--auth-form-input-outline);
   }
 
   .action-container {
@@ -78,24 +83,40 @@
   }
 
   .action-button {
-    width: 80px;
-    float: right;
-    margin-right: 0;
-    margin-left: 10px;
-    padding: 5px 5px 3px 5px;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 6px 6px 5px 6px;
     border-radius: 4px;
     font-weight: 500;
-    font-size: 14px;
+    font-size: 16px;
     outline: none;
-    background-color: var(--auth-form-button-background);
-    border: 1px solid var(--auth-form-button-border);
-    color: var(--auth-form-button-color);
+  }
+
+  .sign-up-button {
+    background-color: var(--auth-form-primary-button-background);
+    border: 1px solid var(--auth-form-primary-button-border);
+    color: var(--auth-form-primary-button-color);
+  }
+
+  .sign-in-button {
+    background-color: var(--auth-form-secondary-button-background);
+    border: 1px solid var(--auth-form-secondary-button-border);
+    color: var(--auth-form-secondary-button-color);
+  }
+
+  .sign-in-button:hover {
+    background-color: var(--auth-form-secondary-button-background-hover);
+    border: 1px solid var(--auth-form-secondary-button-border-hover);
+    color: var(--auth-form-secondary-button-color-hover);
   }
 
   .action-button:hover {
     cursor: pointer;
-    background-color: var(--auth-form-button-background-hover);
-    border: 1px solid var(--auth-form-button-border-hover);
-    color: var(--auth-form-button-color-hover);
   }
+}
+
+.page-background-sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
 }

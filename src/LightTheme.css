@@ -1,28 +1,36 @@
 :root {
     --nav-background: transparent;
-    --nav-link-color: #757575;
+    --nav-link-color: #616161;
     --nav-div-color-hover: black;
     --title-nav-link-color: black;
 
-    --page-background: linear-gradient(white, #eeeeee);
+    --page-background: linear-gradient(white, #e0e0e0);
 
-    --editor-page-toolbar-button-background: #eeeeee;
-    --editor-page-toolbar-button-background-hover: #e0e0e0;
-    --editor-page-toolbar-button-color: #757575;
+    --editor-page-toolbar-button-background: transparent;
+    --editor-page-toolbar-button-border: transparent;
+    --editor-page-toolbar-button-color: #616161;
+    --editor-page-toolbar-button-background-disabled: transparent;
+    --editor-page-toolbar-button-border-disabled: transparent;
+    --editor-page-toolbar-button-color-disabled: #9e9e9e;
+    --editor-page-toolbar-button-background-hover: #eeeeee;
+    --editor-page-toolbar-button-border-hover: #eeeeee;
+    --editor-page-toolbar-button-color-hover: #424242;
     --editor-page-title-color: black;
     --editor-page-tiptap-color: black;
 
-    --auth-form-input-background: #eeeeee;
-    --auth-form-input-border: #eeeeee;
-    --auth-form-input-background-hover: #e0e0e0;
-    --auth-form-input-border-hover: #e0e0e0;
+    --auth-form-input-background: transparent;
+    --auth-form-input-border: #bdbdbd;
     --auth-form-input-color: #212121;
-    --auth-form-button-background: #eeeeee;
-    --auth-form-button-border: #eeeeee;
-    --auth-form-button-color: #757575;
-    --auth-form-button-background-hover: black;
-    --auth-form-button-border-hover: black;
-    --auth-form-button-color-hover: white;
-    --auth-form-valid-input-color: #009a4f;
-    --auth-form-error-input-color: #fd0031;
+    --auth-form-input-outline: #4FC3F7;
+    --auth-form-primary-button-background: black;
+    --auth-form-primary-button-border: black;
+    --auth-form-primary-button-color: white;
+    --auth-form-secondary-button-background: #e0e0e0;
+    --auth-form-secondary-button-border: #e0e0e0;
+    --auth-form-secondary-button-color: #616161;
+    --auth-form-secondary-button-background-hover: #bdbdbd;
+    --auth-form-secondary-button-border-hover: #bdbdbd;
+    --auth-form-secondary-button-color-hover: #424242;
+    --valid-input-color: #009a4f;
+    --error-input-color: #fd0031;
 }
