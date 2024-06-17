@@ -35,24 +35,24 @@
 
   .toolbar-button {
     margin-right: 10px;
-    background-color: var(--editor-page-toolbar-button-background);
-    border: 1px solid var(--editor-page-toolbar-button-border);
+    background-color: var(--document-toolbar-button-background);
+    border: 1px solid var(--document-toolbar-button-border);
     border-radius: 5px;
-    color: var(--editor-page-toolbar-button-color);
+    color: var(--document-toolbar-button-color);
     padding: 3px 4px 0 4px;
   }
 
   .toolbar-button:disabled {
-    color: var(--editor-page-toolbar-button-color-disabled);
-    background-color: var(--editor-page-toolbar-button-background-disabled);
-    border: 1px solid var(--editor-page-toolbar-button-border-disabled);
+    color: var(--document-toolbar-button-color-disabled);
+    background-color: var(--document-toolbar-button-background-disabled);
+    border: 1px solid var(--document-toolbar-button-border-disabled);
   }
 
   .toolbar-button:hover:not([disabled]) {
     cursor: pointer;
-    color: var(--editor-page-toolbar-button-color-hover);
-    background-color: var(--editor-page-toolbar-button-background-hover);
-    border: 1px solid var(--editor-page-toolbar-button-border-hover);
+    color: var(--document-toolbar-button-color-hover);
+    background-color: var(--document-toolbar-button-background-hover);
+    border: 1px solid var(--document-toolbar-button-border-hover);
   }
 
   .material-symbols-outlined {
@@ -90,7 +90,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
     font-size: 40px;
-    color: var(--editor-page-tiptap-color);
+    color: var(--document-tiptap-color);
   }
 
   .tiptap {
@@ -105,7 +105,7 @@
     font-weight: 500;
     border: none;
     text-align: left;
-    color: var(--editor-page-tiptap-color);
+    color: var(--document-tiptap-color);
   }
 
   .tiptap .is-editor-empty:first-child::before {

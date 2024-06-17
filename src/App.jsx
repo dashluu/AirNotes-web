@@ -1,5 +1,5 @@
 import {auth} from "./firebase.js";
-import './App.css'
+import "./App.css"
 
 function App() {
     const user = auth.currentUser;

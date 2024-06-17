@@ -1,17 +1,19 @@
-import {EditorContent, useEditor} from '@tiptap/react'
-import StarterKit from '@tiptap/starter-kit'
+import {EditorContent, useEditor} from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
-import './EditorPage.scss'
+import "./Editor.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useEffect, useRef, useState} from "react";
 import {collection, doc, setDoc, addDoc} from "firebase/firestore";
 import {auth, db} from "../firebase.js";
+import DocumentUpdate from "../models/DocumentUpdate.js";
 
 // define your extension array
 const extensions = [
     StarterKit,
+    History,
     Placeholder.configure({
-        placeholder: 'Write something...',
+        placeholder: "Write something...",
     })
 ]
 
@@ -43,31 +45,24 @@ function showMessage(result, statusContainer, statusIcon, statusMessage) {
 
 async function saveDocument(documentIdContainer, titleInput, content, statusContainer, statusIcon, statusMessage) {
     try {
-        let docRef;
+        let documentRef;
+        const document = new DocumentUpdate(
+            auth.currentUser.uid,
+            titleInput.value,
+            content
+        );
 
         if (documentIdContainer.innerHTML === "") {
             // New document
-            docRef = collection(db, "documents");
-
-            await addDoc(docRef, {
-                // This assumes the user is already logged in
-                userId: auth.currentUser.uid,
-                title: titleInput.value,
-                content: content
-            });
+            documentRef = collection(db, "documents");
+            await addDoc(documentRef, DocumentUpdate.FromDocumentUpdate(document));
         } else {
             // Editing existing document
-            docRef = doc(db, "documents", documentIdContainer.innerHTML);
-
-            await setDoc(docRef, {
-                // This assumes the user is already logged in
-                userId: auth.currentUser.uid,
-                title: titleInput.value,
-                content: content
-            }, {merge: true});
+            documentRef = doc(db, "documents", documentIdContainer.innerHTML);
+            await setDoc(documentRef, DocumentUpdate.FromDocumentUpdate(document), {merge: true});
         }
 
-        documentIdContainer.innerHTML = docRef.id;
+        documentIdContainer.innerHTML = documentRef.id;
         const result = [true, "Save successfully."];
         showMessage(result, statusContainer, statusIcon, statusMessage);
     } catch (error) {
@@ -76,22 +71,23 @@ async function saveDocument(documentIdContainer, titleInput, content, statusCont
     }
 }
 
-const EditorPage = ({ documentId }) => {
+function Editor({documentId, title, content, isNew}) {
     const documentIdContainer = useRef(null);
-    const [isSaveDisabled, setSaveDisabled] = useState(true);
+    const [isSaveDisabled, setSaveDisabled] = useState(title === "");
     const pageBackground = useRef(null);
     const statusContainer = useRef(null);
     const statusMessage = useRef(null);
     const statusIcon = useRef(null);
     const saveButton = useRef(null);
     const titleInput = useRef(null);
-    const [content, setContent] = useState("");
+    const [getContent, setContent] = useState("");
     const editor = useEditor({
         extensions,
+        content,
         onUpdate({editor}) {
             setContent(editor.getHTML());
         }
-    })
+    });
 
     useEffect(() => {
         if (pageBackground.current) {
@@ -103,32 +99,55 @@ const EditorPage = ({ documentId }) => {
         }
     });
 
+    if (!editor) {
+        return null;
+    }
+
     return (
         <div className="editor-page">
             <NavBar/>
             <div className="page-background" ref={pageBackground}></div>
-            <div className='editor-container'>
-                <div ref={documentIdContainer} className='document-id-container'></div>
-                <div className='toolbar'>
-                    <button ref={saveButton} className='toolbar-button undo-button'>
+            <div className="editor-container">
+                <div ref={documentIdContainer} className="document-id-container">{documentId}</div>
+                <div className="toolbar">
+                    <button className="toolbar-button undo-button"
+                            onClick={() => editor.chain().focus().undo().run()}
+                            disabled={!editor.can().undo()}
+                            title="Undo">
                         <span className="material-symbols-outlined">undo</span>
                     </button>
-                    <button ref={saveButton} className='toolbar-button redo-button'>
+                    <button className="toolbar-button redo-button"
+                            onClick={() => editor.chain().focus().redo().run()}
+                            disabled={!editor.can().redo()}
+                            title="Redo">
                         <span className="material-symbols-outlined">redo</span>
                     </button>
-                    <button ref={saveButton} className='toolbar-button save-button' disabled={isSaveDisabled}
+                    <button className="toolbar-button open-button"
+                            title="Open">
+                        <span className="material-symbols-outlined">folder_open</span>
+                    </button>
+                    <button ref={saveButton} className="toolbar-button save-button" disabled={isSaveDisabled}
+                            title="Save"
                             onClick={() =>
-                                saveDocument(documentIdContainer.current, titleInput.current, content,
+                                saveDocument(documentIdContainer.current, titleInput.current, getContent,
                                     statusContainer.current, statusIcon.current, statusMessage.current)
                             }>
                         <span className="material-symbols-outlined">save</span>
                     </button>
+                    {
+                        !isNew &&
+                        <button className="toolbar-button delete-button"
+                                title="Delete">
+                            <span className="material-symbols-outlined">delete</span>
+                        </button>
+                    }
                 </div>
-                <div className='status-container' ref={statusContainer}>
+                <div className="status-container" ref={statusContainer}>
                     <span ref={statusIcon} className={`material-symbols-outlined ${errorIconClass}`}></span>
                     <span ref={statusMessage} className={`${errorMessageClass}`}></span>
                 </div>
-                <input ref={titleInput} type='text' className='title' required placeholder="Enter title..."
+                <input ref={titleInput} type="text" className="title" required placeholder="Enter title..."
+                       value={title}
                        onChange={(e) => {
                            setSaveDisabled(e.target.validity.valueMissing);
                        }}/>
@@ -138,4 +157,4 @@ const EditorPage = ({ documentId }) => {
     )
 }
 
-export default EditorPage;
+export default Editor;

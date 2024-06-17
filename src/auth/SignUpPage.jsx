@@ -1,4 +1,4 @@
-import './SignUpPage.scss'
+import "./SignUpPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useRef} from "react";

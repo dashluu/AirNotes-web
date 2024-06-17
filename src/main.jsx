@@ -1,11 +1,12 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import EditorPage from "./editor/EditorPage.jsx";
+import React from "react"
+import ReactDOM from "react-dom/client"
+import App from "./App.jsx"
+import "./index.css"
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import ErrorPage from "./error/ErrorPage.jsx";
 import SignUpPage from "./auth/SignUpPage.jsx";
+import NewDocumentPage from "./new_document/NewDocumentPage.jsx";
+import EditDocumentPage, {loader as editDocumentLoader} from "./edit_document/EditDocumentPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -18,7 +19,12 @@ const router = createBrowserRouter([
     },
     {
         path: "/new",
-        element: <EditorPage/>
+        element: <NewDocumentPage/>
+    },
+    {
+        path: "/notes/:documentId",
+        element: <EditDocumentPage/>,
+        loader: editDocumentLoader
     },
     {
         path: "/*",
@@ -26,7 +32,7 @@ const router = createBrowserRouter([
     }
 ]);
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
         <RouterProvider router={router}/>
     </React.StrictMode>,

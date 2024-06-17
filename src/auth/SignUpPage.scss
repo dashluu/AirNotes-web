@@ -104,10 +104,10 @@
     color: var(--auth-form-secondary-button-color);
   }
 
-  .sign-in-button:hover {
-    background-color: var(--auth-form-secondary-button-background-hover);
-    border: 1px solid var(--auth-form-secondary-button-border-hover);
-    color: var(--auth-form-secondary-button-color-hover);
+  .sign-up-button:hover {
+    background-color: var(--auth-form-primary-button-background-hover);
+    border: 1px solid var(--auth-form-primary-button-border-hover);
+    color: var(--auth-form-primary-button-color-hover);
   }
 
   .action-button:hover {
