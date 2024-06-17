@@ -1,13 +1,22 @@
 import {auth} from "./firebase.js";
 import "./App.css"
+import {useState} from "react";
+import {onAuthStateChanged} from "firebase/auth";
 
 function App() {
-    const user = auth.currentUser;
-    const status = user ? "Logged in" : "Logged out";
+    const [getStatus, setStatus] = useState("");
+    onAuthStateChanged(auth, (user) => {
+        setStatus(user ? `${user.email} is signed in` : "Signed out");
+    });
 
     return (
         <>
-            {status}
+            <div>{getStatus}</div>
+            <button onClick={() => {
+                signOut(auth);
+            }}>
+                Sign out
+            </button>
         </>
     )
 }

@@ -5,8 +5,9 @@ import "./index.css"
 import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import ErrorPage from "./error/ErrorPage.jsx";
 import SignUpPage from "./auth/SignUpPage.jsx";
-import NewDocumentPage from "./new_document/NewDocumentPage.jsx";
-import EditDocumentPage, {loader as editDocumentLoader} from "./edit_document/EditDocumentPage.jsx";
+import NewDocumentPage from "./document/NewDocumentPage.jsx";
+import EditDocumentPage, {loader as editDocumentLoader} from "./document/EditDocumentPage.jsx";
+import SignInPage from "./auth/SignInPage.jsx";
 
 const router = createBrowserRouter([
     {
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
     {
         path: "/sign-up",
         element: <SignUpPage/>
+    },
+    {
+        path: "/sign-in",
+        element: <SignInPage/>
     },
     {
         path: "/new",

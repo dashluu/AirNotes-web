@@ -8,7 +8,7 @@
     height: 100vh;
     top: 0;
     left: 0;
-    background: var(--page-background);
+    background: var(--editor-background);
   }
 
   .editor-container {
@@ -35,24 +35,24 @@
 
   .toolbar-button {
     margin-right: 10px;
-    background-color: var(--document-toolbar-button-background);
-    border: 1px solid var(--document-toolbar-button-border);
+    background-color: var(--editor-toolbar-button-background);
+    border: 1px solid var(--editor-toolbar-button-border);
     border-radius: 5px;
-    color: var(--document-toolbar-button-color);
+    color: var(--editor-toolbar-button-color);
     padding: 3px 4px 0 4px;
   }
 
   .toolbar-button:disabled {
-    color: var(--document-toolbar-button-color-disabled);
-    background-color: var(--document-toolbar-button-background-disabled);
-    border: 1px solid var(--document-toolbar-button-border-disabled);
+    color: var(--editor-toolbar-button-color-disabled);
+    background-color: var(--editor-toolbar-button-background-disabled);
+    border: 1px solid var(--editor-toolbar-button-border-disabled);
   }
 
   .toolbar-button:hover:not([disabled]) {
     cursor: pointer;
-    color: var(--document-toolbar-button-color-hover);
-    background-color: var(--document-toolbar-button-background-hover);
-    border: 1px solid var(--document-toolbar-button-border-hover);
+    color: var(--editor-toolbar-button-color-hover);
+    background-color: var(--editor-toolbar-button-background-hover);
+    border: 1px solid var(--editor-toolbar-button-border-hover);
   }
 
   .material-symbols-outlined {
@@ -90,7 +90,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
     font-size: 40px;
-    color: var(--document-tiptap-color);
+    color: var(--editor-title-color);
   }
 
   .tiptap {
@@ -105,7 +105,7 @@
     font-weight: 500;
     border: none;
     text-align: left;
-    color: var(--document-tiptap-color);
+    color: var(--editor-tiptap-color);
   }
 
   .tiptap .is-editor-empty:first-child::before {

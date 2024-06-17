@@ -4,20 +4,20 @@
     --nav-div-color-hover: black;
     --title-nav-link-color: black;
 
-    --page-background: linear-gradient(white, #e0e0e0);
+    --auth-background: white;
+    --editor-background: linear-gradient(white, #eeeeee);
 
-    --document-toolbar-button-background: transparent;
-    --document-toolbar-button-border: transparent;
-    --document-toolbar-button-color: #616161;
-    --document-toolbar-button-background-disabled: transparent;
-    --document-toolbar-button-border-disabled: transparent;
-    --document-toolbar-button-color-disabled: #9e9e9e;
-    --document-toolbar-button-background-hover: #eeeeee;
-    --document-toolbar-button-border-hover: #eeeeee;
-    --document-toolbar-button-color-hover: #424242;
-    --document-title-color: black;
-    --document-tiptap-color: black;
-    --document-content-color: black;
+    --editor-toolbar-button-background: transparent;
+    --editor-toolbar-button-border: transparent;
+    --editor-toolbar-button-color: #616161;
+    --editor-toolbar-button-background-disabled: transparent;
+    --editor-toolbar-button-border-disabled: transparent;
+    --editor-toolbar-button-color-disabled: #9e9e9e;
+    --editor-toolbar-button-background-hover: #eeeeee;
+    --editor-toolbar-button-border-hover: #eeeeee;
+    --editor-toolbar-button-color-hover: #424242;
+    --editor-title-color: black;
+    --editor-tiptap-color: black;
 
     --auth-form-input-background: transparent;
     --auth-form-input-border: #bdbdbd;

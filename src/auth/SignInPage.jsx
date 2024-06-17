@@ -1,12 +1,10 @@
-import "./SignUpPage.scss";
+import "./SignInPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useNavigate} from "react-router-dom";
 import {useEffect, useRef} from "react";
 import {auth} from "../firebase.js"
-import {createUserWithEmailAndPassword} from "firebase/auth";
-import SignUpChecker from "./SignUpChecker.ts";
+import {signInWithEmailAndPassword} from "firebase/auth";
 
-const signUpChecker = new SignUpChecker();
 const validIconClass = "valid-icon";
 const validMessageClass = "valid-message";
 const errorIconClass = "error-icon";
@@ -33,42 +31,12 @@ function showMessage(result, validityContainer, validityIcon, validityMessage) {
     return result[0];
 }
 
-function validateEmail(emailInput, emailValidityContainer, emailValidityIcon, emailValidityMessage) {
-    const result = signUpChecker.checkEmail(emailInput);
-    return showMessage(result, emailValidityContainer, emailValidityIcon, emailValidityMessage);
-}
-
-function validatePassword(passwordInput, passwordValidityContainer, passwordValidityIcon, passwordValidityMessage) {
-    const result = signUpChecker.checkPassword(passwordInput);
-    return showMessage(result, passwordValidityContainer, passwordValidityIcon, passwordValidityMessage);
-}
-
-function validateInput(emailInput, passwordInput,
-                       emailValidityContainer, passwordValidityContainer,
-                       emailValidityIcon, passwordValidityIcon,
-                       emailValidityMessage, passwordValidityMessage) {
-    let result;
-
-    if ((result = validateEmail(emailInput, emailValidityContainer, emailValidityIcon, emailValidityMessage))) {
-        return result;
-    }
-
-    return validatePassword(passwordInput, passwordValidityContainer, passwordValidityIcon, passwordValidityMessage);
-}
-
-async function signUpPage(navigate, emailInput, passwordInput,
+async function signInPage(navigate, emailInput, passwordInput,
                           emailValidityContainer, passwordValidityContainer,
                           emailValidityIcon, passwordValidityIcon,
                           emailValidityMessage, passwordValidityMessage) {
-    if (!validateInput(emailInput, passwordInput,
-        emailValidityContainer, passwordValidityContainer,
-        emailValidityIcon, passwordValidityIcon,
-        emailValidityMessage, passwordValidityMessage)) {
-        return;
-    }
-
-    // Send sign-up data to the server
-    createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
+    // Send sign-in data to the server
+    signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
         .then(() => {
             navigate("/");
         })
@@ -84,7 +52,7 @@ async function signUpPage(navigate, emailInput, passwordInput,
         });
 }
 
-function SignUpPage() {
+function SignInPage() {
     const pageBackground = useRef(null);
     const emailInput = useRef(null);
     const emailValidityContainer = useRef(null);
@@ -107,19 +75,14 @@ function SignUpPage() {
     });
 
     return (
-        <div className="sign-up-page">
+        <div className="sign-in-page">
             <NavBar/>
             <div className="page-background" ref={pageBackground}></div>
-            <div className="sign-up-form">
-                <div className="form-title">Sign Up</div>
+            <div className="sign-in-form">
+                <div className="form-title">Sign In</div>
                 <div className="input-container">
                     <input type="email" placeholder="Email" className="auth-input email-input" required
-                           ref={emailInput}
-                           onChange={
-                               (e) => validateEmail(
-                                   e.target, emailValidityContainer.current,
-                                   emailValidityIcon.current, emailValidityMessage.current)
-                           }/>
+                           ref={emailInput}/>
                     <div className="validity-container" ref={emailValidityContainer}>
                         <span ref={emailValidityIcon} className={`material-symbols-outlined ${errorIconClass}`}></span>
                         <span ref={emailValidityMessage} className={`${errorMessageClass}`}></span>
@@ -128,12 +91,7 @@ function SignUpPage() {
                 <div className="input-container">
                     <input type="password" placeholder="Password" className="auth-input password-input"
                            required
-                           minLength="6" maxLength="4096" ref={passwordInput}
-                           onChange={
-                               (e) => validatePassword(
-                                   e.target, passwordValidityContainer.current,
-                                   passwordValidityIcon.current, passwordValidityMessage.current)
-                           }/>
+                           minLength="6" maxLength="4096" ref={passwordInput}/>
                     <div className="validity-container" ref={passwordValidityContainer}>
                         <span ref={passwordValidityIcon}
                               className={`material-symbols-outlined ${errorIconClass}`}></span>
@@ -141,20 +99,20 @@ function SignUpPage() {
                     </div>
                 </div>
                 <div className="action-container">
-                    <button className="action-button sign-up-button"
+                    <button className="action-button sign-in-button"
                             onClick={() =>
-                                signUpPage(navigate, emailInput.current, passwordInput.current,
+                                signInPage(navigate, emailInput.current, passwordInput.current,
                                     emailValidityContainer.current, passwordValidityContainer.current,
                                     emailValidityIcon.current, passwordValidityIcon.current,
                                     emailValidityMessage.current, passwordValidityMessage.current)
                             }>
-                        Sign up
-                    </button>
-                    <button className="action-button sign-in-button"
-                            onClick={() =>
-                                navigate("/sign-in")
-                            }>
                         Sign in
+                    </button>
+                    <button className="action-button sign-up-button"
+                            onClick={() =>
+                                navigate("/sign-up")
+                            }>
+                        Sign up
                     </button>
                 </div>
             </div>
@@ -162,4 +120,4 @@ function SignUpPage() {
     )
 }
 
-export default SignUpPage
+export default SignInPage

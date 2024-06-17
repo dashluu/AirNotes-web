@@ -65,15 +65,17 @@ async function saveDocument(documentIdContainer, titleInput, content, statusCont
         documentIdContainer.innerHTML = documentRef.id;
         const result = [true, "Save successfully."];
         showMessage(result, statusContainer, statusIcon, statusMessage);
+        return true;
     } catch (error) {
         const result = [false, error];
         showMessage(result, statusContainer, statusIcon, statusMessage);
+        return false;
     }
 }
 
-function Editor({documentId, title, content, isNew}) {
+function Editor({documentId, title, content, isNewDocument}) {
     const documentIdContainer = useRef(null);
-    const [isSaveDisabled, setSaveDisabled] = useState(title === "");
+    const [getSaveDisabled, setSaveDisabled] = useState(title === "");
     const pageBackground = useRef(null);
     const statusContainer = useRef(null);
     const statusMessage = useRef(null);
@@ -81,6 +83,7 @@ function Editor({documentId, title, content, isNew}) {
     const saveButton = useRef(null);
     const titleInput = useRef(null);
     const [getContent, setContent] = useState("");
+    const [getNewDocument, setNewDocument] = useState(isNewDocument);
     const editor = useEditor({
         extensions,
         content,
@@ -126,16 +129,22 @@ function Editor({documentId, title, content, isNew}) {
                             title="Open">
                         <span className="material-symbols-outlined">folder_open</span>
                     </button>
-                    <button ref={saveButton} className="toolbar-button save-button" disabled={isSaveDisabled}
+                    <button ref={saveButton} className="toolbar-button save-button" disabled={getSaveDisabled}
                             title="Save"
-                            onClick={() =>
+                            onClick={() => {
                                 saveDocument(documentIdContainer.current, titleInput.current, getContent,
                                     statusContainer.current, statusIcon.current, statusMessage.current)
-                            }>
+                                    .then((result) => {
+                                        if (result) {
+                                            // If document is saved successfully, it is no longer a new document
+                                            setNewDocument(false);
+                                        }
+                                    });
+                            }}>
                         <span className="material-symbols-outlined">save</span>
                     </button>
                     {
-                        !isNew &&
+                        !getNewDocument &&
                         <button className="toolbar-button delete-button"
                                 title="Delete">
                             <span className="material-symbols-outlined">delete</span>

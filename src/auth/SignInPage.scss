@@ -1,6 +1,6 @@
 @use "../LightTheme.css";
 
-.sign-up-page {
+.sign-in-page {
   .page-background {
     position: fixed;
     z-index: -1000;
@@ -11,7 +11,7 @@
     background: var(--auth-background);
   }
 
-  .sign-up-form {
+  .sign-in-form {
     width: 360px;
     position: absolute;
     left: 50%;;
@@ -92,19 +92,19 @@
     outline: none;
   }
 
-  .sign-up-button {
+  .sign-in-button {
     background-color: var(--auth-form-primary-button-background);
     border: 1px solid var(--auth-form-primary-button-border);
     color: var(--auth-form-primary-button-color);
   }
 
-  .sign-in-button {
+  .sign-up-button {
     background-color: var(--auth-form-secondary-button-background);
     border: 1px solid var(--auth-form-secondary-button-border);
     color: var(--auth-form-secondary-button-color);
   }
 
-  .sign-up-button:hover {
+  .sign-in-button:hover {
     background-color: var(--auth-form-primary-button-background-hover);
     border: 1px solid var(--auth-form-primary-button-border-hover);
     color: var(--auth-form-primary-button-color-hover);
