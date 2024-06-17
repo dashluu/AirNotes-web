@@ -18,7 +18,7 @@ function App() {
                 Sign out
             </button>
         </>
-    )
+    );
 }
 
-export default App
+export default App;

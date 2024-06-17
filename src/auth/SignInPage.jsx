@@ -1,6 +1,6 @@
 import "./SignInPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {useEffect, useRef} from "react";
 import {auth} from "../firebase.js"
 import {signInWithEmailAndPassword} from "firebase/auth";
@@ -31,14 +31,15 @@ function showMessage(result, validityContainer, validityIcon, validityMessage) {
     return result[0];
 }
 
-async function signInPage(navigate, emailInput, passwordInput,
+async function signInPage(navigate, location,
+                          emailInput, passwordInput,
                           emailValidityContainer, passwordValidityContainer,
                           emailValidityIcon, passwordValidityIcon,
                           emailValidityMessage, passwordValidityMessage) {
     // Send sign-in data to the server
     signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
         .then(() => {
-            navigate("/");
+            navigate(location.state.target);
         })
         .catch((error) => {
             const errorMessage = error.message;
@@ -53,6 +54,8 @@ async function signInPage(navigate, emailInput, passwordInput,
 }
 
 function SignInPage() {
+    const navigate = useNavigate();
+    const location = useLocation();
     const pageBackground = useRef(null);
     const emailInput = useRef(null);
     const emailValidityContainer = useRef(null);
@@ -62,7 +65,6 @@ function SignInPage() {
     const passwordValidityContainer = useRef(null);
     const passwordValidityMessage = useRef(null);
     const passwordValidityIcon = useRef(null);
-    const navigate = useNavigate();
 
     useEffect(() => {
         if (pageBackground.current) {
@@ -101,7 +103,8 @@ function SignInPage() {
                 <div className="action-container">
                     <button className="action-button sign-in-button"
                             onClick={() =>
-                                signInPage(navigate, emailInput.current, passwordInput.current,
+                                signInPage(navigate, location,
+                                    emailInput.current, passwordInput.current,
                                     emailValidityContainer.current, passwordValidityContainer.current,
                                     emailValidityIcon.current, passwordValidityIcon.current,
                                     emailValidityMessage.current, passwordValidityMessage.current)
@@ -117,7 +120,7 @@ function SignInPage() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
-export default SignInPage
+export default SignInPage;

@@ -38,7 +38,7 @@ function EditDocumentPage() {
         <Editor documentId={fullDocument.id} title={fullDocument.title}
                 content={fullDocument.content} isNewDocument={false}>
         </Editor>
-    )
+    );
 }
 
 export default EditDocumentPage;

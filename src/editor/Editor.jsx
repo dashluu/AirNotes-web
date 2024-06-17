@@ -163,7 +163,7 @@ function Editor({documentId, title, content, isNewDocument}) {
                 <EditorContent editor={editor}></EditorContent>
             </div>
         </div>
-    )
+    );
 }
 
 export default Editor;
