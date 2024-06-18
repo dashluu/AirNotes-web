@@ -1,26 +1,37 @@
+export class SignUpStatus {
+    public success: boolean;
+    public message: string;
+
+    constructor(success: boolean, message: string) {
+        this.success = success;
+        this.message = message;
+    }
+}
+
 export default class SignUpChecker {
-    private static validMessage = "Valid";
     private static passwordSpecialChars = "^$*.[]{}()?\"!@#%&/\\,><':;|_~`";
     private static minPasswordLength: number = 6;
     private static maxPasswordLength: number = 4096;
 
-    public checkEmail(input: any): [boolean, string] {
+    public checkEmail(input: any) {
         if (input.validity.valueMissing) {
-            return [false, "Missing email"];
+            return new SignUpStatus(false, "Missing email address")
         } else if (input.validity.typeMismatch) {
-            return [false, "Expected a form of a@a"];
+            return new SignUpStatus(false, "Expected a form of a@a")
         }
 
-        return [true, SignUpChecker.validMessage];
+        return new SignUpStatus(true, "Valid");
     }
 
-    public checkPassword(input: any): [boolean, string] {
+    public checkPassword(input: any) {
         if (input.validity.valueMissing) {
-            return [false, "Missing password"];
+            return new SignUpStatus(false, "Missing password");
         } else if (input.validity.tooShort) {
-            return [false, `Too short, must be at least ${SignUpChecker.minPasswordLength} characters`];
+            return new SignUpStatus(false,
+                `Too short, must be at least ${SignUpChecker.minPasswordLength} characters`);
         } else if (input.validity.tooLong) {
-            return [false, `Too short, must be at most ${SignUpChecker.maxPasswordLength} characters`];
+            return new SignUpStatus(false,
+                `Too short, must be at most ${SignUpChecker.maxPasswordLength} characters`);
         }
 
         let char: string;
@@ -47,15 +58,15 @@ export default class SignUpChecker {
         }
 
         if (!hasUppercase) {
-            return [false, "Missing at least 1 uppercase"];
+            return new SignUpStatus(false, "Missing at least 1 uppercase");
         } else if (!hasLowercase) {
-            return [false, "Missing at least 1 lowercase"];
+            return new SignUpStatus(false, "Missing at least 1 lowercase");
         } else if (!hasNumeric) {
-            return [false, "Missing at least 1 numeric"];
+            return new SignUpStatus(false, "Missing at least 1 numeric");
         } else if (!hasSpecialChar) {
-            return [false, "Missing at least 1 special character"];
+            return new SignUpStatus(false, "Missing at least 1 special character");
         }
 
-        return [true, SignUpChecker.validMessage];
+        return new SignUpStatus(true, "Valid");
     }
 }

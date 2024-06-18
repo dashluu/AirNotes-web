@@ -1,105 +1,27 @@
 import "./SignUpPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useNavigate} from "react-router-dom";
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import {auth} from "../firebase.js"
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import SignUpChecker from "./SignUpChecker.ts";
 
-const signUpChecker = new SignUpChecker();
-const validIconClass = "valid-icon";
-const validMessageClass = "valid-message";
-const errorIconClass = "error-icon";
-const errorMessageClass = "error-message";
-
-function showMessage(result, validityContainer, validityIcon, validityMessage) {
-    validityMessage.innerHTML = `${result[1]}`;
-    validityContainer.style.display = "inline-flex";
-
-    if (!result[0]) {
-        validityIcon.innerHTML = "error";
-        validityIcon.classList.add(errorIconClass);
-        validityIcon.classList.remove(validIconClass);
-        validityMessage.classList.add(errorMessageClass);
-        validityMessage.classList.remove(validMessageClass);
-    } else {
-        validityIcon.innerHTML = "check_circle";
-        validityIcon.classList.add(validIconClass);
-        validityIcon.classList.remove(errorIconClass);
-        validityMessage.classList.add(validMessageClass);
-        validityMessage.classList.remove(errorMessageClass);
-    }
-
-    return result[0];
-}
-
-function validateEmail(emailInput, emailValidityContainer, emailValidityIcon, emailValidityMessage) {
-    const result = signUpChecker.checkEmail(emailInput);
-    return showMessage(result, emailValidityContainer, emailValidityIcon, emailValidityMessage);
-}
-
-function validatePassword(passwordInput, passwordValidityContainer, passwordValidityIcon, passwordValidityMessage) {
-    const result = signUpChecker.checkPassword(passwordInput);
-    return showMessage(result, passwordValidityContainer, passwordValidityIcon, passwordValidityMessage);
-}
-
-function validateInput(emailInput, passwordInput,
-                       emailValidityContainer, passwordValidityContainer,
-                       emailValidityIcon, passwordValidityIcon,
-                       emailValidityMessage, passwordValidityMessage) {
-    let result;
-
-    if ((result = validateEmail(emailInput, emailValidityContainer, emailValidityIcon, emailValidityMessage))) {
-        return result;
-    }
-
-    return validatePassword(passwordInput, passwordValidityContainer, passwordValidityIcon, passwordValidityMessage);
-}
-
-async function signUpPage(navigate, emailInput, passwordInput,
-                          emailValidityContainer, passwordValidityContainer,
-                          emailValidityIcon, passwordValidityIcon,
-                          emailValidityMessage, passwordValidityMessage) {
-    if (!validateInput(emailInput, passwordInput,
-        emailValidityContainer, passwordValidityContainer,
-        emailValidityIcon, passwordValidityIcon,
-        emailValidityMessage, passwordValidityMessage)) {
-        return;
-    }
-
-    // Send sign-up data to the server
-    createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
-        .then(() => {
-            // Check if there is a target page after signing up
-            if ("target" in location.state) {
-                navigate(location.state.target);
-            } else {
-                navigate("/");
-            }
-        })
-        .catch((error) => {
-            const errorMessage = error.message;
-            const result = [false, errorMessage];
-
-            if (errorMessage.toLowerCase().indexOf("email") >= 0) {
-                showMessage(result, emailValidityContainer, emailValidityIcon, emailValidityMessage);
-            } else {
-                showMessage(result, passwordValidityContainer, passwordValidityIcon, passwordValidityMessage);
-            }
-        });
-}
-
 function SignUpPage() {
+    const navigate = useNavigate();
     const pageBackground = useRef(null);
     const emailInput = useRef(null);
-    const emailValidityContainer = useRef(null);
-    const emailValidityMessage = useRef(null);
-    const emailValidityIcon = useRef(null);
     const passwordInput = useRef(null);
-    const passwordValidityContainer = useRef(null);
-    const passwordValidityMessage = useRef(null);
-    const passwordValidityIcon = useRef(null);
-    const navigate = useNavigate();
+    const [getEmailStatusDisplay, setEmailStatusDisplay] = useState("none");
+    const [getEmailStatusIcon, setEmailStatusIcon] = useState("");
+    const [getEmailStatusMessage, setEmailStatusMessage] = useState("");
+    const [getEmailStatusIconClass, setEmailStatusIconClass] = useState("");
+    const [getEmailStatusMessageClass, setEmailStatusMessageClass] = useState("");
+    const [getPasswordStatusDisplay, setPasswordStatusDisplay] = useState("none");
+    const [getPasswordStatusIcon, setPasswordStatusIcon] = useState("");
+    const [getPasswordStatusMessage, setPasswordStatusMessage] = useState("");
+    const [getPasswordStatusIconClass, setPasswordStatusIconClass] = useState("");
+    const [getPasswordStatusMessageClass, setPasswordStatusMessageClass] = useState("");
+    const signUpChecker = new SignUpChecker();
 
     useEffect(() => {
         if (pageBackground.current) {
@@ -111,6 +33,84 @@ function SignUpPage() {
         }
     });
 
+    function validateEmail() {
+        const status = signUpChecker.checkEmail(emailInput.current);
+        return showEmailMessage(status);
+    }
+
+    function validatePassword() {
+        const status = signUpChecker.checkPassword(passwordInput.current);
+        return showPasswordMessage(status);
+    }
+
+    function validateInput() {
+        let success = validateEmail();
+
+        if (!success) {
+            return success;
+        }
+
+        return validatePassword();
+    }
+
+    async function signUpPage() {
+        if (!validateInput()) {
+            return;
+        }
+
+        // Send sign-up data to the server
+        await createUserWithEmailAndPassword(auth, emailInput.current.value, passwordInput.current.value)
+            .then(() => {
+                // Check if there is a target page after signing up
+                if ("target" in location.state) {
+                    navigate(location.state.target);
+                } else {
+                    navigate("/");
+                }
+            })
+            .catch((error) => {
+                if (error.message.toLowerCase().indexOf("email") >= 0) {
+                    showEmailMessage(false, error.message);
+                } else {
+                    showPasswordMessage(false, error.message);
+                }
+            });
+    }
+
+    function showEmailMessage(status) {
+        setEmailStatusMessage(status.message);
+        setEmailStatusDisplay("inline-flex");
+
+        if (!status.success) {
+            setEmailStatusIcon("error");
+            setEmailStatusIconClass("error-icon");
+            setEmailStatusMessageClass("error-message");
+        } else {
+            setEmailStatusIcon("check_circle");
+            setEmailStatusIconClass("valid-icon");
+            setEmailStatusMessageClass("valid-message");
+        }
+
+        return status.success;
+    }
+
+    function showPasswordMessage(status) {
+        setPasswordStatusMessage(status.message);
+        setPasswordStatusDisplay("inline-flex");
+
+        if (!status.success) {
+            setPasswordStatusIcon("error");
+            setPasswordStatusIconClass("error-icon");
+            setPasswordStatusMessageClass("error-message");
+        } else {
+            setPasswordStatusIcon("check_circle");
+            setPasswordStatusIconClass("valid-icon");
+            setPasswordStatusMessageClass("valid-message");
+        }
+
+        return status.success;
+    }
+
     return (
         <div className="sign-up-page">
             <NavBar/>
@@ -121,13 +121,15 @@ function SignUpPage() {
                     <input type="email" placeholder="Email" className="auth-input email-input" required
                            ref={emailInput}
                            onChange={
-                               (e) => validateEmail(
-                                   e.target, emailValidityContainer.current,
-                                   emailValidityIcon.current, emailValidityMessage.current)
+                               (e) => validateEmail(e.target)
                            }/>
-                    <div className="validity-container" ref={emailValidityContainer}>
-                        <span ref={emailValidityIcon} className={`material-symbols-outlined ${errorIconClass}`}></span>
-                        <span ref={emailValidityMessage} className={`${errorMessageClass}`}></span>
+                    <div className="status-container" style={{display: `${getEmailStatusDisplay}`}}>
+                        <span className={`material-symbols-outlined ${getEmailStatusIconClass}`}>
+                            {getEmailStatusIcon}
+                        </span>
+                        <span className={`${getEmailStatusMessageClass}`}>
+                            {getEmailStatusMessage}
+                        </span>
                     </div>
                 </div>
                 <div className="input-container">
@@ -135,23 +137,21 @@ function SignUpPage() {
                            required
                            minLength="6" maxLength="4096" ref={passwordInput}
                            onChange={
-                               (e) => validatePassword(
-                                   e.target, passwordValidityContainer.current,
-                                   passwordValidityIcon.current, passwordValidityMessage.current)
+                               (e) => validatePassword(e.target)
                            }/>
-                    <div className="validity-container" ref={passwordValidityContainer}>
-                        <span ref={passwordValidityIcon}
-                              className={`material-symbols-outlined ${errorIconClass}`}></span>
-                        <span ref={passwordValidityMessage} className={`${errorMessageClass}`}></span>
+                    <div className="status-container" style={{display: `${getPasswordStatusDisplay}`}}>
+                        <span className={`material-symbols-outlined ${getPasswordStatusIconClass}`}>
+                            {getPasswordStatusIcon}
+                        </span>
+                        <span className={`${getPasswordStatusMessageClass}`}>
+                            {getPasswordStatusMessage}
+                        </span>
                     </div>
                 </div>
                 <div className="action-container">
                     <button className="action-button sign-up-button"
-                            onClick={() =>
-                                signUpPage(navigate, emailInput.current, passwordInput.current,
-                                    emailValidityContainer.current, passwordValidityContainer.current,
-                                    emailValidityIcon.current, passwordValidityIcon.current,
-                                    emailValidityMessage.current, passwordValidityMessage.current)
+                            onClick={async () =>
+                                await signUpPage()
                             }>
                         Sign up
                     </button>
