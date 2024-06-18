@@ -7,6 +7,12 @@
     --auth-background: white;
     --editor-background: white;
 
+    --thumbnail-border: 1px solid #eeeeee;
+    --summary-title-color: black;
+    --summary-date-color: #9E9E9E;
+    --summary-date-color-hover: #616161;
+    --summary-card-width: 360px;
+
     --editor-toolbar-button-background: transparent;
     --editor-toolbar-button-border: transparent;
     --editor-toolbar-button-color: #616161;
@@ -16,6 +22,7 @@
     --editor-toolbar-button-background-hover: #eeeeee;
     --editor-toolbar-button-border-hover: #eeeeee;
     --editor-toolbar-button-color-hover: #424242;
+    --editor-date-color: #616161;
     --editor-title-color: black;
     --editor-tiptap-color: black;
 

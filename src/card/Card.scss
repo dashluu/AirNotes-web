@@ -1,0 +1,91 @@
+@use "../LightTheme.css";
+
+.card-container {
+  & {
+    height: auto;
+    width: auto;
+    display: grid;
+    gap: 10px 10px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    margin-bottom: 10px;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  .thumbnail-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 5px 0 5px;
+  }
+
+  .thumbnail {
+    width: 100%;
+    border-radius: 8px;
+    border: var(--thumbnail-border);
+    transition: transform .2s;
+  }
+
+  .thumbnail-hover {
+    transform: scale(1.05);
+  }
+
+  .summary-container {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 0 5px 0 5px;
+  }
+
+  .summary-title {
+    color: var(--summary-title-color);
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    width: 90%;
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    //-webkit-mask-image: linear-gradient(180deg, black 0%, transparent);
+    //mask-image: linear-gradient(180deg, black 0%, transparent);
+  }
+
+  .summary-date {
+    color: var(--summary-date-color);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 5px;
+  }
+
+  .summary-date-hover {
+    color: var(--summary-date-color-hover);
+  }
+
+  .summary-num-likes {
+    margin-right: 15px;
+    margin-top: 0;
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    color: var(--summary-num-likes-color);
+    font-weight: 500;
+  }
+
+  .summary-num-likes-hover {
+    color: var(--summary-likes-color-hover);
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 1,
+    'wght' 300,
+    'GRAD' -25,
+    'opsz' 20;
+    padding: 3px 0 0 0;
+  }
+}

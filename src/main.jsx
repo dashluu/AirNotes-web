@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.jsx";
+import App, {loader as appLoader} from "./App.jsx";
 import "./index.css";
 import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} from "react-router-dom";
 import ErrorPage from "./error/ErrorPage.jsx";
@@ -13,7 +13,7 @@ import AuthRouter from "./auth_router/AuthRouter.jsx";
 const router = createBrowserRouter(
     createRoutesFromElements(
         <Route path="/" element={<AuthRouter/>}>
-            <Route path="/" element={<App/>}/>
+            <Route path="/" element={<App/>} loader={appLoader}/>
             <Route path="sign-up" element={<SignUpPage/>}/>
             <Route path="sign-in" element={<SignInPage/>}/>
             <Route path="new" element={<NewDocumentPage/>}/>

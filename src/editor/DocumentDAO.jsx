@@ -1,13 +1,16 @@
 import DocumentUpdate from "../models/DocumentUpdate.js";
 import {auth, db} from "../firebase.js";
-import {addDoc, collection, deleteDoc, doc, setDoc} from "firebase/firestore";
+import {addDoc, collection, deleteDoc, doc, setDoc, serverTimestamp} from "firebase/firestore";
 
 export default class DocumentDAO {
     async update(documentId, title, content) {
+        // Get server time since it's more accurate
+        const timestamp = serverTimestamp();
         const documentUpdate = new DocumentUpdate(
             auth.currentUser.uid,
             title,
-            content
+            content,
+            timestamp
         );
 
         if (!documentId) {
@@ -27,7 +30,7 @@ export default class DocumentDAO {
             );
         }
 
-        return documentId;
+        return [documentId, timestamp];
     }
 
     async delete(documentId) {

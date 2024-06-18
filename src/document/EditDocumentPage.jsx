@@ -30,8 +30,11 @@ function EditDocumentPage() {
     const fullDocument = useLoaderData();
 
     return (
-        <Editor documentId={fullDocument.id} title={fullDocument.title}
-                content={fullDocument.content} isNewDocument={false}>
+        <Editor documentId={fullDocument.id}
+                title={fullDocument.title}
+                content={fullDocument.content}
+                date={fullDocument.date.toDate()}
+                isNewDocument={false}>
         </Editor>
     );
 }

@@ -16,14 +16,16 @@ const extensions = [
     })
 ]
 
-function Editor({documentId, title, content, isNewDocument}) {
+function Editor({documentId, title, content, date, isNewDocument}) {
     const navigate = useNavigate();
     const pageBackground = useRef(null);
     const [getDocumentId, setDocumentId] = useState(documentId);
     const [getTitle, setTitle] = useState(title);
     const [getContent, setContent] = useState(content);
-    const [getSaveDisabled, setSaveDisabled] = useState(getTitle === "");
+    const [getDate, setDate] = useState(getDateStr(date));
+    const [getSaveDisabled, setSaveDisabled] = useState(title === "");
     const [getDeleteDisplay, setDeleteDisplay] = useState(isNewDocument ? "none" : "inline-block");
+    const [getDateDisplay, setDateDisplay] = useState(date === "" ? "none" : "flex");
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
@@ -48,6 +50,7 @@ function Editor({documentId, title, content, isNewDocument}) {
         }
 
         setDeleteDisplay(getDocumentId === "" ? "none" : "inline-block");
+        setDateDisplay(getDate === "" ? "none" : "flex");
 
         if (getTitle === "") {
             setSaveDisabled(true);
@@ -56,6 +59,13 @@ function Editor({documentId, title, content, isNewDocument}) {
             setStatusIcon("error");
             setStatusIconClass("error-icon");
             setStatusMessageClass("error-message");
+        } else {
+            setSaveDisabled(false);
+            setStatusMessage("");
+            setStatusDisplay("none");
+            setStatusIcon("");
+            setStatusIconClass("");
+            setStatusMessageClass("");
         }
     }, [getDocumentId, getTitle]);
 
@@ -63,11 +73,16 @@ function Editor({documentId, title, content, isNewDocument}) {
         return null;
     }
 
+    function getDateStr(dateObj) {
+        return dateObj ? dateObj.toLocaleDateString() : "";
+    }
+
     async function afterSaveDocument() {
         await documentDAO.update(getDocumentId, getTitle, getContent)
-            .then((promiseDocumentId) => {
+            .then((result) => {
                 showMessage(true, "Save successfully.");
-                setDocumentId(promiseDocumentId);
+                setDocumentId(result[0]);
+                setDate(getDateStr(result[1].toDate()));
             })
             .catch((error) => {
                 showMessage(false, error);
@@ -132,6 +147,9 @@ function Editor({documentId, title, content, isNewDocument}) {
                             onClick={afterDeleteDocument}>
                         <span className="material-symbols-outlined">delete</span>
                     </button>
+                    <div className="date" style={{display: `${getDateDisplay}`}}>
+                        Last modified: {getDate}
+                    </div>
                 </div>
                 <div className="status-container" style={{display: `${getStatusDisplay}`}}>
                     <span className={`material-symbols-outlined ${getStatusIconClass}`}>
