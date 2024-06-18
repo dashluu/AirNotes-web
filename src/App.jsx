@@ -1,13 +1,16 @@
 import {auth} from "./firebase.js";
 import "./App.css"
-import {useState} from "react";
-import {onAuthStateChanged} from "firebase/auth";
+import {useEffect, useState} from "react";
+import {onAuthStateChanged, signOut} from "firebase/auth";
 
 function App() {
     const [getStatus, setStatus] = useState("");
-    onAuthStateChanged(auth, (user) => {
-        setStatus(user ? `${user.email} is signed in` : "Signed out");
-    });
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            setStatus(user ? `${user.email} is signed in` : "Signed out");
+        });
+    }, [getStatus]);
 
     return (
         <>

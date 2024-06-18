@@ -1,26 +1,31 @@
 import {auth} from "../firebase.js";
 import {onAuthStateChanged} from "firebase/auth";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Navigate, Outlet, useLocation} from "react-router-dom";
 
 function AuthRouter() {
     const location = useLocation();
-    const [getRoute, setRoute] = useState(null);
+    const [getRender, setRender] = useState(null);
 
-    let unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-            setRoute(
-                <Outlet/>
-            );
-        } else {
-            setRoute(
-                <Navigate to="/sign-in" state={{target: location.pathname}}></Navigate>
-            );
-        }
-    });
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                if (location.pathname === "/sign-in" || location.pathname === "/sign-up") {
+                    setRender(<Navigate to="/"></Navigate>);
+                } else {
+                    setRender(<Outlet/>);
+                }
+            } else {
+                if (location.pathname === "/sign-in" || location.pathname === "/sign-up") {
+                    setRender(<Outlet/>);
+                } else {
+                    setRender(<Navigate to="/sign-in" state={{target: location.pathname}}></Navigate>);
+                }
+            }
+        });
+    }, [getRender]);
 
-    unsubscribe();
-    return getRoute;
+    return getRender;
 }
 
 export default AuthRouter;

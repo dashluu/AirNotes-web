@@ -6,11 +6,6 @@ import {redirect, useLoaderData} from "react-router-dom";
 
 export async function loader({params}) {
     try {
-        if (auth.currentUser === null) {
-            // If the user is not signed in, go to the sign-in page
-            return redirect("/sign-in");
-        }
-
         const documentRef = doc(db, "documents", params.documentId);
         const documentSnapshot = await getDoc(documentRef);
 

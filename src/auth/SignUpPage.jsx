@@ -70,7 +70,12 @@ async function signUpPage(navigate, emailInput, passwordInput,
     // Send sign-up data to the server
     createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
         .then(() => {
-            navigate("/");
+            // Check if there is a target page after signing up
+            if ("target" in location.state) {
+                navigate(location.state.target);
+            } else {
+                navigate("/");
+            }
         })
         .catch((error) => {
             const errorMessage = error.message;

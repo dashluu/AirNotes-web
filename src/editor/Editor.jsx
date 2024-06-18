@@ -4,7 +4,7 @@ import {Placeholder} from "@tiptap/extension-placeholder";
 import "./Editor.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useEffect, useRef, useState} from "react";
-import {collection, doc, setDoc, addDoc} from "firebase/firestore";
+import {collection, doc, setDoc, addDoc, deleteDoc} from "firebase/firestore";
 import {auth, db} from "../firebase.js";
 import DocumentUpdate from "../models/DocumentUpdate.js";
 
@@ -43,34 +43,45 @@ function showMessage(result, statusContainer, statusIcon, statusMessage) {
     return result[0];
 }
 
-async function saveDocument(documentIdContainer, titleInput, content, statusContainer, statusIcon, statusMessage) {
-    try {
-        let documentRef;
-        const document = new DocumentUpdate(
-            auth.currentUser.uid,
-            titleInput.value,
-            content
+async function saveDocument(documentId, title, content) {
+    const documentUpdate = new DocumentUpdate(
+        auth.currentUser.uid,
+        title,
+        content
+    );
+
+    if (documentId === "") {
+        // New document
+        const documentRef = await addDoc(
+            collection(db, "documents"),
+            DocumentUpdate.FromDocumentUpdate(documentUpdate)
         );
 
-        if (documentIdContainer.innerHTML === "") {
-            // New document
-            documentRef = collection(db, "documents");
-            await addDoc(documentRef, DocumentUpdate.FromDocumentUpdate(document));
-        } else {
-            // Editing existing document
-            documentRef = doc(db, "documents", documentIdContainer.innerHTML);
-            await setDoc(documentRef, DocumentUpdate.FromDocumentUpdate(document), {merge: true});
-        }
-
-        documentIdContainer.innerHTML = documentRef.id;
-        const result = [true, "Save successfully."];
-        showMessage(result, statusContainer, statusIcon, statusMessage);
-        return true;
-    } catch (error) {
-        const result = [false, error];
-        showMessage(result, statusContainer, statusIcon, statusMessage);
-        return false;
+        documentId = documentRef.id;
+    } else {
+        // Editing existing document
+        await setDoc(
+            doc(db, "documents", documentId),
+            DocumentUpdate.FromDocumentUpdate(documentUpdate),
+            {merge: true}
+        );
     }
+
+    return documentId;
+}
+
+function renderAfterSaveDocument(documentIdContainer, title, content,
+                                 statusContainer, statusIcon, statusMessage) {
+    saveDocument(documentIdContainer.innerHTML, title, content)
+        .then((documentId) => {
+            documentIdContainer.innerHTML = documentId;
+            const result = [true, "Save successfully."];
+            showMessage(result, statusContainer, statusIcon, statusMessage);
+        })
+        .catch((error) => {
+            const result = [false, error];
+            showMessage(result, statusContainer, statusIcon, statusMessage);
+        });
 }
 
 function Editor({documentId, title, content, isNewDocument}) {
@@ -132,21 +143,22 @@ function Editor({documentId, title, content, isNewDocument}) {
                     <button ref={saveButton} className="toolbar-button save-button" disabled={getSaveDisabled}
                             title="Save"
                             onClick={() => {
-                                saveDocument(documentIdContainer.current, titleInput.current, getContent,
-                                    statusContainer.current, statusIcon.current, statusMessage.current)
-                                    .then((result) => {
-                                        if (result) {
-                                            // If document is saved successfully, it is no longer a new document
-                                            setNewDocument(false);
-                                        }
-                                    });
+                                renderAfterSaveDocument(
+                                    documentIdContainer.current, titleInput.current.value, getContent,
+                                    statusContainer.current, statusIcon.current, statusMessage.current
+                                );
+                                // If the document id is stored, the document is savable
+                                setNewDocument(documentIdContainer.current.innerHTML === "");
                             }}>
                         <span className="material-symbols-outlined">save</span>
                     </button>
                     {
                         !getNewDocument &&
                         <button className="toolbar-button delete-button"
-                                title="Delete">
+                                title="Delete"
+                                onClick={() => {
+
+                                }}>
                             <span className="material-symbols-outlined">delete</span>
                         </button>
                     }

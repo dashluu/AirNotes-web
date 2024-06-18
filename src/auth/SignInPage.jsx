@@ -39,7 +39,12 @@ async function signInPage(navigate, location,
     // Send sign-in data to the server
     signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
         .then(() => {
-            navigate(location.state.target);
+            // Check if there is a target page after signing up
+            if ("target" in location.state) {
+                navigate(location.state.target);
+            } else {
+                navigate("/");
+            }
         })
         .catch((error) => {
             const errorMessage = error.message;
