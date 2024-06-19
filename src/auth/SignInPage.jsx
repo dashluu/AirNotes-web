@@ -125,6 +125,12 @@ function SignInPage() {
                             }>
                         Sign up
                     </button>
+                    <button className="action-button forgot-password-button"
+                            onClick={() =>
+                                navigate("/forgot-password")
+                            }>
+                        Forgot password
+                    </button>
                 </div>
             </div>
         </div>
