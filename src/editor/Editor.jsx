@@ -1,4 +1,4 @@
-import {EditorProvider, useCurrentEditor} from "@tiptap/react";
+import {EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
 import "./Editor.scss";
@@ -32,7 +32,15 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     const [getStatusMessage, setStatusMessage] = useState("");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
-    let {editor} = useCurrentEditor();
+    let editor = useEditor({
+        extensions,
+        content,
+        onUpdate({ editor }) {
+            setContent(editor.getHTML());
+            setUndoDisabled(!editor.can().undo());
+            setRedoDisabled(!editor.can().redo());
+        }
+    });
 
     useEffect(() => {
         if (pageBackground.current) {
@@ -149,15 +157,7 @@ function Editor({documentId, title, content, date, isNewDocument}) {
                        onChange={(e) => {
                            setTitle(e.target.value);
                        }}/>
-                <EditorProvider extensions={extensions} content={getContent}
-                                onUpdate={() => {
-                                    // setContent(editor.getHTML());
-                                    // alert(editor.getHTML())
-                                    // setUndoDisabled(!editor.can().undo());
-                                    // setRedoDisabled(!editor.can().redo());
-                                    alert(editor.getHTML())
-                                }}
-                ></EditorProvider>
+                <EditorContent editor={editor}/>
             </div>
         </div>
     );
