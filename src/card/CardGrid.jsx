@@ -1,6 +1,6 @@
-import './CardGrid.scss';
+import "./CardGrid.scss";
 
-function CardGrid({topic, cards}) {
+function CardGrid({cards}) {
     return (
         <div className="card-grid-container">
             <div className="card-grid">

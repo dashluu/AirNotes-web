@@ -2,7 +2,7 @@ import Editor from "../editor/Editor.jsx";
 
 function NewDocumentPage() {
     return (
-        <Editor documentId="" title="" content="" isNewDocument={true}></Editor>
+        <Editor documentId="" title="" content="" date="" isNewDocument={true}></Editor>
     );
 }
 

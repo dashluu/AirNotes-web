@@ -1,37 +1,42 @@
-import './App.scss';
+import "./App.scss";
 import NavBar from "./navbar/NavBar.jsx";
 import Card from "./card/Card.jsx";
-import {useLoaderData} from "react-router-dom";
 import CardGrid from "./card/CardGrid.jsx";
-
-function fetchCards() {
-    const cards = [];
-
-    for (let i = 0; i < 4; i++) {
-        cards.push(
-            <Card key={i}
-                  title="Title 1234567845847 wjdjwdnjwndjnd jshdhjdhsjhdjshjdhsjhdjhsjdhjshdjhsjhdjshjdhsjhd"
-                  thumbnail="/thumbnail.webp"
-                  date="03/05/2024"
-            />
-        );
-    }
-
-    return cards;
-}
-
-export function loader() {
-    const cards = fetchCards();
-    return {cards};
-}
+import {useEffect, useState} from "react";
+import {documentDAO, auth} from "./firebase.js";
+import DocumentDAO from "./editor/DocumentDAO.jsx";
+import {onAuthStateChanged} from "firebase/auth";
 
 function App() {
-    const {cards} = useLoaderData();
+    const [getPage, setPage] = useState([]);
+
+    async function fetchPage() {
+        await onAuthStateChanged(auth, async (user) => {
+            const documentSummaryList = await documentDAO.getDocumentSummaryList(user.uid, 0);
+            const page = []
+
+            for (let i = 0; i < DocumentDAO.documentsPerPage; i++) {
+                page.push(
+                    <Card key={i}
+                          title={`${documentSummaryList[i].title}`}
+                          thumbnail="/thumbnail.jpg"
+                          date={`${documentSummaryList[i].date}`}
+                    />
+                );
+            }
+
+            setPage(page);
+        });
+    }
+
+    useEffect(() => {
+        fetchPage();
+    }, []);
 
     return (
         <div className="home-page">
             <NavBar/>
-            <CardGrid topic="Technology" cards={cards} />
+            <CardGrid topic="Technology" cards={getPage}/>
         </div>
     )
 }

@@ -114,9 +114,9 @@ function SignInPage() {
                 </div>
                 <div className="action-container">
                     <button className="action-button sign-in-button"
-                            onClick={async () =>
-                                await signInPage(emailInput.current.value, passwordInput.current.value)
-                            }>
+                            onClick={() => {
+                                signInPage(emailInput.current.value, passwordInput.current.value);
+                            }}>
                         Sign in
                     </button>
                     <button className="action-button sign-up-button"

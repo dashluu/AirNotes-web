@@ -150,15 +150,13 @@ function SignUpPage() {
                 </div>
                 <div className="action-container">
                     <button className="action-button sign-up-button"
-                            onClick={async () =>
-                                await signUpPage()
-                            }>
+                            onClick={() => {
+                                signUpPage();
+                            }}>
                         Sign up
                     </button>
                     <button className="action-button sign-in-button"
-                            onClick={() =>
-                                navigate("/sign-in")
-                            }>
+                            onClick={() => navigate("/sign-in")}>
                         Sign in
                     </button>
                 </div>

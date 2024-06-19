@@ -1,4 +1,4 @@
-class DocumentUpdate {
+export default class DocumentUpdate {
     constructor(userId, title, content, date) {
         this.userId = userId;
         this.title = title;
@@ -15,10 +15,13 @@ class DocumentUpdate {
         };
     }
 
+    static getDateStr(timestamp) {
+        const date = timestamp.toDate();
+        return date.toLocaleDateString("en-US");
+    }
+
     static ToDocumentUpdate(snapshot) {
         const data = snapshot.data();
-        return new DocumentUpdate(data.userId, data.title, data.content, data.date);
+        return new DocumentUpdate(data.userId, data.title, data.content, this.getDateStr(data.date));
     }
 }
-
-export default DocumentUpdate;

@@ -1,29 +1,16 @@
-import {doc, getDoc} from "firebase/firestore";
 import Editor from "../editor/Editor.jsx";
-import {auth, db} from "../firebase.js";
-import FullDocument from "../models/FullDocument.js";
 import {redirect, useLoaderData} from "react-router-dom";
+import {documentDAO} from "../firebase.js";
 
 export async function loader({params}) {
-    try {
-        const documentRef = doc(db, "documents", params.documentId);
-        const documentSnapshot = await getDoc(documentRef);
+    const fullDocument = await documentDAO.getFullDocument(params.documentId);
 
-        if (!documentSnapshot.exists()) {
-            // Document does not exist
-            return redirect("/error");
-        }
-
-        if (documentSnapshot.data().userId !== auth.currentUser.uid) {
-            // TODO: access resource not belong to the user
-            return redirect("/error");
-        }
-
-        return FullDocument.ToFullDocument(documentSnapshot);
-    } catch (error) {
-        // Error while loading the document
-        return redirect("/error");
+    if (fullDocument) {
+        return fullDocument;
     }
+
+    // Error while loading the document
+    return redirect("/error");
 }
 
 function EditDocumentPage() {
@@ -33,7 +20,7 @@ function EditDocumentPage() {
         <Editor documentId={fullDocument.id}
                 title={fullDocument.title}
                 content={fullDocument.content}
-                date={fullDocument.date.toDate()}
+                date={fullDocument.date}
                 isNewDocument={false}>
         </Editor>
     );

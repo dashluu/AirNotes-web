@@ -4,7 +4,7 @@ import {Placeholder} from "@tiptap/extension-placeholder";
 import "./Editor.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useEffect, useRef, useState} from "react";
-import DocumentDAO from "./DocumentDAO.jsx";
+import {documentDAO} from "../firebase.js";
 import {useNavigate} from "react-router-dom";
 
 // define your extension array
@@ -22,7 +22,7 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     const [getDocumentId, setDocumentId] = useState(documentId);
     const [getTitle, setTitle] = useState(title);
     const [getContent, setContent] = useState(content);
-    const [getDate, setDate] = useState(getDateStr(date));
+    const [getDate, setDate] = useState(date);
     const [getSaveDisabled, setSaveDisabled] = useState(title === "");
     const [getDeleteDisplay, setDeleteDisplay] = useState(isNewDocument ? "none" : "inline-block");
     const [getDateDisplay, setDateDisplay] = useState(date === "" ? "none" : "flex");
@@ -31,7 +31,6 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     const [getStatusMessage, setStatusMessage] = useState("");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
-    const documentDAO = new DocumentDAO();
     const editor = useEditor({
         extensions,
         getContent,
@@ -67,22 +66,18 @@ function Editor({documentId, title, content, date, isNewDocument}) {
             setStatusIconClass("");
             setStatusMessageClass("");
         }
-    }, [getDocumentId, getTitle]);
+    }, [getDate, getDocumentId, getTitle]);
 
     if (!editor) {
         return null;
-    }
-
-    function getDateStr(dateObj) {
-        return dateObj ? dateObj.toLocaleDateString() : "";
     }
 
     async function afterSaveDocument() {
         await documentDAO.update(getDocumentId, getTitle, getContent)
             .then((result) => {
                 showMessage(true, "Save successfully.");
-                setDocumentId(result[0]);
-                setDate(getDateStr(result[1].toDate()));
+                setDocumentId(result.id);
+                setDate(result.date);
             })
             .catch((error) => {
                 showMessage(false, error);
@@ -139,12 +134,16 @@ function Editor({documentId, title, content, date, isNewDocument}) {
                     </button>
                     <button className="toolbar-button save-button" disabled={getSaveDisabled}
                             title="Save"
-                            onClick={afterSaveDocument}>
+                            onClick={() => {
+                                afterSaveDocument();
+                            }}>
                         <span className="material-symbols-outlined">save</span>
                     </button>
                     <button className="toolbar-button delete-button" style={{display: `${getDeleteDisplay}`}}
                             title="Delete"
-                            onClick={afterDeleteDocument}>
+                            onClick={() => {
+                                afterDeleteDocument();
+                            }}>
                         <span className="material-symbols-outlined">delete</span>
                     </button>
                     <div className="date" style={{display: `${getDateDisplay}`}}>

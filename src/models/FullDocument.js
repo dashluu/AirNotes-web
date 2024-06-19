@@ -1,4 +1,4 @@
-class FullDocument {
+export default class FullDocument {
     constructor(id, userId, title, content, date) {
         this.id = id;
         this.userId = userId;
@@ -21,10 +21,13 @@ class FullDocument {
         };
     }
 
+    static getDateStr(timestamp) {
+        const date = timestamp.toDate();
+        return `${date.toLocaleDateString("en-US")} ${date.toLocaleTimeString("en-US")}`;
+    }
+
     static ToFullDocument(snapshot) {
         const data = snapshot.data();
-        return new FullDocument(snapshot.id, data.userId, data.title, data.content, data.date);
+        return new FullDocument(snapshot.id, data.userId, data.title, data.content, this.getDateStr(data.date));
     }
 }
-
-export default FullDocument;
