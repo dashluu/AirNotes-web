@@ -9,6 +9,7 @@ import NewDocumentPage from "./document/NewDocumentPage.jsx";
 import EditDocumentPage, {loader as editDocumentLoader} from "./document/EditDocumentPage.jsx";
 import SignInPage from "./auth/SignInPage.jsx";
 import AuthRouter from "./auth_router/AuthRouter.jsx";
+import Settings from "./settings/Settings.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -18,6 +19,7 @@ const router = createBrowserRouter(
             <Route path="sign-in" element={<SignInPage/>}/>
             <Route path="new" element={<NewDocumentPage/>}/>
             <Route path="notes/:documentId" element={<EditDocumentPage/>} loader={editDocumentLoader}/>
+            <Route path={"settings"} element={<Settings/>}/>
             <Route path="*" element={<ErrorPage/>}/>
         </Route>
     )

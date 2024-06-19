@@ -28,6 +28,11 @@ const NavBar = () => {
                             <span className="material-symbols-outlined">edit_square</span>
                         </div>
                     </Link>
+                    <Link to="/settings" className="nav-link">
+                        <div className="nav-div">
+                            <span className="material-symbols-outlined">settings</span>
+                        </div>
+                    </Link>
                 </li>
             </ul>
         </nav>

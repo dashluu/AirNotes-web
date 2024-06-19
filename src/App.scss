@@ -1,0 +1,22 @@
+.home-page {
+  & {
+    width: 100%;
+    height: auto;
+  }
+
+  .page-background {
+    position: fixed;
+    z-index: -1000;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: var(--page-background);
+  }
+}
+
+.page-background-sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+}

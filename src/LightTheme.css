@@ -4,8 +4,7 @@
     --nav-div-color-hover: black;
     --title-nav-link-color: black;
 
-    --auth-background: white;
-    --editor-background: white;
+    --page-background: white;
 
     --thumbnail-border: 1px solid #eeeeee;
     --summary-title-color: black;
@@ -41,4 +40,16 @@
     --auth-form-primary-button-color-hover: white;
     --valid-input-color: #009a4f;
     --error-input-color: #fd0031;
+
+    --settings-field-label: black;
+    --settings-field-content: #9e9e9e;
+    --settings-field-button-background: transparent;
+    --settings-field-button-border: #9e9e9e;
+    --settings-field-button-color: black;
+    --settings-field-button-background-hover: black;
+    --settings-field-button-border-hover: black;
+    --settings-field-button-color-hover: white;
+    --settings-sign-out-button-background: black;
+    --settings-sign-out-button-border: black;
+    --settings-sign-out-button-color: white;
 }

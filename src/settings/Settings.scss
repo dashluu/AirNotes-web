@@ -1,0 +1,97 @@
+@media screen and (max-width: 1000px) {
+  .settings-page {
+    .field-right {
+      justify-content: flex-start !important;
+    }
+  }
+}
+
+.settings-page {
+  & {
+    width: 100%;
+    height: auto;
+  }
+
+  .page-background {
+    position: fixed;
+    z-index: -1000;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: var(--page-background);
+  }
+
+  .settings-container {
+    width: 50%;
+    height: auto;
+    position: absolute;
+    left: 50%;;
+    top: 50%;
+    -ms-transform: translateX(-50%) translateY(-50%);
+    transform: translateX(-50%) translateY(-50%);
+  }
+
+  .field-container {
+    width: 100%;
+    margin-bottom: 15px;
+    display: grid;
+    grid-gap: 10px 0;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+
+  .field-label {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--settings-field-label);
+  }
+
+  .field-content {
+    font-size: 16px;
+    color: var(--settings-field-content);
+  }
+
+  .field-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .settings-button {
+    border-radius: 5px;
+    padding-top: 6px;
+    padding-bottom: 5px;
+    width: 180px;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  .field-button {
+    background-color: var(--settings-field-button-background);
+    border: 1px solid var(--settings-field-button-border);
+    color: var(--settings-field-button-color);
+  }
+
+  .field-button:hover {
+    background-color: var(--settings-field-button-background-hover);
+    border: 1px solid var(--settings-field-button-border-hover);
+    color: var(--settings-field-button-color-hover);
+    cursor: pointer;
+  }
+
+  .sign-out-button {
+    background-color: var(--settings-sign-out-button-background);
+    border: 1px solid var(--settings-sign-out-button-border);
+    color: var(--settings-sign-out-button-color);
+  }
+
+  .sign-out-button:hover {
+    cursor: pointer;
+  }
+}
+
+.page-background-sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+}

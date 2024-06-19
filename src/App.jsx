@@ -1,12 +1,13 @@
 import "./App.scss";
 import NavBar from "./navbar/NavBar.jsx";
-import Card from "./card/Card.jsx";
-import CardGrid from "./card/CardGrid.jsx";
-import {useEffect, useState} from "react";
+import Card from "./card_grid/Card.jsx";
+import CardGrid from "./card_grid/CardGrid.jsx";
+import {useEffect, useRef, useState} from "react";
 import {documentDAO, auth} from "./firebase.js";
 import {onAuthStateChanged} from "firebase/auth";
 
 function App() {
+    const pageBackground = useRef(null);
     const [getPage, setPage] = useState([]);
 
     async function fetchPage() {
@@ -30,13 +31,22 @@ function App() {
     }
 
     useEffect(() => {
+        if (pageBackground.current) {
+            if (window.scrollY < pageBackground.current.offsetTop) {
+                pageBackground.current.classList.remove("page-background-sticky");
+            } else {
+                pageBackground.current.classList.add("page-background-sticky");
+            }
+        }
+
         fetchPage();
     }, []);
 
     return (
         <div className="home-page">
             <NavBar/>
-            <CardGrid topic="Technology" cards={getPage}/>
+            <div className="page-background" ref={pageBackground}></div>
+            <CardGrid cards={getPage}/>
         </div>
     )
 }

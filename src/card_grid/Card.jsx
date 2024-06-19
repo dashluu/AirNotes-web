@@ -30,7 +30,7 @@ const Card = ({thumbnail, documentId, title, date}) => {
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default Card;

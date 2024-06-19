@@ -7,7 +7,7 @@ function CardGrid({cards}) {
                 {cards}
             </div>
         </div>
-    )
+    );
 }
 
 export default CardGrid;
