@@ -4,7 +4,7 @@ import {
     query,
     orderBy,
     limit,
-    startAt,
+    startAfter,
     where,
     addDoc,
     collection,
@@ -62,17 +62,29 @@ export default class DocumentDAO {
         return FullDocument.ToFullDocument(documentSnapshot);
     }
 
-    async getDocumentSummaryList(userId, page) {
-        const cursor = page * DocumentDAO.documentsPerPage;
-        const documentQuery = query(
-            collection(db, "documents"),
-            orderBy("date"),
-            where("userId", "==", userId),
-            startAt(cursor),
-            limit(DocumentDAO.documentsPerPage));
+    async getDocumentSummaryList(userId, page, cursor) {
+        let documentQuery;
+
+        if (page === 0) {
+            documentQuery = query(
+                collection(db, "documents"),
+                where("userId", "==", userId),
+                orderBy("date", "desc"),
+                limit(DocumentDAO.documentsPerPage)
+            );
+        } else {
+            documentQuery = query(
+                collection(db, "documents"),
+                where("userId", "==", userId),
+                orderBy("date", "desc"),
+                startAfter(cursor),
+                limit(DocumentDAO.documentsPerPage)
+            );
+        }
+
         const documentSnapshotList = await getDocs(documentQuery);
-        let documentSnapshot;
         let documentSummaryList = [];
+        let documentSnapshot;
         let documentSummary;
 
         for (let i = 0; i < documentSnapshotList.size; i++) {

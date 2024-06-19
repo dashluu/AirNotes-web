@@ -6,6 +6,10 @@ export default class DocumentUpdate {
         this.date = date;
     }
 
+    toString() {
+        return `userId:${this.userId}\ntitle:${this.title}\ncontent:${this.content}\ndate:${this.date}`;
+    }
+
     static FromDocumentUpdate(documentUpdate) {
         return {
             userId: documentUpdate.userId,

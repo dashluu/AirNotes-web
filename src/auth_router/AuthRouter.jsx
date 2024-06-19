@@ -23,7 +23,7 @@ function AuthRouter() {
                 }
             }
         });
-    }, [getRender, location.pathname]);
+    }, [getRender]);
 
     return getRender;
 }

@@ -4,7 +4,6 @@ import Card from "./card/Card.jsx";
 import CardGrid from "./card/CardGrid.jsx";
 import {useEffect, useState} from "react";
 import {documentDAO, auth} from "./firebase.js";
-import DocumentDAO from "./editor/DocumentDAO.jsx";
 import {onAuthStateChanged} from "firebase/auth";
 
 function App() {
@@ -12,14 +11,15 @@ function App() {
 
     async function fetchPage() {
         await onAuthStateChanged(auth, async (user) => {
-            const documentSummaryList = await documentDAO.getDocumentSummaryList(user.uid, 0);
+            const documentSummaryList = await documentDAO.getDocumentSummaryList(user.uid, 0, null);
             const page = []
 
-            for (let i = 0; i < DocumentDAO.documentsPerPage; i++) {
+            for (let i = 0; i < documentSummaryList.length; i++) {
                 page.push(
                     <Card key={i}
-                          title={`${documentSummaryList[i].title}`}
                           thumbnail="/thumbnail.jpg"
+                          documentId={`${documentSummaryList[i].id}`}
+                          title={`${documentSummaryList[i].title}`}
                           date={`${documentSummaryList[i].date}`}
                     />
                 );

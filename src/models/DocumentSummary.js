@@ -5,6 +5,10 @@ export default class DocumentSummary {
         this.date = date;
     }
 
+    toString() {
+        return `id: ${this.id}\ntitle:${this.title}\ndate:${this.date}`;
+    }
+
     static getDateStr(timestamp) {
         const date = timestamp.toDate();
         return `${date.toLocaleDateString("en-US")} ${date.toLocaleTimeString("en-US")}`;

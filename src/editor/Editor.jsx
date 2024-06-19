@@ -1,4 +1,4 @@
-import {EditorContent, useEditor} from "@tiptap/react";
+import {EditorProvider, useCurrentEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
 import "./Editor.scss";
@@ -10,7 +10,6 @@ import {useNavigate} from "react-router-dom";
 // define your extension array
 const extensions = [
     StarterKit,
-    History,
     Placeholder.configure({
         placeholder: "Write something...",
     })
@@ -23,6 +22,8 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     const [getTitle, setTitle] = useState(title);
     const [getContent, setContent] = useState(content);
     const [getDate, setDate] = useState(date);
+    const [getUndoDisabled, setUndoDisabled] = useState(true);
+    const [getRedoDisabled, setRedoDisabled] = useState(true);
     const [getSaveDisabled, setSaveDisabled] = useState(title === "");
     const [getDeleteDisplay, setDeleteDisplay] = useState(isNewDocument ? "none" : "inline-block");
     const [getDateDisplay, setDateDisplay] = useState(date === "" ? "none" : "flex");
@@ -31,13 +32,7 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     const [getStatusMessage, setStatusMessage] = useState("");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
-    const editor = useEditor({
-        extensions,
-        getContent,
-        onUpdate({editor}) {
-            setContent(editor.getHTML());
-        }
-    });
+    let {editor} = useCurrentEditor();
 
     useEffect(() => {
         if (pageBackground.current) {
@@ -60,22 +55,13 @@ function Editor({documentId, title, content, date, isNewDocument}) {
             setStatusMessageClass("error-message");
         } else {
             setSaveDisabled(false);
-            setStatusMessage("");
-            setStatusDisplay("none");
-            setStatusIcon("");
-            setStatusIconClass("");
-            setStatusMessageClass("");
         }
     }, [getDate, getDocumentId, getTitle]);
-
-    if (!editor) {
-        return null;
-    }
 
     async function afterSaveDocument() {
         await documentDAO.update(getDocumentId, getTitle, getContent)
             .then((result) => {
-                showMessage(true, "Save successfully.");
+                showMessage(true, "Save successfully");
                 setDocumentId(result.id);
                 setDate(result.date);
             })
@@ -118,13 +104,13 @@ function Editor({documentId, title, content, date, isNewDocument}) {
                 <div className="toolbar">
                     <button className="toolbar-button undo-button"
                             onClick={() => editor.chain().focus().undo().run()}
-                            disabled={!editor.can().undo()}
+                            disabled={getUndoDisabled}
                             title="Undo">
                         <span className="material-symbols-outlined">undo</span>
                     </button>
                     <button className="toolbar-button redo-button"
                             onClick={() => editor.chain().focus().redo().run()}
-                            disabled={!editor.can().redo()}
+                            disabled={getRedoDisabled}
                             title="Redo">
                         <span className="material-symbols-outlined">redo</span>
                     </button>
@@ -163,7 +149,15 @@ function Editor({documentId, title, content, date, isNewDocument}) {
                        onChange={(e) => {
                            setTitle(e.target.value);
                        }}/>
-                <EditorContent editor={editor}></EditorContent>
+                <EditorProvider extensions={extensions} content={getContent}
+                                onUpdate={() => {
+                                    // setContent(editor.getHTML());
+                                    // alert(editor.getHTML())
+                                    // setUndoDisabled(!editor.can().undo());
+                                    // setRedoDisabled(!editor.can().redo());
+                                    alert(editor.getHTML())
+                                }}
+                ></EditorProvider>
             </div>
         </div>
     );
