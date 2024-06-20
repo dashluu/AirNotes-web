@@ -2,9 +2,8 @@ import "./SignUpPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useNavigate} from "react-router-dom";
 import {useRef, useState} from "react";
-import {auth} from "../firebase.js"
+import {auth, signUpChecker, paths} from "../backend.js"
 import {createUserWithEmailAndPassword} from "firebase/auth";
-import SignUpChecker from "./SignUpChecker.ts";
 
 function SignUpPage() {
     const navigate = useNavigate();
@@ -20,7 +19,6 @@ function SignUpPage() {
     const [getPasswordStatusMessage, setPasswordStatusMessage] = useState("");
     const [getPasswordStatusIconClass, setPasswordStatusIconClass] = useState("");
     const [getPasswordStatusMessageClass, setPasswordStatusMessageClass] = useState("");
-    const signUpChecker = new SignUpChecker();
 
     function validateEmail() {
         const status = signUpChecker.checkEmail(emailInput.current);
@@ -144,7 +142,9 @@ function SignUpPage() {
                         Sign up
                     </button>
                     <button className="action-button sign-in-button"
-                            onClick={() => navigate("/sign-in")}>
+                            onClick={() => {
+                                navigate(paths.signIn);
+                            }}>
                         Sign in
                     </button>
                 </div>

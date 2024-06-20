@@ -6,6 +6,7 @@ import {getAnalytics} from "firebase/analytics";
 import {getAuth} from "firebase/auth";
 import {getFirestore} from "firebase/firestore";
 import DocumentDAO from "./editor/DocumentDAO.jsx";
+import SignUpChecker from "./auth/SignUpChecker.ts";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -25,3 +26,12 @@ const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const documentDAO = new DocumentDAO();
+export const signUpChecker = new SignUpChecker();
+export const paths = {
+    home: "/",
+    signIn: "/sign-in",
+    signUp: "/sign-up",
+    error: "/error",
+    forgotPassword: "/forgot-password",
+    newDocument: "/new"
+}

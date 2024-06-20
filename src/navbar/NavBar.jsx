@@ -2,7 +2,7 @@ import {useEffect, useRef} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import "./NavBar.scss";
 import {signOut} from "firebase/auth";
-import {auth} from "../firebase.js";
+import {auth, paths} from "../backend.js";
 
 // Navigation bar component
 const NavBar = () => {
@@ -11,7 +11,7 @@ const NavBar = () => {
 
     async function signOutApp() {
         await signOut(auth).then(() => {
-            navigate("/sign-in");
+            navigate(paths.signIn);
         });
     }
 

@@ -3,7 +3,7 @@ import NavBar from "./navbar/NavBar.jsx";
 import Card from "./card_grid/Card.jsx";
 import CardGrid from "./card_grid/CardGrid.jsx";
 import {useEffect, useState} from "react";
-import {auth, documentDAO} from "./firebase.js";
+import {auth, documentDAO, paths} from "./backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 
@@ -13,31 +13,29 @@ function App() {
 
     async function fetchCardList(userId) {
         const documentSummaryList = await documentDAO.getDocumentSummaryList(userId, 0, null);
-        const page = []
 
-        for (let i = 0; i < documentSummaryList.length; i++) {
-            page.push(
-                <Card key={i}
-                      thumbnail="/thumbnail.jpg"
-                      documentId={`${documentSummaryList[i].id}`}
-                      title={`${documentSummaryList[i].title}`}
-                      date={`${documentSummaryList[i].date}`}
-                />
-            );
-        }
+        const page = documentSummaryList.map(
+            (documentSummary, i) => <Card key={i}
+                                          thumbnail="/thumbnail.jpg"
+                                          documentId={`${documentSummary.id}`}
+                                          title={`${documentSummary.title}`}
+                                          date={`${documentSummary.date}`}/>
+        );
 
         setCardList(page);
     }
 
     useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                fetchCardList(user.uid);
+            } else {
+                navigate(paths.signIn);
+            }
+        });
+
         return () => {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    fetchCardList(user.uid);
-                } else {
-                    navigate("/sign-in");
-                }
-            });
+            unsubscribe();
         }
     }, []);
 
@@ -47,7 +45,9 @@ function App() {
             <div className="home-container">
                 <div className="toolbar">
                     <button className="toolbar-button new-button"
-                            onClick={() => navigate("/new")}
+                            onClick={() => {
+                                navigate(paths.newDocument);
+                            }}
                             title="New">
                         <span className="material-symbols-outlined">edit_square</span>
                     </button>

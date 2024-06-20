@@ -2,7 +2,7 @@ import "./SignInPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useRef, useState} from "react";
-import {auth} from "../firebase.js"
+import {auth, paths} from "../backend.js"
 import {signInWithEmailAndPassword} from "firebase/auth";
 
 function SignInPage() {
@@ -29,7 +29,7 @@ function SignInPage() {
                 if ("target" in location.state) {
                     navigate(location.state.target);
                 } else {
-                    navigate("/");
+                    navigate(paths.home);
                 }
             })
             .catch((error) => {
@@ -108,15 +108,15 @@ function SignInPage() {
                         Sign in
                     </button>
                     <button className="action-button sign-up-button"
-                            onClick={() =>
-                                navigate("/sign-up")
-                            }>
+                            onClick={() => {
+                                navigate(paths.signUp);
+                            }}>
                         Sign up
                     </button>
                     <button className="action-button forgot-password-button"
-                            onClick={() =>
-                                navigate("/forgot-password")
-                            }>
+                            onClick={() => {
+                                navigate(paths.forgotPassword);
+                            }}>
                         Forgot password?
                     </button>
                 </div>

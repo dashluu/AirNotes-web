@@ -1,4 +1,4 @@
-import {auth} from "../firebase.js";
+import {auth} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {useEffect, useState} from "react";
 import {Navigate, Outlet, useLocation} from "react-router-dom";

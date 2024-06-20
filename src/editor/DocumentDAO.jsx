@@ -1,5 +1,5 @@
 import DocumentUpdate from "../models/DocumentUpdate.js";
-import {auth, db} from "../firebase.js";
+import {auth, db} from "../backend.js";
 import {
     query,
     orderBy,

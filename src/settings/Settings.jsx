@@ -2,7 +2,7 @@ import "./Settings.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useEffect, useState} from "react";
 import {onAuthStateChanged, signOut} from "firebase/auth";
-import {auth} from "../firebase.js";
+import {auth, paths} from "../backend.js";
 import {useNavigate} from "react-router-dom";
 
 function Settings() {
@@ -11,20 +11,22 @@ function Settings() {
 
     // Fetch data once
     useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user);
+            } else {
+                navigate(paths.signIn);
+            }
+        });
+
         return () => {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    setUser(user);
-                } else {
-                    navigate("/sign-in");
-                }
-            });
+            unsubscribe();
         }
     }, []);
 
     async function signOutApp() {
         await signOut(auth).then(() => {
-            navigate("/sign-in");
+            navigate(paths.signIn);
         });
     }
 

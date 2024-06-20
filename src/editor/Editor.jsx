@@ -4,8 +4,8 @@ import {Placeholder} from "@tiptap/extension-placeholder";
 import "./Editor.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useEffect, useState} from "react";
-import {documentDAO} from "../firebase.js";
-import {useLocation, useNavigate} from "react-router-dom";
+import {documentDAO, paths} from "../backend.js";
+import {useNavigate} from "react-router-dom";
 
 // define your extension array
 const extensions = [
@@ -33,13 +33,25 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
     let editor = useEditor({
         extensions,
-        content,
         onUpdate({editor}) {
             setContent(editor.getHTML());
             setUndoDisabled(!editor.can().undo());
             setRedoDisabled(!editor.can().redo());
         }
     });
+
+    useEffect(() => {
+        setDocumentId(documentId);
+        setTitle(title);
+        setContent(content);
+        setDate(date);
+    }, [documentId, title, content, date]);
+
+    useEffect(() => {
+        if (editor) {
+            editor.commands.setContent(getContent);
+        }
+    }, [editor, getContent]);
 
     useEffect(() => {
         setDeleteDisplay(getDocumentId === "" ? "none" : "inline-block");
@@ -79,7 +91,7 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     async function afterDeleteDocument() {
         await documentDAO.delete(getDocumentId)
             .then(() => {
-                navigate("/");
+                navigate(paths.home);
             })
             .catch((error) => {
                 showMessage(false, error);
@@ -108,7 +120,9 @@ function Editor({documentId, title, content, date, isNewDocument}) {
                 <div className="document-id-container">{getDocumentId}</div>
                 <div className="toolbar">
                     <button className="toolbar-button new-button"
-                            onClick={() => navigate("/new")}
+                            onClick={() => {
+                                navigate(paths.newDocument);
+                            }}
                             title="New">
                         <span className="material-symbols-outlined">edit_square</span>
                     </button>
