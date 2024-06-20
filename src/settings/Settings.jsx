@@ -8,12 +8,23 @@ import {useNavigate} from "react-router-dom";
 function Settings() {
     const navigate = useNavigate();
     const pageBackground = useRef(null);
-    const [getEmail, setEmail] = useState("");
+    const [getUser, setUser] = useState(null);
 
-    async function loadCredential() {
-        await onAuthStateChanged(auth, (user) => {
-            setEmail(user.email);
+    function fetchProfile() {
+        let redirect = false;
+
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user);
+            } else {
+                redirect = true;
+            }
         });
+
+        if (redirect) {
+            unsubscribe();
+            navigate("/sign-in");
+        }
     }
 
     useEffect(() => {
@@ -24,9 +35,12 @@ function Settings() {
                 pageBackground.current.classList.add("page-background-sticky");
             }
         }
-
-        loadCredential();
     });
+
+    // Fetch data once
+    useEffect(() => {
+        fetchProfile();
+    }, []);
 
     async function signOutApp() {
         await signOut(auth).then(() => {
@@ -42,7 +56,7 @@ function Settings() {
                 <div className="field-container">
                     <div className="field-left">
                         <div className="field-label">Email</div>
-                        <div className="field-content">{getEmail}</div>
+                        <div className="field-content">{getUser ? getUser.email : ""}</div>
                     </div>
                     <div className="field-right">
                         <button className="settings-button field-button">Change email</button>

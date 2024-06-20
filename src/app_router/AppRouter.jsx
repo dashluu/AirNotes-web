@@ -3,7 +3,7 @@ import {onAuthStateChanged} from "firebase/auth";
 import {useEffect, useState} from "react";
 import {Navigate, Outlet, useLocation} from "react-router-dom";
 
-function AuthRouter() {
+function AppRouter() {
     const location = useLocation();
     const [getRender, setRender] = useState(null);
 
@@ -23,9 +23,9 @@ function AuthRouter() {
                 }
             }
         });
-    }, [getRender]);
+    }, [location]);
 
     return getRender;
 }
 
-export default AuthRouter;
+export default AppRouter;

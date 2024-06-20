@@ -84,7 +84,8 @@
   .action-button {
     width: 100%;
     margin-bottom: 10px;
-    padding: 6px 6px 5px 6px;
+    padding-top: 6px;
+    padding-bottom: 5px;
     border-radius: 4px;
     font-weight: 500;
     font-size: 16px;
@@ -103,7 +104,7 @@
     color: var(--auth-form-secondary-button-color);
   }
 
-  .forgot-button {
+  .forgot-password-button {
     background-color: var(--auth-form-secondary-button-background);
     border: 1px solid var(--auth-form-secondary-button-border);
     color: var(--auth-form-secondary-button-color);

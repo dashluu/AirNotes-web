@@ -8,18 +8,18 @@ import SignUpPage from "./auth/SignUpPage.jsx";
 import NewDocumentPage from "./document/NewDocumentPage.jsx";
 import EditDocumentPage, {loader as editDocumentLoader} from "./document/EditDocumentPage.jsx";
 import SignInPage from "./auth/SignInPage.jsx";
-import AuthRouter from "./auth_router/AuthRouter.jsx";
-import Settings from "./settings/Settings.jsx";
+import AppRouter from "./app_router/AppRouter.jsx";
+import Settings, {loader as settingsLoader} from "./settings/Settings.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
-        <Route path="/" element={<AuthRouter/>}>
+        <Route path="/" element={<AppRouter/>}>
             <Route path="/" element={<App/>}/>
             <Route path="sign-up" element={<SignUpPage/>}/>
             <Route path="sign-in" element={<SignInPage/>}/>
             <Route path="new" element={<NewDocumentPage/>}/>
             <Route path="notes/:documentId" element={<EditDocumentPage/>} loader={editDocumentLoader}/>
-            <Route path={"settings"} element={<Settings/>}/>
+            <Route path="settings" element={<Settings/>} loader={settingsLoader}/>
             <Route path="*" element={<ErrorPage/>}/>
         </Route>
     )
