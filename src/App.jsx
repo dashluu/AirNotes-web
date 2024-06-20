@@ -2,67 +2,56 @@ import "./App.scss";
 import NavBar from "./navbar/NavBar.jsx";
 import Card from "./card_grid/Card.jsx";
 import CardGrid from "./card_grid/CardGrid.jsx";
-import {useEffect, useRef, useState} from "react";
-import {documentDAO, auth} from "./firebase.js";
+import {useEffect, useState} from "react";
+import {auth, documentDAO} from "./firebase.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 
 function App() {
     const navigate = useNavigate();
-    const pageBackground = useRef(null);
     const [getCardList, setCardList] = useState([]);
 
-    function fetchCardList() {
-        let redirect = false;
+    async function fetchCardList(userId) {
+        const documentSummaryList = await documentDAO.getDocumentSummaryList(userId, 0, null);
+        const page = []
 
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const documentSummaryList = await documentDAO.getDocumentSummaryList(user.uid, 0, null);
-                const page = []
-
-                for (let i = 0; i < documentSummaryList.length; i++) {
-                    page.push(
-                        <Card key={i}
-                              thumbnail="/thumbnail.jpg"
-                              documentId={`${documentSummaryList[i].id}`}
-                              title={`${documentSummaryList[i].title}`}
-                              date={`${documentSummaryList[i].date}`}
-                        />
-                    );
-                }
-
-                setCardList(page);
-            } else {
-                redirect = true;
-            }
-        });
-
-        if (redirect) {
-            unsubscribe();
-            navigate("/sign-in");
+        for (let i = 0; i < documentSummaryList.length; i++) {
+            page.push(
+                <Card key={i}
+                      thumbnail="/thumbnail.jpg"
+                      documentId={`${documentSummaryList[i].id}`}
+                      title={`${documentSummaryList[i].title}`}
+                      date={`${documentSummaryList[i].date}`}
+                />
+            );
         }
+
+        setCardList(page);
     }
 
     useEffect(() => {
-        if (pageBackground.current) {
-            if (window.scrollY < pageBackground.current.offsetTop) {
-                pageBackground.current.classList.remove("page-background-sticky");
+        return onAuthStateChanged(auth, (user) => {
+            if (user) {
+                fetchCardList(user.uid);
             } else {
-                pageBackground.current.classList.add("page-background-sticky");
+                navigate("/sign-in");
             }
-        }
-    });
-
-    // Fetch data once
-    useEffect(() => {
-        fetchCardList();
-    }, [])
+        });
+    }, []);
 
     return (
         <div className="home-page">
             <NavBar/>
-            <div className="page-background" ref={pageBackground}></div>
-            <CardGrid cards={getCardList}/>
+            <div className="home-container">
+                <div className="toolbar">
+                    <button className="toolbar-button new-button"
+                            onClick={() => navigate("/new")}
+                            title="New">
+                        <span className="material-symbols-outlined">edit_square</span>
+                    </button>
+                </div>
+                <CardGrid cards={getCardList}/>
+            </div>
         </div>
     )
 }

@@ -4,7 +4,7 @@
     --nav-div-color-hover: black;
     --title-nav-link-color: black;
 
-    --page-background: white;
+    --background: white;
 
     --thumbnail-border: 1px solid #eeeeee;
     --summary-title-color: black;
@@ -35,9 +35,15 @@
     --auth-form-secondary-button-background: black;
     --auth-form-secondary-button-border: black;
     --auth-form-secondary-button-color: white;
+    --auth-form-emergency-button-background: #e40006;
+    --auth-form-emergency-button-border: #e40006;
+    --auth-form-emergency-button-color: white;
     --auth-form-primary-button-background-hover: #1565C0;
     --auth-form-primary-button-border-hover: #1565C0;
     --auth-form-primary-button-color-hover: white;
+    --auth-form-emergency-button-background-hover: #cb0005;
+    --auth-form-emergency-button-border-hover: #cb0005;
+    --auth-form-emergency-button-color-hover: white;
     --valid-input-color: #009a4f;
     --error-input-color: #fd0031;
 
@@ -49,7 +55,10 @@
     --settings-field-button-background-hover: black;
     --settings-field-button-border-hover: black;
     --settings-field-button-color-hover: white;
-    --settings-sign-out-button-background: black;
-    --settings-sign-out-button-border: black;
+    --settings-sign-out-button-background: #e40006;
+    --settings-sign-out-button-border: #e40006;
     --settings-sign-out-button-color: white;
+    --settings-sign-out-button-background-hover: #cb0005;
+    --settings-sign-out-button-border-hover: #cb0005;
+    --settings-sign-out-button-color-hover: white;
 }

@@ -1,14 +1,13 @@
 import "./SignInPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import {auth} from "../firebase.js"
 import {signInWithEmailAndPassword} from "firebase/auth";
 
 function SignInPage() {
     const navigate = useNavigate();
     const location = useLocation();
-    const pageBackground = useRef(null);
     const emailInput = useRef(null);
     const passwordInput = useRef(null);
     const [getEmailStatusDisplay, setEmailStatusDisplay] = useState("none");
@@ -21,16 +20,6 @@ function SignInPage() {
     const [getPasswordStatusMessage, setPasswordStatusMessage] = useState("");
     const [getPasswordStatusIconClass, setPasswordStatusIconClass] = useState("");
     const [getPasswordStatusMessageClass, setPasswordStatusMessageClass] = useState("");
-
-    useEffect(() => {
-        if (pageBackground.current) {
-            if (window.scrollY < pageBackground.current.offsetTop) {
-                pageBackground.current.classList.remove("page-background-sticky");
-            } else {
-                pageBackground.current.classList.add("page-background-sticky");
-            }
-        }
-    });
 
     async function signInPage(email, password) {
         // Send sign-in data to the server
@@ -85,7 +74,6 @@ function SignInPage() {
     return (
         <div className="sign-in-page">
             <NavBar/>
-            <div className="page-background" ref={pageBackground}></div>
             <div className="sign-in-form">
                 <div className="form-title">Sign In</div>
                 <div className="input-container">
@@ -113,6 +101,12 @@ function SignInPage() {
                     </div>
                 </div>
                 <div className="action-container">
+                    <button className="action-button forgot-password-button"
+                            onClick={() =>
+                                navigate("/forgot-password")
+                            }>
+                        Forgot password
+                    </button>
                     <button className="action-button sign-in-button"
                             onClick={() => {
                                 signInPage(emailInput.current.value, passwordInput.current.value);
@@ -124,12 +118,6 @@ function SignInPage() {
                                 navigate("/sign-up")
                             }>
                         Sign up
-                    </button>
-                    <button className="action-button forgot-password-button"
-                            onClick={() =>
-                                navigate("/forgot-password")
-                            }>
-                        Forgot password
                     </button>
                 </div>
             </div>

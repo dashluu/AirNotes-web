@@ -1,10 +1,19 @@
 import {useEffect, useRef} from "react";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import "./NavBar.scss";
+import {signOut} from "firebase/auth";
+import {auth} from "../firebase.js";
 
 // Navigation bar component
 const NavBar = () => {
+    const navigate = useNavigate();
     const navbar = useRef(null);
+
+    async function signOutApp() {
+        await signOut(auth).then(() => {
+            navigate("/sign-in");
+        });
+    }
 
     useEffect(() => {
         if (navbar.current) {
@@ -23,16 +32,19 @@ const NavBar = () => {
                     <Link to="/" className="title-nav-link">AirNotes</Link>
                 </li>
                 <li>
-                    <Link to="/new" className="nav-link">
-                        <div className="nav-div">
-                            <span className="material-symbols-outlined">edit_square</span>
-                        </div>
-                    </Link>
                     <Link to="/settings" className="nav-link">
                         <div className="nav-div">
                             <span className="material-symbols-outlined">settings</span>
                         </div>
                     </Link>
+                    <div className="nav-link"
+                         onClick={() => {
+                             signOutApp();
+                         }}>
+                        <div className="nav-div">
+                            <span className="material-symbols-outlined">logout</span>
+                        </div>
+                    </div>
                 </li>
             </ul>
         </nav>

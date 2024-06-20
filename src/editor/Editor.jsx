@@ -3,9 +3,9 @@ import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
 import "./Editor.scss";
 import NavBar from "../navbar/NavBar.jsx";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useState} from "react";
 import {documentDAO} from "../firebase.js";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 
 // define your extension array
 const extensions = [
@@ -17,7 +17,6 @@ const extensions = [
 
 function Editor({documentId, title, content, date, isNewDocument}) {
     const navigate = useNavigate();
-    const pageBackground = useRef(null);
     const [getDocumentId, setDocumentId] = useState(documentId);
     const [getTitle, setTitle] = useState(title);
     const [getContent, setContent] = useState(content);
@@ -35,7 +34,7 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     let editor = useEditor({
         extensions,
         content,
-        onUpdate({ editor }) {
+        onUpdate({editor}) {
             setContent(editor.getHTML());
             setUndoDisabled(!editor.can().undo());
             setRedoDisabled(!editor.can().redo());
@@ -43,17 +42,11 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     });
 
     useEffect(() => {
-        if (pageBackground.current) {
-            if (window.scrollY < pageBackground.current.offsetTop) {
-                pageBackground.current.classList.remove("page-background-sticky");
-            } else {
-                pageBackground.current.classList.add("page-background-sticky");
-            }
-        }
-
         setDeleteDisplay(getDocumentId === "" ? "none" : "inline-block");
         setDateDisplay(getDate === "" ? "none" : "flex");
+    }, [getDate, getDocumentId]);
 
+    useEffect(() => {
         if (getTitle === "") {
             setSaveDisabled(true);
             setStatusMessage("Title cannot be empty");
@@ -63,8 +56,13 @@ function Editor({documentId, title, content, date, isNewDocument}) {
             setStatusMessageClass("error-message");
         } else {
             setSaveDisabled(false);
+            setStatusMessage("");
+            setStatusDisplay("none");
+            setStatusIcon("");
+            setStatusIconClass("");
+            setStatusMessageClass("");
         }
-    }, [getDate, getDocumentId, getTitle]);
+    }, [getTitle]);
 
     async function afterSaveDocument() {
         await documentDAO.update(getDocumentId, getTitle, getContent)
@@ -106,10 +104,14 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     return (
         <div className="editor-page">
             <NavBar/>
-            <div className="page-background" ref={pageBackground}></div>
             <div className="editor-container">
                 <div className="document-id-container">{getDocumentId}</div>
                 <div className="toolbar">
+                    <button className="toolbar-button new-button"
+                            onClick={() => navigate("/new")}
+                            title="New">
+                        <span className="material-symbols-outlined">edit_square</span>
+                    </button>
                     <button className="toolbar-button undo-button"
                             onClick={() => editor.chain().focus().undo().run()}
                             disabled={getUndoDisabled}

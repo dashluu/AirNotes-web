@@ -1,14 +1,13 @@
 import "./SignUpPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useNavigate} from "react-router-dom";
-import {useEffect, useRef, useState} from "react";
+import {useRef, useState} from "react";
 import {auth} from "../firebase.js"
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import SignUpChecker from "./SignUpChecker.ts";
 
 function SignUpPage() {
     const navigate = useNavigate();
-    const pageBackground = useRef(null);
     const emailInput = useRef(null);
     const passwordInput = useRef(null);
     const [getEmailStatusDisplay, setEmailStatusDisplay] = useState("none");
@@ -22,16 +21,6 @@ function SignUpPage() {
     const [getPasswordStatusIconClass, setPasswordStatusIconClass] = useState("");
     const [getPasswordStatusMessageClass, setPasswordStatusMessageClass] = useState("");
     const signUpChecker = new SignUpChecker();
-
-    useEffect(() => {
-        if (pageBackground.current) {
-            if (window.scrollY < pageBackground.current.offsetTop) {
-                pageBackground.current.classList.remove("page-background-sticky");
-            } else {
-                pageBackground.current.classList.add("page-background-sticky");
-            }
-        }
-    });
 
     function validateEmail() {
         const status = signUpChecker.checkEmail(emailInput.current);
@@ -114,7 +103,6 @@ function SignUpPage() {
     return (
         <div className="sign-up-page">
             <NavBar/>
-            <div className="page-background" ref={pageBackground}></div>
             <div className="sign-up-form">
                 <div className="form-title">Sign Up</div>
                 <div className="input-container">

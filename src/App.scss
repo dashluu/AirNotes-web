@@ -4,19 +4,47 @@
     height: auto;
   }
 
-  .page-background {
-    position: fixed;
-    z-index: -1000;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background: var(--page-background);
+  .home-container {
+    margin-top: 60px;
+    width: 80%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
   }
-}
 
-.page-background-sticky {
-  position: fixed;
-  top: 0;
-  left: 0;
+  .toolbar {
+    width: 100%;
+    padding: 5px 12px 5px 12px;
+    margin-bottom: 10px;
+    display: inline-flex;
+  }
+
+  .toolbar-button {
+    margin-right: 10px;
+    background-color: var(--editor-toolbar-button-background);
+    border: 1px solid var(--editor-toolbar-button-border);
+    border-radius: 5px;
+    color: var(--editor-toolbar-button-color);
+    padding: 3px 4px 0 4px;
+  }
+
+  .toolbar-button:disabled {
+    color: var(--editor-toolbar-button-color-disabled);
+    background-color: var(--editor-toolbar-button-background-disabled);
+    border: 1px solid var(--editor-toolbar-button-border-disabled);
+  }
+
+  .toolbar-button:hover:not([disabled]) {
+    cursor: pointer;
+    color: var(--editor-toolbar-button-color-hover);
+    background-color: var(--editor-toolbar-button-background-hover);
+    border: 1px solid var(--editor-toolbar-button-border-hover);
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+  }
 }

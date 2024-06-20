@@ -1,7 +1,7 @@
 @media screen and (max-width: 1000px) {
   .settings-page {
-    .field-right {
-      justify-content: flex-start !important;
+    .settings-button {
+      width: 100% !important;
     }
   }
 }
@@ -10,16 +10,6 @@
   & {
     width: 100%;
     height: auto;
-  }
-
-  .page-background {
-    position: fixed;
-    z-index: -1000;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background: var(--page-background);
   }
 
   .settings-container {
@@ -86,12 +76,13 @@
   }
 
   .sign-out-button:hover {
+    background-color: var(--settings-sign-out-button-background-hover);
+    border: 1px solid var(--settings-sign-out-button-border-hover);
+    color: var(--settings-sign-out-button-color-hover);
     cursor: pointer;
   }
-}
 
-.page-background-sticky {
-  position: fixed;
-  top: 0;
-  left: 0;
+  .sign-out-button:hover {
+    cursor: pointer;
+  }
 }

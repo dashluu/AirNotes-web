@@ -1,16 +1,6 @@
 @use "../LightTheme.css";
 
 .sign-in-page {
-  .page-background {
-    position: fixed;
-    z-index: -1000;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background: var(--page-background);
-  }
-
   .sign-in-form {
     width: 360px;
     position: absolute;
@@ -48,10 +38,9 @@
 
   .material-symbols-outlined {
     font-variation-settings: 'FILL' 0,
-    'wght' 200,
+    'wght' 300,
     'GRAD' 0,
-    'opsz' 20;
-    padding-top: 2px;
+    'opsz' 24;
   }
 
   .status-container {
@@ -79,13 +68,14 @@
   .action-container {
     width: 100%;
     height: 50px;
+    margin-top: 20px;
   }
 
   .action-button {
     width: 100%;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     padding-top: 6px;
-    padding-bottom: 5px;
+    padding-bottom: 6px;
     border-radius: 4px;
     font-weight: 500;
     font-size: 16px;
@@ -105,9 +95,9 @@
   }
 
   .forgot-password-button {
-    background-color: var(--auth-form-secondary-button-background);
-    border: 1px solid var(--auth-form-secondary-button-border);
-    color: var(--auth-form-secondary-button-color);
+    background-color: var(--auth-form-emergency-button-background);
+    border: 1px solid var(--auth-form-emergency-button-border);
+    color: var(--auth-form-emergency-button-color);
   }
 
   .sign-in-button:hover {
@@ -116,13 +106,13 @@
     color: var(--auth-form-primary-button-color-hover);
   }
 
+  .forgot-password-button:hover {
+    background-color: var(--auth-form-emergency-button-background-hover);
+    border: 1px solid var(--auth-form-emergency-button-border-hover);
+    color: var(--auth-form-emergency-button-color-hover);
+  }
+
   .action-button:hover {
     cursor: pointer;
   }
-}
-
-.page-background-sticky {
-  position: fixed;
-  top: 0;
-  left: 0;
 }
