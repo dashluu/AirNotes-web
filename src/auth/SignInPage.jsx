@@ -101,12 +101,6 @@ function SignInPage() {
                     </div>
                 </div>
                 <div className="action-container">
-                    <button className="action-button forgot-password-button"
-                            onClick={() =>
-                                navigate("/forgot-password")
-                            }>
-                        Forgot password
-                    </button>
                     <button className="action-button sign-in-button"
                             onClick={() => {
                                 signInPage(emailInput.current.value, passwordInput.current.value);
@@ -118,6 +112,12 @@ function SignInPage() {
                                 navigate("/sign-up")
                             }>
                         Sign up
+                    </button>
+                    <button className="action-button forgot-password-button"
+                            onClick={() =>
+                                navigate("/forgot-password")
+                            }>
+                        Forgot password?
                     </button>
                 </div>
             </div>

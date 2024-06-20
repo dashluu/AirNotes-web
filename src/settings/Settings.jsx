@@ -11,13 +11,15 @@ function Settings() {
 
     // Fetch data once
     useEffect(() => {
-        return onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUser(user);
-            } else {
-                navigate("/sign-in");
-            }
-        });
+        return () => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    setUser(user);
+                } else {
+                    navigate("/sign-in");
+                }
+            });
+        }
     }, []);
 
     async function signOutApp() {

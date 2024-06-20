@@ -35,15 +35,9 @@
     --auth-form-secondary-button-background: black;
     --auth-form-secondary-button-border: black;
     --auth-form-secondary-button-color: white;
-    --auth-form-emergency-button-background: #e40006;
-    --auth-form-emergency-button-border: #e40006;
-    --auth-form-emergency-button-color: white;
     --auth-form-primary-button-background-hover: #1565C0;
     --auth-form-primary-button-border-hover: #1565C0;
     --auth-form-primary-button-color-hover: white;
-    --auth-form-emergency-button-background-hover: #cb0005;
-    --auth-form-emergency-button-border-hover: #cb0005;
-    --auth-form-emergency-button-color-hover: white;
     --valid-input-color: #009a4f;
     --error-input-color: #fd0031;
 

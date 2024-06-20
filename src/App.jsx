@@ -30,13 +30,15 @@ function App() {
     }
 
     useEffect(() => {
-        return onAuthStateChanged(auth, (user) => {
-            if (user) {
-                fetchCardList(user.uid);
-            } else {
-                navigate("/sign-in");
-            }
-        });
+        return () => {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    fetchCardList(user.uid);
+                } else {
+                    navigate("/sign-in");
+                }
+            });
+        }
     }, []);
 
     return (
