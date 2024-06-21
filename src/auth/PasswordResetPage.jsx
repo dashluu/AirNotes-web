@@ -1,3 +1,4 @@
+import "./PasswordResetPage.scss"
 import NavBar from "../navbar/NavBar.jsx";
 import {useRef, useState} from "react";
 import {signUpChecker} from "../backend.js";
@@ -32,11 +33,15 @@ function PasswordResetPage() {
         return status.success;
     }
 
+    function resetPassword() {
+
+    }
+
     return (
         <div className="password-reset-page">
             <NavBar/>
             <div className="password-reset-form">
-                <div className="form-title">Sign Up</div>
+                <div className="form-title">Password Reset</div>
                 <div className="input-container">
                     <input type="password" placeholder="Password" className="auth-input password-input"
                            required
@@ -57,7 +62,7 @@ function PasswordResetPage() {
                     <button className="action-button password-reset-button"
                             onClick={() => {
                             }}>
-                        Sign up
+                        Reset password
                     </button>
                 </div>
             </div>

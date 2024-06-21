@@ -9,7 +9,9 @@ const Card = ({thumbnail, documentId, title, date}) => {
 
     return (
         <div className="card-container"
-             onClick={() => navigate(`/notes/${documentId}`)}
+             onClick={() => {
+                 navigate(`/notes/${documentId}`);
+             }}
              onMouseEnter={() => {
                  setThumbnailClass("thumbnail-hover");
                  setDateClass("summary-date-hover");
