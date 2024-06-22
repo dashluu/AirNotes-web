@@ -1,4 +1,4 @@
-import {EditorContent, useEditor} from "@tiptap/react";
+import {BubbleMenu, EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
 import "./Editor.scss";
@@ -6,6 +6,7 @@ import NavBar from "../navbar/NavBar.jsx";
 import {useEffect, useState} from "react";
 import {documentDAO, paths} from "../backend.js";
 import {useNavigate} from "react-router-dom";
+import TextGenPopup from "../popup/TextGenPopup.jsx";
 
 // define your extension array
 const extensions = [
@@ -31,6 +32,8 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     const [getStatusMessage, setStatusMessage] = useState("");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
+    const [getSummaryText, setSummaryText] = useState("");
+    const [getSummaryDisplay, setSummaryDisplay] = useState("none");
     let editor = useEditor({
         extensions,
         onUpdate({editor}) {
@@ -113,6 +116,26 @@ function Editor({documentId, title, content, date, isNewDocument}) {
         }
     }
 
+    async function summarize() {
+        const summaryModel = {
+            text: editor.getHTML()
+        };
+
+        const response = await fetch("http://localhost:8000/summarize", {
+            method: "post",
+            body: JSON.stringify(summaryModel),
+            headers: {
+                "Content-Type": "application/json"
+            },
+        });
+
+        if (response.ok) {
+            const summaryText = await response.json();
+            setSummaryText(summaryText);
+            setSummaryDisplay("block");
+        }
+    }
+
     return (
         <div className="editor-page">
             <NavBar/>
@@ -125,6 +148,13 @@ function Editor({documentId, title, content, date, isNewDocument}) {
                             }}
                             title="New">
                         <span className="material-symbols-outlined">edit_square</span>
+                    </button>
+                    <button className="toolbar-button summarize-button"
+                            onClick={() => {
+                                summarize();
+                            }}
+                            title="Summarize All">
+                        <span className="material-symbols-outlined">notes</span>
                     </button>
                     <button className="toolbar-button undo-button"
                             onClick={() => editor.chain().focus().undo().run()}
@@ -173,6 +203,28 @@ function Editor({documentId, title, content, date, isNewDocument}) {
                        onChange={(e) => {
                            setTitle(e.target.value);
                        }}/>
+
+                {editor && <BubbleMenu editor={editor} tippyOptions={{duration: 100}}>
+                    <div className="bubble-menu">
+                        <button
+                            onClick={() => editor.chain().focus().toggleBold().run()}
+                            className={editor.isActive("bold") ? "is-active" : ""}
+                        >
+                            Bold
+                        </button>
+                        <button
+                            onClick={() => editor.chain().focus().toggleItalic().run()}
+                            className={editor.isActive("italic") ? "is-active" : ""}
+                        >
+                            Italic
+                        </button>
+                    </div>
+                </BubbleMenu>}
+                <div className="summary-container" style={{display: `${getSummaryDisplay}`}}>
+                    <TextGenPopup text={getSummaryText} closePopup={() => {
+                        setSummaryDisplay("none");
+                    }}></TextGenPopup>
+                </div>
                 <EditorContent editor={editor}/>
             </div>
         </div>

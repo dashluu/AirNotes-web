@@ -1,16 +1,6 @@
 @use "../LightTheme.css";
 
 .editor-page {
-  .page-background {
-    position: fixed;
-    z-index: -1000;
-    width: 100vw;
-    height: 100vh;
-    top: 0;
-    left: 0;
-    background: var(--page-background);
-  }
-
   .editor-container {
     height: 80vh;
     width: 70%;
@@ -100,6 +90,49 @@
     color: var(--editor-title-color);
   }
 
+  .bubble-menu {
+    background-color: var(--editor-bubble-menu-background);
+    border: 1px solid var(--editor-bubble-menu-border);
+    box-shadow: var(--editor-bubble-menu-shadow);
+    border-radius: 5px;
+    display: flex;
+    padding: .2rem;
+  }
+
+  .bubble-menu button {
+    background-color: unset;
+    border-radius: 5px;
+    border: none;
+    color: var(--editor-bubble-menu-button-color);
+    font-family: inherit;
+    font-size: .875rem;
+    font-weight: 500;
+    line-height: 1.15;
+    padding: .375rem .625rem;
+    transition: all .2s cubic-bezier(.65, .05, .36, 1)
+  }
+
+  .bubble-menu button:hover {
+    cursor: pointer;
+    background: var(--editor-bubble-menu-button-background-hover);
+  }
+
+  .summary-container {
+    width: 60%;
+    height: 50vh;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translateY(-50%) translateX(-50%);
+    transform: translateY(-50%) translateX(-50%);
+    background-color: var(--text-gen-popup-container-background);
+    border: 1px solid var(--text-gen-popup-container-border);
+    box-shadow: var(--text-gen-popup-container-shadow);
+    border-radius: 5px;
+    padding: 10px 12px 2px 10px;
+    z-index: 99999;
+  }
+
   .tiptap {
     overflow-y: auto;
     height: 100%;
@@ -122,10 +155,4 @@
     height: 0;
     pointer-events: none;
   }
-}
-
-.page-background-sticky {
-  position: fixed;
-  top: 0;
-  left: 0;
 }

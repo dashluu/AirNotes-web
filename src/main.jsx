@@ -11,6 +11,7 @@ import SignInPage from "./auth/SignInPage.jsx";
 import AppRouter from "./app_router/AppRouter.jsx";
 import Settings from "./settings/Settings.jsx";
 import PasswordResetPage from "./auth/PasswordResetPage.jsx";
+import TextGenPopup from "./popup/TextGenPopup.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
             <Route path="notes/:documentId" element={<EditDocumentPage/>} loader={editDocumentLoader}/>
             <Route path="settings" element={<Settings/>}/>
             <Route path="password-reset" element={<PasswordResetPage/>}/>
+            <Route path="text-gen" element={<TextGenPopup/>}/>
             <Route path="*" element={<ErrorPage/>}/>
         </Route>
     )

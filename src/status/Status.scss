@@ -1,0 +1,19 @@
+@use "../Icon";
+
+.status-container {
+  align-items: center;
+}
+
+.valid-message,
+.error-message {
+  font-size: 14px;
+  padding-top: 0;
+}
+
+.valid-icon, .valid-message {
+  color: var(--valid-input-color);
+}
+
+.error-icon, .error-message {
+  color: var(--error-input-color);
+}
