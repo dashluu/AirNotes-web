@@ -1,5 +1,79 @@
 @use "../LightTheme.css";
 
+@media screen and (max-width: 800px) {
+  .text-gen-popup {
+    --text-gen-action-bar-height: 120px;
+
+    .action-bar {
+      width: 100%;
+      height: var(--text-gen-action-bar-height);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .status-container {
+      width: 100%;
+    }
+
+    .action-container {
+      width: 100%;
+      display: block;
+    }
+
+    .action-button {
+      background-color: var(--text-gen-action-button-background);
+      border: 1px solid var(--text-gen-action-button-border);
+      color: var(--text-gen-action-button-color);
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      padding-top: 5px;
+      padding-bottom: 8px;
+      width: 100%;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 10px;
+    }
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .text-gen-popup {
+    --text-gen-action-bar-height: 50px;
+
+    .action-bar {
+      width: 100%;
+      height: var(--text-gen-action-bar-height);
+      display: flex;
+      align-items: center;
+    }
+
+    .status-container {
+      width: 50%;
+    }
+
+    .action-container {
+      width: 50%;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .action-button {
+      margin-left: 10px;
+      background-color: var(--text-gen-action-button-background);
+      border: 1px solid var(--text-gen-action-button-border);
+      color: var(--text-gen-action-button-color);
+      border-radius: 5px;
+      font-size: 14px;
+      font-weight: 500;
+      padding-top: 5px;
+      padding-bottom: 8px;
+      width: 80px;
+    }
+  }
+}
+
 .text-gen-popup {
   & {
     width: 100%;
@@ -15,7 +89,7 @@
 
   .text-container {
     width: 100%;
-    height: calc(100% - 50px);
+    height: calc(100% - var(--text-gen-action-bar-height));
     resize: none;
     margin-left: auto;
     margin-right: auto;
@@ -23,29 +97,7 @@
     border: 1px solid var(--text-gen-text-box-border);
     color: 1px solid var(--text-gen-text-box-color);
     border-radius: 5px;
-  }
-
-  .action-container {
-    width: 100%;
-    height: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  .action-button {
-    margin-left: 10px;
-    background-color: var(--text-gen-action-button-background);
-    border: 1px solid var(--text-gen-action-button-border);
-    color: var(--text-gen-action-button-color);
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: 500;
-    padding-top: 5px;
-    padding-bottom: 8px;
-    width: 60px;
+    overflow: auto;
   }
 
   .action-button:hover {

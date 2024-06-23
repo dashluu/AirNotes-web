@@ -11,6 +11,6 @@
     width: 100%;
     display: grid;
     gap: 30px 50px;
-    grid-template-columns: repeat(auto-fill, minmax(var(--summary-card-width), 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(var(--card-width), 1fr));
   }
 }

@@ -1,19 +1,22 @@
-@use "../Icon";
+@use "../LightTheme.css";
 
 .status-container {
-  align-items: center;
-}
+  & {
+    display: flex;
+    align-items: center;
+  }
 
-.valid-message,
-.error-message {
-  font-size: 14px;
-  padding-top: 0;
-}
+  .valid-message,
+  .error-message {
+    font-size: 14px;
+    padding-top: 0;
+  }
 
-.valid-icon, .valid-message {
-  color: var(--valid-input-color);
-}
+  .valid-icon, .valid-message {
+    color: var(--valid-input-color);
+  }
 
-.error-icon, .error-message {
-  color: var(--error-input-color);
+  .error-icon, .error-message {
+    color: var(--error-input-color);
+  }
 }

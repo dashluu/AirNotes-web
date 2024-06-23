@@ -7,6 +7,7 @@ import {useEffect, useState} from "react";
 import {documentDAO, paths} from "../backend.js";
 import {useNavigate} from "react-router-dom";
 import TextGenPopup from "../popup/TextGenPopup.jsx";
+import Status from "../status/Status.jsx";
 
 // define your extension array
 const extensions = [
@@ -34,6 +35,7 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
     const [getSummaryText, setSummaryText] = useState("");
     const [getSummaryDisplay, setSummaryDisplay] = useState("none");
+    const [getDisablePanelDisplay, setDisablePanelDisplay] = useState("none");
     let editor = useEditor({
         extensions,
         onUpdate({editor}) {
@@ -82,7 +84,7 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     async function afterSaveDocument() {
         await documentDAO.update(getDocumentId, getTitle, getContent)
             .then((result) => {
-                showMessage(true, "Save successfully");
+                showMessage(true, "Saved successfully");
                 setDocumentId(result.id);
                 setDate(result.date);
             })
@@ -117,87 +119,97 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     }
 
     async function summarize() {
-        const summaryModel = {
-            text: editor.getHTML()
-        };
+        // const summaryModel = {
+        //     text: editor.getHTML()
+        // };
+        //
+        // const response = await fetch("http://localhost:8000/summarize", {
+        //     method: "post",
+        //     body: JSON.stringify(summaryModel),
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        // });
+        //
+        // if (response.ok) {
+        //     const summaryText = await response.json();
+        //     setSummaryText(summaryText);
+        //     setSummaryDisplay("block");
+        // }
 
-        const response = await fetch("http://localhost:8000/summarize", {
-            method: "post",
-            body: JSON.stringify(summaryModel),
-            headers: {
-                "Content-Type": "application/json"
-            },
-        });
-
-        if (response.ok) {
-            const summaryText = await response.json();
-            setSummaryText(summaryText);
-            setSummaryDisplay("block");
-        }
+        setSummaryText("");
+        setSummaryDisplay("block");
+        setDisablePanelDisplay("block");
     }
 
     return (
         <div className="editor-page">
             <NavBar/>
+            <div className="disable-panel" style={{display: `${getDisablePanelDisplay}`}}></div>
+            <div className="summary-container" style={{display: `${getSummaryDisplay}`}}>
+                <TextGenPopup text={getSummaryText} closePopup={() => {
+                    setSummaryDisplay("none");
+                    setDisablePanelDisplay("none");
+                }}></TextGenPopup>
+            </div>
             <div className="editor-container">
                 <div className="document-id-container">{getDocumentId}</div>
                 <div className="toolbar">
-                    <button className="toolbar-button new-button"
-                            onClick={() => {
-                                navigate(paths.newDocument);
-                            }}
-                            title="New">
-                        <span className="material-symbols-outlined">edit_square</span>
-                    </button>
-                    <button className="toolbar-button summarize-button"
-                            onClick={() => {
-                                summarize();
-                            }}
-                            title="Summarize All">
-                        <span className="material-symbols-outlined">notes</span>
-                    </button>
-                    <button className="toolbar-button undo-button"
-                            onClick={() => editor.chain().focus().undo().run()}
-                            disabled={getUndoDisabled}
-                            title="Undo">
-                        <span className="material-symbols-outlined">undo</span>
-                    </button>
-                    <button className="toolbar-button redo-button"
-                            onClick={() => editor.chain().focus().redo().run()}
-                            disabled={getRedoDisabled}
-                            title="Redo">
-                        <span className="material-symbols-outlined">redo</span>
-                    </button>
-                    <button className="toolbar-button open-button"
-                            title="Open">
-                        <span className="material-symbols-outlined">folder_open</span>
-                    </button>
-                    <button className="toolbar-button save-button" disabled={getSaveDisabled}
-                            title="Save"
-                            onClick={() => {
-                                afterSaveDocument();
-                            }}>
-                        <span className="material-symbols-outlined">save</span>
-                    </button>
-                    <button className="toolbar-button delete-button" style={{display: `${getDeleteDisplay}`}}
-                            title="Delete"
-                            onClick={() => {
-                                afterDeleteDocument();
-                            }}>
-                        <span className="material-symbols-outlined">delete</span>
-                    </button>
+                    <div className="toolbar-button-container">
+                        <button className="toolbar-button new-button"
+                                onClick={() => {
+                                    navigate(paths.newDocument);
+                                }}
+                                title="New">
+                            <span className="material-symbols-outlined">edit_square</span>
+                        </button>
+                        <button className="toolbar-button summarize-button"
+                                onClick={() => {
+                                    summarize();
+                                }}
+                                title="Summarize All">
+                            <span className="material-symbols-outlined">notes</span>
+                        </button>
+                        <button className="toolbar-button undo-button"
+                                onClick={() => editor.chain().focus().undo().run()}
+                                disabled={getUndoDisabled}
+                                title="Undo">
+                            <span className="material-symbols-outlined">undo</span>
+                        </button>
+                        <button className="toolbar-button redo-button"
+                                onClick={() => editor.chain().focus().redo().run()}
+                                disabled={getRedoDisabled}
+                                title="Redo">
+                            <span className="material-symbols-outlined">redo</span>
+                        </button>
+                        <button className="toolbar-button open-button"
+                                title="Open">
+                            <span className="material-symbols-outlined">folder_open</span>
+                        </button>
+                        <button className="toolbar-button save-button" disabled={getSaveDisabled}
+                                title="Save"
+                                onClick={() => {
+                                    afterSaveDocument();
+                                }}>
+                            <span className="material-symbols-outlined">save</span>
+                        </button>
+                        <button className="toolbar-button delete-button" style={{display: `${getDeleteDisplay}`}}
+                                title="Delete"
+                                onClick={() => {
+                                    afterDeleteDocument();
+                                }}>
+                            <span className="material-symbols-outlined">delete</span>
+                        </button>
+                    </div>
                     <div className="date" style={{display: `${getDateDisplay}`}}>
                         Last modified: {getDate}
                     </div>
                 </div>
-                <div className="status-container" style={{display: `${getStatusDisplay}`}}>
-                    <span className={`material-symbols-outlined ${getStatusIconClass}`}>
-                        {getStatusIcon}
-                    </span>
-                    <span className={`${getStatusMessageClass}`}>
-                        {getStatusMessage}
-                    </span>
-                </div>
+                <Status display={getStatusDisplay}
+                        iconClass={getStatusIconClass}
+                        messageClass={getStatusMessageClass}
+                        icon={getStatusIcon}
+                        message={getStatusMessage}></Status>
                 <input type="text" className="title" required placeholder="Enter title..."
                        value={getTitle}
                        onChange={(e) => {
@@ -220,11 +232,6 @@ function Editor({documentId, title, content, date, isNewDocument}) {
                         </button>
                     </div>
                 </BubbleMenu>}
-                <div className="summary-container" style={{display: `${getSummaryDisplay}`}}>
-                    <TextGenPopup text={getSummaryText} closePopup={() => {
-                        setSummaryDisplay("none");
-                    }}></TextGenPopup>
-                </div>
                 <EditorContent editor={editor}/>
             </div>
         </div>

@@ -7,10 +7,10 @@
     --background: white;
 
     --thumbnail-border: 1px solid #eeeeee;
-    --summary-title-color: black;
-    --summary-date-color: #9E9E9E;
-    --summary-date-color-hover: #616161;
-    --summary-card-width: 360px;
+    --card-title-color: black;
+    --card-date-color: #9E9E9E;
+    --card-date-color-hover: #616161;
+    --card-width: 360px;
 
     --editor-toolbar-button-background: transparent;
     --editor-toolbar-button-border: transparent;
@@ -23,12 +23,14 @@
     --editor-toolbar-button-color-hover: #424242;
     --editor-date-color: #616161;
     --editor-title-color: black;
-    --editor-bubble-menu-background: white;
+    --editor-bubble-menu-background: rgba(245, 245, 245, 0.7);
     --editor-bubble-menu-border: rgba(61, 37, 20, .05);
     --editor-bubble-menu-shadow: 0px 12px 33px 0px rgba(0, 0, 0, .06), 0px 3.618px 9.949px 0px rgba(0, 0, 0, .04);
-    --editor-bubble-menu-button-background-hover: #e0e0e0;
     --editor-bubble-menu-button-color: black;
+    --editor-bubble-menu-button-background-hover: black;
+    --editor-bubble-menu-button-color-hover: white;
     --editor-tiptap-color: black;
+    --editor-disable-panel-background: rgba(100, 100, 100, 0.7);
 
     --auth-form-input-background: transparent;
     --auth-form-input-border: #bdbdbd;
@@ -61,14 +63,14 @@
     --settings-sign-out-button-border-hover: #cb0005;
     --settings-sign-out-button-color-hover: white;
 
-    --text-gen-popup-container-background: white;
+    --text-gen-popup-container-background: rgba(255, 255, 255, 0.7);
     --text-gen-popup-container-border: rgba(61, 37, 20, .05);
     --text-gen-popup-container-shadow: 0px 12px 33px 0px rgba(0, 0, 0, .06), 0px 3.618px 9.949px 0px rgba(0, 0, 0, .04);
-    --text-gen-text-box-background: #eeeeee;
-    --text-gen-text-box-border: #eeeeee;
+    --text-gen-text-box-background: transparent;
+    --text-gen-text-box-border: transparent;
     --text-gen-text-box-color: black;
-    --text-gen-action-button-background: #eeeeee;
-    --text-gen-action-button-border: #eeeeee;
+    --text-gen-action-button-background: rgba(200, 200, 200, 0.7);
+    --text-gen-action-button-border: rgba(200, 200, 200, 0.5);
     --text-gen-action-button-color: black;
     --text-gen-action-button-background-hover: black;
     --text-gen-action-button-border-hover: black;

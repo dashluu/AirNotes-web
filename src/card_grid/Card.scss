@@ -45,7 +45,7 @@
   }
 
   .summary-title {
-    color: var(--summary-title-color);
+    color: var(--card-title-color);
     font-size: 19px;
     font-weight: bold;
     margin-bottom: 10px;
@@ -67,10 +67,10 @@
   }
 
   .summary-date {
-    color: var(--summary-date-color);
+    color: var(--card-date-color);
   }
 
   .summary-date-hover {
-    color: var(--summary-date-color-hover);
+    color: var(--card-date-color-hover);
   }
 }

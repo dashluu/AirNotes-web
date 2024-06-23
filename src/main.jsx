@@ -23,7 +23,6 @@ const router = createBrowserRouter(
             <Route path="notes/:documentId" element={<EditDocumentPage/>} loader={editDocumentLoader}/>
             <Route path="settings" element={<Settings/>}/>
             <Route path="password-reset" element={<PasswordResetPage/>}/>
-            <Route path="text-gen" element={<TextGenPopup/>}/>
             <Route path="*" element={<ErrorPage/>}/>
         </Route>
     )

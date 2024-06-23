@@ -2,6 +2,7 @@ import "./PasswordResetPage.scss"
 import NavBar from "../navbar/NavBar.jsx";
 import {useRef, useState} from "react";
 import {signUpChecker} from "../backend.js";
+import Status from "../status/Status.jsx";
 
 function PasswordResetPage() {
     const passwordInput = useRef(null);
@@ -49,14 +50,11 @@ function PasswordResetPage() {
                            onChange={
                                (e) => validatePassword(e.target)
                            }/>
-                    <div className="status-container" style={{display: `${getPasswordStatusDisplay}`}}>
-                        <span className={`material-symbols-outlined ${getPasswordStatusIconClass}`}>
-                            {getPasswordStatusIcon}
-                        </span>
-                        <span className={`${getPasswordStatusMessageClass}`}>
-                            {getPasswordStatusMessage}
-                        </span>
-                    </div>
+                    <Status display={getPasswordStatusDisplay}
+                            iconClass={getPasswordStatusIconClass}
+                            messageClass={getPasswordStatusMessageClass}
+                            icon={getPasswordStatusIcon}
+                            message={getPasswordStatusMessage}></Status>
                 </div>
                 <div className="action-container">
                     <button className="action-button password-reset-button"

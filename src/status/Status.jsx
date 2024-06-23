@@ -1,3 +1,5 @@
+import "./Status.scss";
+
 function Status({display, iconClass, messageClass, icon, message}) {
     return (
         <div className="status-container" style={{display: `${display}`}}>

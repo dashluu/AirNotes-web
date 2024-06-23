@@ -4,6 +4,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {useRef, useState} from "react";
 import {auth, paths} from "../backend.js"
 import {signInWithEmailAndPassword} from "firebase/auth";
+import Status from "../status/Status.jsx";
 
 function SignInPage() {
     const navigate = useNavigate();
@@ -79,26 +80,20 @@ function SignInPage() {
                 <div className="input-container">
                     <input type="email" placeholder="Email" className="auth-input email-input" required
                            ref={emailInput}/>
-                    <div className="status-container" style={{display: `${getEmailStatusDisplay}`}}>
-                        <span className={`material-symbols-outlined ${getEmailStatusIconClass}`}>
-                            {getEmailStatusIcon}
-                        </span>
-                        <span className={`${getEmailStatusMessageClass}`}>
-                            {getEmailStatusMessage}
-                        </span>
-                    </div>
+                    <Status display={getEmailStatusDisplay}
+                            iconClass={getEmailStatusIconClass}
+                            messageClass={getEmailStatusMessageClass}
+                            icon={getEmailStatusIcon}
+                            message={getEmailStatusMessage}></Status>
                 </div>
                 <div className="input-container">
                     <input type="password" placeholder="Password" className="auth-input password-input"
                            required minLength="6" maxLength="4096" ref={passwordInput}/>
-                    <div className="status-container" style={{display: `${getPasswordStatusDisplay}`}}>
-                        <span className={`material-symbols-outlined ${getPasswordStatusIconClass}`}>
-                            {getPasswordStatusIcon}
-                        </span>
-                        <span className={`${getPasswordStatusMessageClass}`}>
-                            {getPasswordStatusMessage}
-                        </span>
-                    </div>
+                    <Status display={getPasswordStatusDisplay}
+                            iconClass={getPasswordStatusIconClass}
+                            messageClass={getPasswordStatusMessageClass}
+                            icon={getPasswordStatusIcon}
+                            message={getPasswordStatusMessage}></Status>
                 </div>
                 <div className="action-container">
                     <button className="action-button sign-in-button"
