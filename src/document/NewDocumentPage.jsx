@@ -1,4 +1,4 @@
-import Editor from "../editor/Editor.jsx";
+import EditorPage from "../editor/EditorPage.jsx";
 import {useEffect} from "react";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth, paths} from "../backend.js";
@@ -20,7 +20,7 @@ function NewDocumentPage() {
     }, []);
 
     return (
-        <Editor documentId="" title="" content="" date="" isNewDocument={true}></Editor>
+        <EditorPage documentId="" title="" content="" date="" isNewDocument={true}/>
     );
 }
 

@@ -1,4 +1,4 @@
-import Editor from "../editor/Editor.jsx";
+import EditorPage from "../editor/EditorPage.jsx";
 import {useLoaderData, useNavigate} from "react-router-dom";
 import {auth, documentDAO, paths} from "../backend.js";
 import {useEffect, useState} from "react";
@@ -38,12 +38,11 @@ function EditDocumentPage() {
     }, []);
 
     return (
-        <Editor documentId={getFullDocument ? getFullDocument.id : ""}
-                title={getFullDocument ? getFullDocument.title : ""}
-                content={getFullDocument ? getFullDocument.content : ""}
-                date={getFullDocument ? getFullDocument.date : ""}
-                isNewDocument={false}>
-        </Editor>
+        <EditorPage documentId={getFullDocument ? getFullDocument.id : ""}
+                    title={getFullDocument ? getFullDocument.title : ""}
+                    content={getFullDocument ? getFullDocument.content : ""}
+                    date={getFullDocument ? getFullDocument.date : ""}
+                    isNewDocument={false}/>
     );
 }
 

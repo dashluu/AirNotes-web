@@ -1,13 +1,11 @@
+import "./Editor.scss";
 import {BubbleMenu, EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
-import "./Editor.scss";
-import NavBar from "../navbar/NavBar.jsx";
-import {useEffect, useState} from "react";
-import {auth, documentDAO, paths} from "../backend.js";
-import {useNavigate} from "react-router-dom";
-import AISummaryPopup from "../popup/AISummaryPopup.jsx";
+import {documentDAO, paths} from "../backend.js";
 import Status from "../status/Status.jsx";
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 
 // define your extension array
 const extensions = [
@@ -15,9 +13,9 @@ const extensions = [
     Placeholder.configure({
         placeholder: "Write something...",
     })
-]
+];
 
-function Editor({documentId, title, content, date, isNewDocument}) {
+function Editor({documentId, title, content, date, isNewDocument, marginLeft, marginRight, openSidebar}) {
     const navigate = useNavigate();
     const [getDocumentId, setDocumentId] = useState(documentId);
     const [getTitle, setTitle] = useState(title);
@@ -33,9 +31,6 @@ function Editor({documentId, title, content, date, isNewDocument}) {
     const [getStatusMessage, setStatusMessage] = useState("");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
-    const [getSummaryText, setSummaryText] = useState("");
-    const [getSummaryDisplay, setSummaryDisplay] = useState("none");
-    const [getDisablePanelDisplay, setDisablePanelDisplay] = useState("none");
     let editor = useEditor({
         extensions,
         onUpdate({editor}) {
@@ -135,140 +130,95 @@ function Editor({documentId, title, content, date, isNewDocument}) {
             });
     }
 
-    async function summarize() {
-        if (auth.currentUser) {
-            displayProgress();
-            const summaryModel = {
-                text: editor.getHTML()
-            };
-
-            const response = await fetch("http://localhost:8000/summarize", {
-                method: "post",
-                body: JSON.stringify(summaryModel),
-                headers: {
-                    "Content-Type": "application/json"
-                },
-            });
-
-            if (response.ok) {
-                await response.json()
-                    .then((summaryText) => {
-                        hideStatus();
-                        setSummaryText(summaryText);
-                        setSummaryDisplay("block");
-                        setDisablePanelDisplay("block");
-                        editor.commands.blur();
-                    })
-                    .catch((error) => {
-                        displayResult(false, error.message);
-                    });
-            } else {
-                displayResult(false, await response.text());
-            }
-        } else {
-            displayResult(false, "Unauthorized access");
-        }
-    }
-
     return (
-        <div className="editor-page">
-            <NavBar/>
-            <div className="disable-panel" style={{display: `${getDisablePanelDisplay}`}}></div>
-            <div className="summary-container" style={{display: `${getSummaryDisplay}`}}>
-                <AISummaryPopup title="Summary"
-                                text={getSummaryText}
-                                closePopup={() => {
-                                  setSummaryDisplay("none");
-                                  setDisablePanelDisplay("none");
-                              }}></AISummaryPopup>
-            </div>
-            <div className="editor-container">
-                <div className="document-id-container">{getDocumentId}</div>
-                <div className="toolbar">
-                    <div className="toolbar-button-container">
-                        <button className="toolbar-button new-button"
-                                onClick={() => {
-                                    navigate(paths.newDocument);
-                                }}
-                                title="New">
-                            <span className="material-symbols-outlined">edit_square</span>
-                        </button>
-                        <button className="toolbar-button summarize-button"
-                                onClick={() => {
-                                    summarize();
-                                }}
-                                title="Summarize All">
-                            <span className="material-symbols-outlined">notes</span>
-                        </button>
-                        <button className="toolbar-button undo-button"
-                                onClick={() => editor.chain().focus().undo().run()}
-                                disabled={getUndoDisabled}
-                                title="Undo">
-                            <span className="material-symbols-outlined">undo</span>
-                        </button>
-                        <button className="toolbar-button redo-button"
-                                onClick={() => editor.chain().focus().redo().run()}
-                                disabled={getRedoDisabled}
-                                title="Redo">
-                            <span className="material-symbols-outlined">redo</span>
-                        </button>
-                        <button className="toolbar-button open-button"
-                                title="Open">
-                            <span className="material-symbols-outlined">folder_open</span>
-                        </button>
-                        <button className="toolbar-button save-button" disabled={getSaveDisabled}
-                                title="Save"
-                                onClick={() => {
-                                    afterSaveDocument();
-                                }}>
-                            <span className="material-symbols-outlined">save</span>
-                        </button>
-                        <button className="toolbar-button delete-button" style={{display: `${getDeleteDisplay}`}}
-                                title="Delete"
-                                onClick={() => {
-                                    afterDeleteDocument();
-                                }}>
-                            <span className="material-symbols-outlined">delete</span>
-                        </button>
-                    </div>
-                    <div className="date" style={{display: `${getDateDisplay}`}}>
-                        Last modified: {getDate}
-                    </div>
+        <div className="editor-container"
+             style={{marginLeft: marginLeft, marginRight: marginRight}}>
+            <div className="document-id-container">{getDocumentId}</div>
+            <div className="editor-toolbar">
+                <div className="editor-toolbar-button-container">
+                    <button className="editor-toolbar-button new-button"
+                            onClick={() => {
+                                navigate(paths.newDocument);
+                            }}
+                            title="New">
+                        <span className="material-symbols-outlined">edit_square</span>
+                    </button>
+                    <button className="editor-toolbar-button summarize-button"
+                            onClick={() => {
+                                openSidebar();
+                            }}
+                            title="AI Features">
+                        <span className="material-symbols-outlined">star</span>
+                    </button>
+                    <button className="editor-toolbar-button undo-button"
+                            onClick={() => editor.chain().focus().undo().run()}
+                            disabled={getUndoDisabled}
+                            title="Undo">
+                        <span className="material-symbols-outlined">undo</span>
+                    </button>
+                    <button className="editor-toolbar-button redo-button"
+                            onClick={() => editor.chain().focus().redo().run()}
+                            disabled={getRedoDisabled}
+                            title="Redo">
+                        <span className="material-symbols-outlined">redo</span>
+                    </button>
+                    <button className="editor-toolbar-button open-button"
+                            title="Open">
+                        <span className="material-symbols-outlined">folder_open</span>
+                    </button>
+                    <button className="editor-toolbar-button save-button" disabled={getSaveDisabled}
+                            title="Save"
+                            onClick={() => {
+                                afterSaveDocument();
+                            }}>
+                        <span className="material-symbols-outlined">save</span>
+                    </button>
+                    <button className="editor-toolbar-button delete-button"
+                            style={{display: `${getDeleteDisplay}`}}
+                            title="Delete"
+                            onClick={() => {
+                                afterDeleteDocument();
+                            }}>
+                        <span className="material-symbols-outlined">delete</span>
+                    </button>
                 </div>
-                <Status display={getStatusDisplay}
-                        iconClass={getStatusIconClass}
-                        messageClass={getStatusMessageClass}
-                        icon={getStatusIcon}
-                        message={getStatusMessage}></Status>
-                <input type="text" className="title" required placeholder="Enter title..."
-                       value={getTitle}
-                       onChange={(e) => {
-                           setTitle(e.target.value);
-                       }}/>
-
-                {editor && <BubbleMenu editor={editor} tippyOptions={{duration: 100}}>
-                    <div className="bubble-menu">
-                        <button
-                            onClick={() => editor.chain().focus().toggleBold().run()}
-                            className={editor.isActive("bold") ? "is-active" : ""}
-                        >
-                            <strong>B</strong>
-                        </button>
-                        <button
-                            onClick={() => editor.chain().focus().toggleItalic().run()}
-                            className={`italic-button ${editor.isActive("italic") ? "is-active" : ""}`}
-                        >
-                            I
-                        </button>
-                        <button
-                            className={`underline-button ${editor.isActive("italic") ? "is-active" : ""}`}
-                        >
-                            U
-                        </button>
-                    </div>
-                </BubbleMenu>}
-                <EditorContent editor={editor}/>
+                <div className="date" style={{display: `${getDateDisplay}`}}>
+                    Last modified: {getDate}
+                </div>
             </div>
+            <Status display={getStatusDisplay}
+                    iconClass={getStatusIconClass}
+                    messageClass={getStatusMessageClass}
+                    icon={getStatusIcon}
+                    message={getStatusMessage}/>
+            <input type="text" className="title" required placeholder="Enter title..."
+                   value={getTitle}
+                   onChange={(e) => {
+                       setTitle(e.target.value);
+                   }}/>
+
+            {editor && <BubbleMenu editor={editor} tippyOptions={{duration: 100}}>
+                <div className="bubble-menu">
+                    <button
+                        onClick={() => editor.chain().focus().toggleBold().run()}
+                        className={editor.isActive("bold") ? "is-active" : ""}
+                    >
+                        <strong>B</strong>
+                    </button>
+                    <button
+                        onClick={() => editor.chain().focus().toggleItalic().run()}
+                        className={`italic-button ${editor.isActive("italic") ? "is-active" : ""}`}
+                    >
+                        I
+                    </button>
+                    <button
+                        className={`underline-button ${editor.isActive("italic") ? "is-active" : ""}`}
+                    >
+                        U
+                    </button>
+                </div>
+            </BubbleMenu>}
+            <EditorContent editor={editor}/>
         </div>
     );
 }

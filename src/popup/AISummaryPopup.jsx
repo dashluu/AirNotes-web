@@ -42,7 +42,7 @@ function AISummaryPopup({title, text, closePopup}) {
                             iconClass={getCopyStatusIconClass}
                             messageClass={getCopyStatusMessageClass}
                             icon={getCopyStatusIcon}
-                            message={getCopyStatusMessage}></Status>
+                            message={getCopyStatusMessage}/>
                     <div className="action-container">
                         <button className="action-button copy-button"
                                 onClick={() => {

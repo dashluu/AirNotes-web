@@ -54,7 +54,7 @@ function PasswordResetPage() {
                             iconClass={getPasswordStatusIconClass}
                             messageClass={getPasswordStatusMessageClass}
                             icon={getPasswordStatusIcon}
-                            message={getPasswordStatusMessage}></Status>
+                            message={getPasswordStatusMessage}/>
                 </div>
                 <div className="action-container">
                     <button className="action-button password-reset-button"
