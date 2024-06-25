@@ -1,6 +1,6 @@
 import "./EditorPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Editor from "./Editor.jsx";
 import Sidebar from "./Sidebar.jsx";
 
@@ -9,6 +9,11 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
     const [getSidebarDisplay, setSidebarDisplay] = useState("block");
     const [getEditorMarginLeft, setEditorMarginLeft] = useState("0px");
     const [getEditorMarginRight, setEditorMarginRight] = useState("0px");
+    const [getContent, setContent] = useState(content);
+
+    useEffect(() => {
+        setContent(content)
+    }, [content]);
 
     function openSidebar() {
         setEditorGridLayout("1fr 3fr");
@@ -18,7 +23,7 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
     }
 
     function closeSidebar() {
-        setEditorGridLayout("1fr");
+        setEditorGridLayout("1fr 0fr");
         setSidebarDisplay("none");
         setEditorMarginLeft("auto");
         setEditorMarginRight("auto");
@@ -28,10 +33,13 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
         <div className="editor-page">
             <NavBar/>
             <div className="editor-grid" style={{gridTemplateColumns: getEditorGridLayout}}>
-                <Sidebar sidebarDisplay={getSidebarDisplay} closeSidebar={closeSidebar}/>
+                <Sidebar sidebarDisplay={getSidebarDisplay}
+                         closeSidebar={closeSidebar}
+                         editorContent={getContent}/>
                 <Editor documentId={documentId}
                         title={title}
-                        content={content}
+                        getContent={getContent}
+                        setContent={setContent}
                         date={date}
                         isNewDocument={isNewDocument}
                         marginLeft={getEditorMarginLeft}

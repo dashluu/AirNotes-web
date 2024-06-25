@@ -5,6 +5,7 @@ import {useRef, useState} from "react";
 import {auth, signUpChecker, paths} from "../backend.js"
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import Status from "../status/Status.jsx";
+import StatusController from "../StatusController.js";
 
 function SignUpPage() {
     const navigate = useNavigate();
@@ -20,15 +21,21 @@ function SignUpPage() {
     const [getPasswordStatusMessage, setPasswordStatusMessage] = useState("");
     const [getPasswordStatusIconClass, setPasswordStatusIconClass] = useState("");
     const [getPasswordStatusMessageClass, setPasswordStatusMessageClass] = useState("");
+    const emailStatusController = new StatusController(
+        setEmailStatusDisplay, setEmailStatusIconClass, setEmailStatusMessageClass, setEmailStatusIcon, setEmailStatusMessage
+    );
+    const passwordStatusController = new StatusController(
+        setPasswordStatusDisplay, setPasswordStatusIconClass, setPasswordStatusMessageClass, setPasswordStatusIcon, setPasswordStatusMessage
+    );
 
     function validateEmail() {
         const status = signUpChecker.checkEmail(emailInput.current);
-        return displayEmailResult(status.success, status.message);
+        return emailStatusController.displayResult(status.success, status.message);
     }
 
     function validatePassword() {
         const status = signUpChecker.checkPassword(passwordInput.current);
-        return displayPasswordResult(status.success, status.message);
+        return passwordStatusController.displayResult(status.success, status.message);
     }
 
     function validateInput() {
@@ -46,14 +53,14 @@ function SignUpPage() {
             return;
         }
 
-        displayEmailProgress();
-        displayPasswordProgress();
+        emailStatusController.displayProgress();
+        passwordStatusController.displayProgress();
 
         // Send sign-up data to the server
         await createUserWithEmailAndPassword(auth, emailInput.current.value, passwordInput.current.value)
             .then(() => {
-                hideEmailStatus();
-                hidePasswordStatus();
+                emailStatusController.hideStatus();
+                passwordStatusController.hideStatus();
 
                 // Check if there is a target page after signing up
                 if ("target" in location.state) {
@@ -64,81 +71,11 @@ function SignUpPage() {
             })
             .catch((error) => {
                 if (error.message.toLowerCase().indexOf("email") >= 0) {
-                    displayEmailResult(false, error.message);
+                    emailStatusController.displayResult(false, error.message);
                 } else {
-                    displayPasswordResult(false, error.message);
+                    passwordStatusController.displayResult(false, error.message);
                 }
             });
-    }
-
-    function displayEmailStatus(statusIconClass, statusMessageClass, statusIcon, statusMessage) {
-        setEmailStatusMessage(statusMessage);
-        setEmailStatusDisplay("inline-flex");
-        setEmailStatusIcon(statusIcon);
-        setEmailStatusIconClass(statusIconClass);
-        setEmailStatusMessageClass(statusMessageClass);
-    }
-
-    function hideEmailStatus() {
-        setEmailStatusDisplay("none");
-        displayEmailStatus("", "", "", "");
-    }
-
-    function displayEmailProgress() {
-        displayEmailStatus("pending-icon", "pending-message", "progress_activity", "Processing...");
-    }
-
-    function displayEmailFailure(message) {
-        displayEmailStatus("error-icon", "error-message", "error", message);
-    }
-
-    function displayEmailSuccess(message) {
-        displayEmailStatus("valid-icon", "valid-message", "check_circle", message);
-    }
-
-    function displayEmailResult(success, message) {
-        if (success) {
-            displayEmailSuccess(message);
-        } else {
-            displayEmailFailure(message);
-        }
-
-        return success;
-    }
-
-    function displayPasswordStatus(statusIconClass, statusMessageClass, statusIcon, statusMessage) {
-        setPasswordStatusMessage(statusMessage);
-        setPasswordStatusDisplay("inline-flex");
-        setPasswordStatusIcon(statusIcon);
-        setPasswordStatusIconClass(statusIconClass);
-        setPasswordStatusMessageClass(statusMessageClass);
-    }
-
-    function hidePasswordStatus() {
-        setPasswordStatusDisplay("none");
-        displayPasswordStatus("", "", "", "");
-    }
-
-    function displayPasswordProgress() {
-        displayPasswordStatus("pending-icon", "pending-message", "progress_activity", "Processing...");
-    }
-
-    function displayPasswordFailure(message) {
-        displayPasswordStatus("error-icon", "error-message", "error", message);
-    }
-
-    function displayPasswordSuccess(message) {
-        displayPasswordStatus("valid-icon", "valid-message", "check_circle", message);
-    }
-
-    function displayPasswordResult(success, message) {
-        if (success) {
-            displayPasswordSuccess(message);
-        } else {
-            displayPasswordFailure(message);
-        }
-
-        return success;
     }
 
     return (

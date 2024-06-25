@@ -6,6 +6,7 @@ import {documentDAO, paths} from "../backend.js";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
+import StatusController from "../StatusController.js";
 
 // define your extension array
 const extensions = [
@@ -15,11 +16,20 @@ const extensions = [
     })
 ];
 
-function Editor({documentId, title, content, date, isNewDocument, marginLeft, marginRight, openSidebar}) {
+function Editor({
+                    documentId,
+                    title,
+                    getContent,
+                    setContent,
+                    date,
+                    isNewDocument,
+                    marginLeft,
+                    marginRight,
+                    openSidebar
+                }) {
     const navigate = useNavigate();
     const [getDocumentId, setDocumentId] = useState(documentId);
     const [getTitle, setTitle] = useState(title);
-    const [getContent, setContent] = useState(content);
     const [getDate, setDate] = useState(date);
     const [getUndoDisabled, setUndoDisabled] = useState(true);
     const [getRedoDisabled, setRedoDisabled] = useState(true);
@@ -31,6 +41,9 @@ function Editor({documentId, title, content, date, isNewDocument, marginLeft, ma
     const [getStatusMessage, setStatusMessage] = useState("");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
+    const statusController = new StatusController(
+        setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
+    );
     let editor = useEditor({
         extensions,
         onUpdate({editor}) {
@@ -43,9 +56,8 @@ function Editor({documentId, title, content, date, isNewDocument, marginLeft, ma
     useEffect(() => {
         setDocumentId(documentId);
         setTitle(title);
-        setContent(content);
         setDate(date);
-    }, [documentId, title, content, date]);
+    }, [documentId, title, date]);
 
     useEffect(() => {
         if (editor) {
@@ -68,65 +80,32 @@ function Editor({documentId, title, content, date, isNewDocument, marginLeft, ma
             setStatusMessageClass("error-message");
         } else {
             setSaveDisabled(false);
-            hideStatus();
+            statusController.hideStatus();
         }
     }, [getTitle]);
 
-    function displayStatus(statusIconClass, statusMessageClass, statusIcon, statusMessage) {
-        setStatusMessage(statusMessage);
-        setStatusDisplay("inline-flex");
-        setStatusIcon(statusIcon);
-        setStatusIconClass(statusIconClass);
-        setStatusMessageClass(statusMessageClass);
-    }
-
-    function hideStatus() {
-        setStatusDisplay("none");
-        displayStatus("", "", "", "");
-    }
-
-    function displayProgress() {
-        displayStatus("pending-icon", "pending-message", "progress_activity", "Processing...");
-    }
-
-    function displayFailure(message) {
-        displayStatus("error-icon", "error-message", "error", message);
-    }
-
-    function displaySuccess(message) {
-        displayStatus("valid-icon", "valid-message", "check_circle", message);
-    }
-
-    function displayResult(success, message) {
-        if (success) {
-            displaySuccess(message);
-        } else {
-            displayFailure(message);
-        }
-    }
-
     async function afterSaveDocument() {
-        displayProgress();
+        statusController.displayProgress();
         await documentDAO.update(getDocumentId, getTitle, getContent)
             .then((result) => {
-                displayResult(true, "Saved successfully");
+                statusController.displayResult(true, "Saved successfully");
                 setDocumentId(result.id);
                 setDate(result.date);
             })
             .catch((error) => {
-                displayResult(false, error);
+                statusController.displayResult(false, error);
             });
     }
 
     async function afterDeleteDocument() {
-        displayProgress();
+        statusController.displayProgress();
         await documentDAO.delete(getDocumentId)
             .then(() => {
-                hideStatus();
+                statusController.hideStatus();
                 navigate(paths.home);
             })
             .catch((error) => {
-                displayResult(false, error);
+                statusController.displayResult(false, error);
             });
     }
 

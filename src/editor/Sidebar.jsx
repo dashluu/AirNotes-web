@@ -1,11 +1,15 @@
 import "./Sidebar.scss";
-import AISummary from "../popup/AISummary.jsx";
+import AISummary from "../AI/AISummary.jsx";
 
-function Sidebar({sidebarDisplay, closeSidebar}) {
+function Sidebar({sidebarDisplay, closeSidebar, editorContent}) {
     return (
         <div className="sidebar" style={{display: sidebarDisplay}}>
             <div className="sidebar-toolbar">
-                <button className="sidebar-toolbar-button" title="Summarize All">
+                <button className="sidebar-toolbar-button"
+                        title="Summarize All"
+                        onClick={() => {
+
+                        }}>
                     <span className="material-symbols-outlined">notes</span>
                 </button>
                 <button className="sidebar-toolbar-button" title="Q&A">
@@ -23,7 +27,7 @@ function Sidebar({sidebarDisplay, closeSidebar}) {
                 </button>
             </div>
             <div className="sidebar-component-container">
-                <AISummary text=""/>
+                <AISummary editorContent={editorContent}/>
             </div>
         </div>
     );
