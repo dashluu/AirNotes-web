@@ -2,6 +2,7 @@ import "./Editor.scss";
 import {BubbleMenu, EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
+import Underline from "@tiptap/extension-underline"
 import {documentDAO, paths} from "../backend.js";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
@@ -13,7 +14,8 @@ const extensions = [
     StarterKit,
     Placeholder.configure({
         placeholder: "Write something...",
-    })
+    }),
+    Underline
 ];
 
 function Editor({
@@ -25,7 +27,9 @@ function Editor({
                     isNewDocument,
                     marginLeft,
                     marginRight,
-                    openSidebar
+                    openSidebar,
+                    setSummaryDisplay,
+                    setQADisplay
                 }) {
     const navigate = useNavigate();
     const [getDocumentId, setDocumentId] = useState(documentId);
@@ -125,9 +129,20 @@ function Editor({
                     <button className="editor-toolbar-button summarize-button"
                             onClick={() => {
                                 openSidebar();
+                                setSummaryDisplay("block");
+                                setQADisplay("none");
                             }}
-                            title="AI Features">
-                        <span className="material-symbols-outlined">star</span>
+                            title="Summarize">
+                        <span className="material-symbols-outlined">notes</span>
+                    </button>
+                    <button className="editor-toolbar-button qa-button"
+                            onClick={() => {
+                                openSidebar();
+                                setQADisplay("block");
+                                setSummaryDisplay("none");
+                            }}
+                            title="Q&A">
+                        <span className="material-symbols-outlined">quiz</span>
                     </button>
                     <button className="editor-toolbar-button undo-button"
                             onClick={() => editor.chain().focus().undo().run()}

@@ -5,14 +5,16 @@ import Editor from "./Editor.jsx";
 import Sidebar from "./Sidebar.jsx";
 
 function EditorPage({documentId, title, content, date, isNewDocument}) {
-    const [getEditorGridLayout, setEditorGridLayout] = useState("1fr 3fr");
-    const [getSidebarDisplay, setSidebarDisplay] = useState("block");
-    const [getEditorMarginLeft, setEditorMarginLeft] = useState("0px");
-    const [getEditorMarginRight, setEditorMarginRight] = useState("0px");
-    const [getContent, setContent] = useState(content);
+    const [getEditorGridLayout, setEditorGridLayout] = useState("1fr");
+    const [getSidebarDisplay, setSidebarDisplay] = useState("none");
+    const [getEditorMarginLeft, setEditorMarginLeft] = useState("auto");
+    const [getEditorMarginRight, setEditorMarginRight] = useState("auto");
+    const [getEditorContent, setEditorContent] = useState(content);
+    const [getSummaryDisplay, setSummaryDisplay] = useState("none");
+    const [getQADisplay, setQADisplay] = useState("none");
 
     useEffect(() => {
-        setContent(content)
+        setEditorContent(content);
     }, [content]);
 
     function openSidebar() {
@@ -23,7 +25,7 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
     }
 
     function closeSidebar() {
-        setEditorGridLayout("1fr 0fr");
+        setEditorGridLayout("1fr");
         setSidebarDisplay("none");
         setEditorMarginLeft("auto");
         setEditorMarginRight("auto");
@@ -35,16 +37,20 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
             <div className="editor-grid" style={{gridTemplateColumns: getEditorGridLayout}}>
                 <Sidebar sidebarDisplay={getSidebarDisplay}
                          closeSidebar={closeSidebar}
-                         editorContent={getContent}/>
+                         editorContent={getEditorContent}
+                         summaryDisplay={getSummaryDisplay}
+                         qaDisplay={getQADisplay}/>
                 <Editor documentId={documentId}
                         title={title}
-                        getContent={getContent}
-                        setContent={setContent}
+                        getContent={getEditorContent}
+                        setContent={setEditorContent}
                         date={date}
                         isNewDocument={isNewDocument}
                         marginLeft={getEditorMarginLeft}
                         marginRight={getEditorMarginRight}
-                        openSidebar={openSidebar}/>
+                        openSidebar={openSidebar}
+                        setSummaryDisplay={setSummaryDisplay}
+                        setQADisplay={setQADisplay}/>
             </div>
         </div>
     );

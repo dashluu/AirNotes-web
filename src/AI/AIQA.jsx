@@ -1,10 +1,12 @@
-import "./AISummary.scss";
+import "./AIQA.scss";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import StatusController from "../StatusController.js";
 import {auth} from "../backend.js";
 
-function AISummary({editorContent}) {
+function AIQA({editorContent}) {
+    const [getQuestion, setQuestion] = useState("");
+    const [getContext, setContext] = useState(editorContent);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
@@ -17,19 +19,24 @@ function AISummary({editorContent}) {
     );
 
     useEffect(() => {
+        setContext(editorContent);
+    }, [editorContent]);
+
+    useEffect(() => {
         setCopyDisabled(getCopyText === "");
     }, [getCopyText]);
 
-    async function summarize() {
+    async function answerQuestion() {
         if (auth.currentUser) {
             statusController.displayProgress();
-            const summaryModel = {
-                text: editorContent
+            const qaModel = {
+                question: getQuestion,
+                context: getContext
             };
 
-            const response = await fetch("http://localhost:8000/summarize", {
+            const response = await fetch("http://localhost:8000/qa", {
                 method: "post",
-                body: JSON.stringify(summaryModel),
+                body: JSON.stringify(qaModel),
                 headers: {
                     "Content-Type": "application/json"
                 }
@@ -37,9 +44,9 @@ function AISummary({editorContent}) {
 
             if (response.ok) {
                 await response.json()
-                    .then((summaryText) => {
-                        setCopyText(summaryText);
-                        statusController.displayResult(true, "Summary generated");
+                    .then((answer) => {
+                        setCopyText(answer);
+                        statusController.displayResult(true, "Answer generated");
                     })
                     .catch((error) => {
                         statusController.displayResult(false, error.message);
@@ -63,13 +70,17 @@ function AISummary({editorContent}) {
     }
 
     return (
-        <div className="ai-summary-container">
-            <div className="title">Note summary</div>
-            <button className="action-button summarize-button"
+        <div className="ai-qa-container">
+            <div className="title">Note Q&A</div>
+            <textarea className="question" placeholder="Enter the question here..."
+                      onChange={(e) => {
+                          setQuestion(e.target.value);
+                      }}></textarea>
+            <button className="action-button qa-button"
                     onClick={() => {
-                        summarize();
+                        answerQuestion();
                     }}>
-                Summarize
+                Answer question
             </button>
             <button className="action-button copy-button"
                     disabled={getCopyDisabled}
@@ -83,9 +94,9 @@ function AISummary({editorContent}) {
                     messageClass={getStatusMessageClass}
                     icon={getStatusIcon}
                     message={getStatusMessage}/>
-            <div className="summary-text">{getCopyText}</div>
+            <div className="qa-text">{getCopyText}</div>
         </div>
     );
 }
 
-export default AISummary;
+export default AIQA;

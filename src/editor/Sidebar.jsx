@@ -1,23 +1,12 @@
 import "./Sidebar.scss";
 import AISummary from "../AI/AISummary.jsx";
+import {useState} from "react";
+import AIQA from "../AI/AIQA.jsx";
 
-function Sidebar({sidebarDisplay, closeSidebar, editorContent}) {
+function Sidebar({sidebarDisplay, closeSidebar, editorContent, summaryDisplay, qaDisplay}) {
     return (
         <div className="sidebar" style={{display: sidebarDisplay}}>
             <div className="sidebar-toolbar">
-                <button className="sidebar-toolbar-button"
-                        title="Summarize All"
-                        onClick={() => {
-
-                        }}>
-                    <span className="material-symbols-outlined">notes</span>
-                </button>
-                <button className="sidebar-toolbar-button" title="Q&A">
-                    <span className="material-symbols-outlined">quiz</span>
-                </button>
-                <button className="sidebar-toolbar-button" title="Translation">
-                    <span className="material-symbols-outlined">language_chinese_quick</span>
-                </button>
                 <button className="sidebar-toolbar-button"
                         title="Close Sidebar"
                         onClick={() => {
@@ -26,8 +15,13 @@ function Sidebar({sidebarDisplay, closeSidebar, editorContent}) {
                     <span className="material-symbols-outlined">keyboard_double_arrow_left</span>
                 </button>
             </div>
-            <div className="sidebar-component-container">
-                <AISummary editorContent={editorContent}/>
+            <div className="sidebar-ui-container">
+                <div className="sidebar-ui" style={{display: summaryDisplay}}>
+                    <AISummary editorContent={editorContent}/>
+                </div>
+                <div className="sidebar-ui" style={{display: qaDisplay}}>
+                    <AIQA editorContent={editorContent}/>
+                </div>
             </div>
         </div>
     );
