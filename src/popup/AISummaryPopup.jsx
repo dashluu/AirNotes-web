@@ -1,8 +1,8 @@
-import "./AITextOutputPopup.scss";
+import "./AISummaryPopup.scss";
 import {useEffect, useState} from "react";
 import Status from "../status/Status.jsx";
 
-function AITextOutputPopup({title, text, closePopup}) {
+function AISummaryPopup({title, text, closePopup}) {
     const [getCopyStatusDisplay, setCopyStatusDisplay] = useState(false);
     const [getCopyStatusIconClass, setCopyStatusIconClass] = useState("");
     const [getCopyStatusMessageClass, setCopyStatusMessageClass] = useState("");
@@ -23,18 +23,18 @@ function AITextOutputPopup({title, text, closePopup}) {
                 setCopyStatusIcon("check_circle");
                 setCopyStatusMessage("Copied successfully");
             })
-            .catch((error) => {
+            .catch(() => {
                 setCopyStatusDisplay(true);
                 setCopyStatusIconClass("error-icon");
                 setCopyStatusMessageClass("error-message");
                 setCopyStatusIcon("error");
-                setCopyStatusMessage(`${error.message}`);
+                setCopyStatusMessage("Failed to copy");
             });
     }
 
     return (
-        <div className="ai-text-output-popup">
-            <div className="ai-text-output-container">
+        <div className="ai-summary-popup">
+            <div className="ai-summary-container">
                 <div className="title">{title}</div>
                 <div className="text-container">{text}</div>
                 <div className="action-bar">
@@ -63,4 +63,4 @@ function AITextOutputPopup({title, text, closePopup}) {
     );
 }
 
-export default AITextOutputPopup;
+export default AISummaryPopup;

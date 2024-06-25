@@ -6,7 +6,7 @@ import NavBar from "../navbar/NavBar.jsx";
 import {useEffect, useState} from "react";
 import {auth, documentDAO, paths} from "../backend.js";
 import {useNavigate} from "react-router-dom";
-import AITextOutputPopup from "../popup/AITextOutputPopup.jsx";
+import AISummaryPopup from "../popup/AISummaryPopup.jsx";
 import Status from "../status/Status.jsx";
 
 // define your extension array
@@ -175,12 +175,12 @@ function Editor({documentId, title, content, date, isNewDocument}) {
             <NavBar/>
             <div className="disable-panel" style={{display: `${getDisablePanelDisplay}`}}></div>
             <div className="summary-container" style={{display: `${getSummaryDisplay}`}}>
-                <AITextOutputPopup title="Summary"
-                                   text={getSummaryText}
-                                   closePopup={() => {
+                <AISummaryPopup title="Summary"
+                                text={getSummaryText}
+                                closePopup={() => {
                                   setSummaryDisplay("none");
                                   setDisablePanelDisplay("none");
-                              }}></AITextOutputPopup>
+                              }}></AISummaryPopup>
             </div>
             <div className="editor-container">
                 <div className="document-id-container">{getDocumentId}</div>

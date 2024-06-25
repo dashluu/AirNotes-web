@@ -155,8 +155,8 @@
     left: 50%;
     -ms-transform: translateY(-50%) translateX(-50%);
     transform: translateY(-50%) translateX(-50%);
-    background-color: var(--ai-text-output-popup-container-background);
-    border: 1px solid var(--ai-text-output-popup-container-border);
+    background-color: var(--ai-summary-popup-container-background);
+    border: 1px solid var(--ai-summary-popup-container-border);
     border-radius: 5px;
     padding: 10px 12px 2px 10px;
     z-index: 99999;

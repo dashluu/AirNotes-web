@@ -64,16 +64,16 @@
     --settings-sign-out-button-border-hover: #cb0005;
     --settings-sign-out-button-color-hover: white;
 
-    --ai-text-output-popup-container-background: rgba(255, 255, 255, 0.7);
-    --ai-text-output-popup-container-border: rgba(61, 37, 20, .05);
-    --ai-text-output-popup-container-shadow: 0px 12px 33px 0px rgba(0, 0, 0, .06), 0px 3.618px 9.949px 0px rgba(0, 0, 0, .04);
-    --ai-text-output-text-box-background: transparent;
-    --ai-text-output-text-box-border: transparent;
-    --ai-text-output-text-box-color: black;
-    --ai-text-output-action-button-background: rgba(200, 200, 200, 0.7);
-    --ai-text-output-action-button-border: rgba(200, 200, 200, 0.5);
-    --ai-text-output-action-button-color: black;
-    --ai-text-output-action-button-background-hover: black;
-    --ai-text-output-action-button-border-hover: black;
-    --ai-text-output-action-button-color-hover: white;
+    --ai-summary-popup-container-background: rgba(255, 255, 255, 0.7);
+    --ai-summary-popup-container-border: rgba(61, 37, 20, .05);
+    --ai-summary-popup-container-shadow: 0px 12px 33px 0px rgba(0, 0, 0, .06), 0px 3.618px 9.949px 0px rgba(0, 0, 0, .04);
+    --ai-summary-text-box-background: transparent;
+    --ai-summary-text-box-border: transparent;
+    --ai-summary-text-box-color: black;
+    --ai-summary-action-button-background: rgba(200, 200, 200, 0.7);
+    --ai-summary-action-button-border: rgba(200, 200, 200, 0.5);
+    --ai-summary-action-button-color: black;
+    --ai-summary-action-button-background-hover: black;
+    --ai-summary-action-button-border-hover: black;
+    --ai-summary-action-button-color-hover: white;
 }
