@@ -4,9 +4,9 @@ import {Placeholder} from "@tiptap/extension-placeholder";
 import "./Editor.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useEffect, useState} from "react";
-import {documentDAO, paths} from "../backend.js";
+import {auth, documentDAO, paths} from "../backend.js";
 import {useNavigate} from "react-router-dom";
-import TextGenPopup from "../popup/TextGenPopup.jsx";
+import AITextOutputPopup from "../popup/AITextOutputPopup.jsx";
 import Status from "../status/Status.jsx";
 
 // define your extension array
@@ -73,73 +73,101 @@ function Editor({documentId, title, content, date, isNewDocument}) {
             setStatusMessageClass("error-message");
         } else {
             setSaveDisabled(false);
-            setStatusMessage("");
-            setStatusDisplay("none");
-            setStatusIcon("");
-            setStatusIconClass("");
-            setStatusMessageClass("");
+            hideStatus();
         }
     }, [getTitle]);
 
+    function displayStatus(statusIconClass, statusMessageClass, statusIcon, statusMessage) {
+        setStatusMessage(statusMessage);
+        setStatusDisplay("inline-flex");
+        setStatusIcon(statusIcon);
+        setStatusIconClass(statusIconClass);
+        setStatusMessageClass(statusMessageClass);
+    }
+
+    function hideStatus() {
+        setStatusDisplay("none");
+        displayStatus("", "", "", "");
+    }
+
+    function displayProgress() {
+        displayStatus("pending-icon", "pending-message", "progress_activity", "Processing...");
+    }
+
+    function displayFailure(message) {
+        displayStatus("error-icon", "error-message", "error", message);
+    }
+
+    function displaySuccess(message) {
+        displayStatus("valid-icon", "valid-message", "check_circle", message);
+    }
+
+    function displayResult(success, message) {
+        if (success) {
+            displaySuccess(message);
+        } else {
+            displayFailure(message);
+        }
+    }
+
     async function afterSaveDocument() {
+        displayProgress();
         await documentDAO.update(getDocumentId, getTitle, getContent)
             .then((result) => {
-                showMessage(true, "Saved successfully");
+                displayResult(true, "Saved successfully");
                 setDocumentId(result.id);
                 setDate(result.date);
             })
             .catch((error) => {
-                showMessage(false, error);
+                displayResult(false, error);
             });
     }
 
     async function afterDeleteDocument() {
+        displayProgress();
         await documentDAO.delete(getDocumentId)
             .then(() => {
+                hideStatus();
                 navigate(paths.home);
             })
             .catch((error) => {
-                showMessage(false, error);
+                displayResult(false, error);
             });
     }
 
-    function showMessage(success, message) {
-        setStatusMessage(message);
-        setStatusDisplay("inline-flex");
-
-        if (!success) {
-            setStatusIcon("error");
-            setStatusIconClass("error-icon");
-            setStatusMessageClass("error-message");
-        } else {
-            setStatusIcon("check_circle");
-            setStatusIconClass("valid-icon");
-            setStatusMessageClass("valid-message");
-        }
-    }
-
     async function summarize() {
-        // const summaryModel = {
-        //     text: editor.getHTML()
-        // };
-        //
-        // const response = await fetch("http://localhost:8000/summarize", {
-        //     method: "post",
-        //     body: JSON.stringify(summaryModel),
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     },
-        // });
-        //
-        // if (response.ok) {
-        //     const summaryText = await response.json();
-        //     setSummaryText(summaryText);
-        //     setSummaryDisplay("block");
-        // }
+        if (auth.currentUser) {
+            displayProgress();
+            const summaryModel = {
+                text: editor.getHTML()
+            };
 
-        setSummaryText("");
-        setSummaryDisplay("block");
-        setDisablePanelDisplay("block");
+            const response = await fetch("http://localhost:8000/summarize", {
+                method: "post",
+                body: JSON.stringify(summaryModel),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            });
+
+            if (response.ok) {
+                await response.json()
+                    .then((summaryText) => {
+                        hideStatus();
+                        setSummaryText(summaryText);
+                        setSummaryDisplay("block");
+                        setDisablePanelDisplay("block");
+                        editor.commands.blur();
+                    })
+                    .catch((error) => {
+                        displayResult(false, error.message);
+                    });
+            } else {
+                displayResult(false, await response.text());
+            }
+        } else {
+            displayResult(false, "Unauthorized access");
+        }
     }
 
     return (
@@ -147,10 +175,12 @@ function Editor({documentId, title, content, date, isNewDocument}) {
             <NavBar/>
             <div className="disable-panel" style={{display: `${getDisablePanelDisplay}`}}></div>
             <div className="summary-container" style={{display: `${getSummaryDisplay}`}}>
-                <TextGenPopup text={getSummaryText} closePopup={() => {
-                    setSummaryDisplay("none");
-                    setDisablePanelDisplay("none");
-                }}></TextGenPopup>
+                <AITextOutputPopup title="Summary"
+                                   text={getSummaryText}
+                                   closePopup={() => {
+                                  setSummaryDisplay("none");
+                                  setDisablePanelDisplay("none");
+                              }}></AITextOutputPopup>
             </div>
             <div className="editor-container">
                 <div className="document-id-container">{getDocumentId}</div>
@@ -222,13 +252,18 @@ function Editor({documentId, title, content, date, isNewDocument}) {
                             onClick={() => editor.chain().focus().toggleBold().run()}
                             className={editor.isActive("bold") ? "is-active" : ""}
                         >
-                            Bold
+                            <strong>B</strong>
                         </button>
                         <button
                             onClick={() => editor.chain().focus().toggleItalic().run()}
-                            className={editor.isActive("italic") ? "is-active" : ""}
+                            className={`italic-button ${editor.isActive("italic") ? "is-active" : ""}`}
                         >
-                            Italic
+                            I
+                        </button>
+                        <button
+                            className={`underline-button ${editor.isActive("italic") ? "is-active" : ""}`}
+                        >
+                            U
                         </button>
                     </div>
                 </BubbleMenu>}

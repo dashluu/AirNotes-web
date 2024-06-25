@@ -10,7 +10,7 @@ export default class DocumentUpdate {
         return `userId:${this.userId}\ntitle:${this.title}\ncontent:${this.content}\ndate:${this.date}`;
     }
 
-    static FromDocumentUpdate(documentUpdate) {
+    static fromDocumentUpdate(documentUpdate) {
         return {
             userId: documentUpdate.userId,
             title: documentUpdate.title,
@@ -22,10 +22,5 @@ export default class DocumentUpdate {
     static getDateStr(timestamp) {
         const date = timestamp.toDate();
         return date.toLocaleDateString("en-US");
-    }
-
-    static ToDocumentUpdate(snapshot) {
-        const data = snapshot.data();
-        return new DocumentUpdate(data.userId, data.title, data.content, this.getDateStr(data.date));
     }
 }

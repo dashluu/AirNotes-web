@@ -31,7 +31,7 @@ export default class DocumentDAO {
             // New document
             const documentRef = await addDoc(
                 collection(db, "documents"),
-                DocumentUpdate.FromDocumentUpdate(documentUpdate)
+                DocumentUpdate.fromDocumentUpdate(documentUpdate)
             );
 
             documentId = documentRef.id;
@@ -39,7 +39,7 @@ export default class DocumentDAO {
             // Updating existing document
             await updateDoc(
                 doc(db, "documents", documentId),
-                DocumentUpdate.FromDocumentUpdate(documentUpdate)
+                DocumentUpdate.fromDocumentUpdate(documentUpdate)
             );
         }
 
@@ -48,7 +48,6 @@ export default class DocumentDAO {
 
     async delete(documentId) {
         await deleteDoc(doc(db, "documents", documentId));
-        return true;
     }
 
     async getFullDocument(documentId) {
@@ -59,7 +58,7 @@ export default class DocumentDAO {
             return null;
         }
 
-        return FullDocument.ToFullDocument(documentSnapshot);
+        return FullDocument.toFullDocument(documentSnapshot);
     }
 
     async getDocumentSummaryList(userId, page, cursor) {
@@ -89,7 +88,7 @@ export default class DocumentDAO {
 
         for (let i = 0; i < documentSnapshotList.size; i++) {
             documentSnapshot = documentSnapshotList.docs[i];
-            documentSummary = DocumentSummary.ToDocumentSummary(documentSnapshot);
+            documentSummary = DocumentSummary.toDocumentSummary(documentSnapshot);
             documentSummaryList.push(documentSummary);
         }
 

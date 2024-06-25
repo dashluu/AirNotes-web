@@ -34,7 +34,7 @@ function EditDocumentPage() {
 
         return () => {
             unsubscribe();
-        }
+        };
     }, []);
 
     return (

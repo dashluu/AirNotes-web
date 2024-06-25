@@ -8,7 +8,7 @@ function AppRouter() {
     const [getRender, setRender] = useState(null);
 
     useEffect(() => {
-        return onAuthStateChanged(auth, (user) => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
                 if (location.pathname === "/sign-in" || location.pathname === "/sign-up") {
                     setRender(<Navigate to="/"></Navigate>);
@@ -23,6 +23,10 @@ function AppRouter() {
                 }
             }
         });
+
+        return () => {
+            unsubscribe();
+        };
     }, [location]);
 
     return getRender;

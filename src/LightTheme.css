@@ -47,6 +47,7 @@
     --auth-form-primary-button-color-hover: white;
     --valid-input-color: #009a4f;
     --error-input-color: #fd0031;
+    --pending-input-color: #9e9e9e;
 
     --settings-field-label: black;
     --settings-field-content: #9e9e9e;
@@ -63,16 +64,16 @@
     --settings-sign-out-button-border-hover: #cb0005;
     --settings-sign-out-button-color-hover: white;
 
-    --text-gen-popup-container-background: rgba(255, 255, 255, 0.7);
-    --text-gen-popup-container-border: rgba(61, 37, 20, .05);
-    --text-gen-popup-container-shadow: 0px 12px 33px 0px rgba(0, 0, 0, .06), 0px 3.618px 9.949px 0px rgba(0, 0, 0, .04);
-    --text-gen-text-box-background: transparent;
-    --text-gen-text-box-border: transparent;
-    --text-gen-text-box-color: black;
-    --text-gen-action-button-background: rgba(200, 200, 200, 0.7);
-    --text-gen-action-button-border: rgba(200, 200, 200, 0.5);
-    --text-gen-action-button-color: black;
-    --text-gen-action-button-background-hover: black;
-    --text-gen-action-button-border-hover: black;
-    --text-gen-action-button-color-hover: white;
+    --ai-text-output-popup-container-background: rgba(255, 255, 255, 0.7);
+    --ai-text-output-popup-container-border: rgba(61, 37, 20, .05);
+    --ai-text-output-popup-container-shadow: 0px 12px 33px 0px rgba(0, 0, 0, .06), 0px 3.618px 9.949px 0px rgba(0, 0, 0, .04);
+    --ai-text-output-text-box-background: transparent;
+    --ai-text-output-text-box-border: transparent;
+    --ai-text-output-text-box-color: black;
+    --ai-text-output-action-button-background: rgba(200, 200, 200, 0.7);
+    --ai-text-output-action-button-border: rgba(200, 200, 200, 0.5);
+    --ai-text-output-action-button-color: black;
+    --ai-text-output-action-button-background-hover: black;
+    --ai-text-output-action-button-border-hover: black;
+    --ai-text-output-action-button-color-hover: white;
 }

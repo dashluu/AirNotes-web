@@ -16,7 +16,7 @@ function NewDocumentPage() {
 
         return () => {
             unsubscribe();
-        }
+        };
     }, []);
 
     return (

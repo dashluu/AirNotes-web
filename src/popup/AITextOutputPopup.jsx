@@ -1,13 +1,13 @@
-import "./TextGenPopup.scss";
+import "./AITextOutputPopup.scss";
 import {useEffect, useState} from "react";
 import Status from "../status/Status.jsx";
 
-function TextGenPopup({text, closePopup}) {
-    const [getCopyStatusDisplay, setCopyStatusDisplay] = useState(true);
-    const [getCopyStatusIconClass, setCopyStatusIconClass] = useState("valid-icon");
-    const [getCopyStatusMessageClass, setCopyStatusMessageClass] = useState("valid-message");
-    const [getCopyStatusIcon, setCopyStatusIcon] = useState("check_circle");
-    const [getCopyStatusMessage, setCopyStatusMessage] = useState("Copied successfully.");
+function AITextOutputPopup({title, text, closePopup}) {
+    const [getCopyStatusDisplay, setCopyStatusDisplay] = useState(false);
+    const [getCopyStatusIconClass, setCopyStatusIconClass] = useState("");
+    const [getCopyStatusMessageClass, setCopyStatusMessageClass] = useState("");
+    const [getCopyStatusIcon, setCopyStatusIcon] = useState("");
+    const [getCopyStatusMessage, setCopyStatusMessage] = useState("");
     const [getText, setText] = useState(text);
 
     useEffect(() => {
@@ -21,7 +21,7 @@ function TextGenPopup({text, closePopup}) {
                 setCopyStatusIconClass("valid-icon");
                 setCopyStatusMessageClass("valid-message");
                 setCopyStatusIcon("check_circle");
-                setCopyStatusMessage("Copied successfully.");
+                setCopyStatusMessage("Copied successfully");
             })
             .catch((error) => {
                 setCopyStatusDisplay(true);
@@ -33,8 +33,9 @@ function TextGenPopup({text, closePopup}) {
     }
 
     return (
-        <div className="text-gen-popup">
-            <div className="text-gen-container">
+        <div className="ai-text-output-popup">
+            <div className="ai-text-output-container">
+                <div className="title">{title}</div>
                 <div className="text-container">{text}</div>
                 <div className="action-bar">
                     <Status display={getCopyStatusDisplay}
@@ -62,4 +63,4 @@ function TextGenPopup({text, closePopup}) {
     );
 }
 
-export default TextGenPopup;
+export default AITextOutputPopup;

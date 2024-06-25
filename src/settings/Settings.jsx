@@ -21,7 +21,7 @@ function Settings() {
 
         return () => {
             unsubscribe();
-        }
+        };
     }, []);
 
     async function signOutApp() {

@@ -11,7 +11,7 @@ import SignInPage from "./auth/SignInPage.jsx";
 import AppRouter from "./app_router/AppRouter.jsx";
 import Settings from "./settings/Settings.jsx";
 import PasswordResetPage from "./auth/PasswordResetPage.jsx";
-import TextGenPopup from "./popup/TextGenPopup.jsx";
+import AITextOutputPopup from "./popup/AITextOutputPopup.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(

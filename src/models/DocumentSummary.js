@@ -14,7 +14,7 @@ export default class DocumentSummary {
         return `${date.toLocaleDateString("en-US")} ${date.toLocaleTimeString("en-US")}`;
     }
 
-    static ToDocumentSummary(snapshot) {
+    static toDocumentSummary(snapshot) {
         const data = snapshot.data();
         return new DocumentSummary(snapshot.id, data.title, this.getDateStr(data.date));
     }
