@@ -18,9 +18,9 @@
     --sidebar-toolbar-button-background-disabled: transparent;
     --sidebar-toolbar-button-border-disabled: transparent;
     --sidebar-toolbar-button-color-disabled: #9e9e9e;
-    --sidebar-toolbar-button-background-hover: #eeeeee;
-    --sidebar-toolbar-button-border-hover: #eeeeee;
-    --sidebar-toolbar-button-color-hover: #424242;
+    --sidebar-toolbar-button-background-hover: black;
+    --sidebar-toolbar-button-border-hover: black;
+    --sidebar-toolbar-button-color-hover: white;
 
     --editor-toolbar-button-background: transparent;
     --editor-toolbar-button-border: transparent;
@@ -28,9 +28,9 @@
     --editor-toolbar-button-background-disabled: transparent;
     --editor-toolbar-button-border-disabled: transparent;
     --editor-toolbar-button-color-disabled: #9e9e9e;
-    --editor-toolbar-button-background-hover: #eeeeee;
-    --editor-toolbar-button-border-hover: #eeeeee;
-    --editor-toolbar-button-color-hover: #424242;
+    --editor-toolbar-button-background-hover: black;
+    --editor-toolbar-button-border-hover: black;
+    --editor-toolbar-button-color-hover: white;
     --editor-date-color: #616161;
     --editor-title-color: black;
     --editor-code-background: black;
@@ -56,12 +56,15 @@
     --auth-form-primary-button-background: #1976D2;
     --auth-form-primary-button-border: #1976D2;
     --auth-form-primary-button-color: white;
-    --auth-form-secondary-button-background: black;
-    --auth-form-secondary-button-border: black;
-    --auth-form-secondary-button-color: white;
+    --auth-form-secondary-button-background: rgba(225, 225, 225);
+    --auth-form-secondary-button-border: rgba(225, 225, 225);
+    --auth-form-secondary-button-color: black;
     --auth-form-primary-button-background-hover: #1565C0;
     --auth-form-primary-button-border-hover: #1565C0;
     --auth-form-primary-button-color-hover: white;
+    --auth-form-secondary-button-background-hover: black;
+    --auth-form-secondary-button-border-hover: black;
+    --auth-form-secondary-button-color-hover: white;
     --valid-input-color: #009a4f;
     --error-input-color: #fd0031;
     --pending-input-color: #9e9e9e;
@@ -87,8 +90,8 @@
     --ai-sidebar-output-background: transparent;
     --ai-sidebar-output-border: transparent;
     --ai-sidebar-output-color: black;
-    --ai-sidebar-action-button-background: rgba(200, 200, 200, 0.7);
-    --ai-sidebar-action-button-border: rgba(200, 200, 200, 0.7);
+    --ai-sidebar-action-button-background: rgba(225, 225, 225);
+    --ai-sidebar-action-button-border: rgba(2225, 225, 225);
     --ai-sidebar-action-button-color: black;
     --ai-sidebar-action-button-background-hover: black;
     --ai-sidebar-action-button-border-hover: black;

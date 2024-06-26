@@ -27,7 +27,7 @@ function BubbleMenuWrapper({editor}) {
                 </button>
                 <button title="Code Block"
                         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
-                        className={`${editor.isActive("bulletList") ? "bubble-menu-button-is-active" : ""}`}>
+                        className={`${editor.isActive("codeBlock") ? "bubble-menu-button-is-active" : ""}`}>
                     <span className="material-symbols-outlined">code</span>
                 </button>
             </div>

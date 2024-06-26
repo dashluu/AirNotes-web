@@ -50,7 +50,7 @@
     width: 100%;
     margin-bottom: 10px;
     padding-top: 5px;
-    padding-bottom: 8px;
+    padding-bottom: 9px;
     border-radius: 4px;
     font-weight: 500;
     font-size: 16px;
@@ -67,13 +67,7 @@
     color: var(--auth-form-primary-button-color);
   }
 
-  .sign-up-button {
-    background-color: var(--auth-form-secondary-button-background);
-    border: 1px solid var(--auth-form-secondary-button-border);
-    color: var(--auth-form-secondary-button-color);
-  }
-
-  .forgot-password-button {
+  .sign-up-button, .forgot-password-button {
     background-color: var(--auth-form-secondary-button-background);
     border: 1px solid var(--auth-form-secondary-button-border);
     color: var(--auth-form-secondary-button-color);
@@ -83,5 +77,11 @@
     background-color: var(--auth-form-primary-button-background-hover);
     border: 1px solid var(--auth-form-primary-button-border-hover);
     color: var(--auth-form-primary-button-color-hover);
+  }
+
+  .sign-up-button:hover, .forgot-password-button:hover {
+    background-color: var(--auth-form-secondary-button-background-hover);
+    border: 1px solid var(--auth-form-secondary-button-border-hover);
+    color: var(--auth-form-secondary-button-color-hover);
   }
 }
