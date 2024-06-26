@@ -1,13 +1,33 @@
 import "./Editor.scss";
-import {BubbleMenu, EditorContent, useEditor} from "@tiptap/react";
+import {EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
-import Underline from "@tiptap/extension-underline"
+import Underline from "@tiptap/extension-underline";
 import {documentDAO, paths} from "../backend.js";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import StatusController from "../StatusController.js";
+import BubbleMenuWrapper from "./BubbleMenuWrapper.jsx";
+import FloatingMenuWrapper from "./FloatingMenuWrapper.jsx";
+// import css from "highlight.js/lib/languages/css";
+// import js from "highlight.js/lib/languages/javascript";
+// import ts from "highlight.js/lib/languages/typescript";
+// import html from "highlight.js/lib/languages/xml";
+// import python from "highlight.js/lib/languages/python";
+// import cpp from "highlight.js/lib/languages/cpp";
+// import java from "highlight.js/lib/languages/java";
+// import {common, createLowlight} from "lowlight";
+// import {CodeBlockLowlight} from "@tiptap/extension-code-block-lowlight";
+//
+// const lowlight = createLowlight(common);
+// lowlight.register({html});
+// lowlight.register({css});
+// lowlight.register({js});
+// lowlight.register({ts});
+// lowlight.register({python});
+// lowlight.register({cpp});
+// lowlight.register({java});
 
 // define your extension array
 const extensions = [
@@ -15,7 +35,10 @@ const extensions = [
     Placeholder.configure({
         placeholder: "Write something...",
     }),
-    Underline
+    Underline,
+    // CodeBlockLowlight.configure({
+    //     lowlight,
+    // }),
 ];
 
 function Editor({
@@ -34,6 +57,7 @@ function Editor({
     const navigate = useNavigate();
     const [getDocumentId, setDocumentId] = useState(documentId);
     const [getTitle, setTitle] = useState(title);
+    const [getLoadInitialContent, setLoadInitialContent] = useState(true);
     const [getDate, setDate] = useState(date);
     const [getUndoDisabled, setUndoDisabled] = useState(true);
     const [getRedoDisabled, setRedoDisabled] = useState(true);
@@ -64,10 +88,11 @@ function Editor({
     }, [documentId, title, date]);
 
     useEffect(() => {
-        if (editor) {
+        if (editor && getLoadInitialContent) {
             editor.commands.setContent(getContent);
+            setLoadInitialContent(false);
         }
-    }, [editor, getContent]);
+    }, [getContent]);
 
     useEffect(() => {
         setDeleteDisplay(getDocumentId === "" ? "none" : "inline-block");
@@ -190,28 +215,8 @@ function Editor({
                    onChange={(e) => {
                        setTitle(e.target.value);
                    }}/>
-
-            {editor && <BubbleMenu editor={editor} tippyOptions={{duration: 100}}>
-                <div className="bubble-menu">
-                    <button
-                        onClick={() => editor.chain().focus().toggleBold().run()}
-                        className={editor.isActive("bold") ? "is-active" : ""}
-                    >
-                        <strong>B</strong>
-                    </button>
-                    <button
-                        onClick={() => editor.chain().focus().toggleItalic().run()}
-                        className={`italic-button ${editor.isActive("italic") ? "is-active" : ""}`}
-                    >
-                        I
-                    </button>
-                    <button
-                        className={`underline-button ${editor.isActive("italic") ? "is-active" : ""}`}
-                    >
-                        U
-                    </button>
-                </div>
-            </BubbleMenu>}
+            {editor && <BubbleMenuWrapper editor={editor}/>}
+            {editor && <FloatingMenuWrapper editor={editor}/>}
             <EditorContent editor={editor}/>
         </div>
     );

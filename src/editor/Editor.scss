@@ -79,45 +79,6 @@
     color: var(--editor-title-color);
   }
 
-  .bubble-menu {
-    background-color: var(--editor-bubble-menu-background);
-    border: 1px solid var(--editor-bubble-menu-border);
-    border-radius: 5px;
-    display: flex;
-    padding: .2rem;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-  }
-
-  .bubble-menu button {
-    background-color: unset;
-    border-radius: 5px;
-    border: none;
-    color: var(--editor-bubble-menu-button-color);
-    font-family: inherit;
-    font-size: .875rem;
-    font-weight: 500;
-    line-height: 1.15;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    transition: all .2s cubic-bezier(.65, .05, .36, 1);
-    width: 36px;
-  }
-
-  .bubble-menu button:hover {
-    cursor: pointer;
-    background: var(--editor-bubble-menu-button-background-hover);
-    color: var(--editor-bubble-menu-button-color-hover);
-  }
-
-  .italic-button {
-    font-style: italic;
-  }
-
-  .underline-button {
-    text-decoration: underline;
-  }
-
   .tiptap {
     overflow-y: auto;
     height: 100%;
@@ -139,5 +100,18 @@
     float: left;
     height: 0;
     pointer-events: none;
+  }
+
+  .tiptap pre {
+    background: var(--editor-code-background);
+    border-radius: .5rem;
+    color: var(--editor-code-color);
+    font-family: JetBrainsMono, monospace;
+    margin: 1.5rem 0;
+    padding: .75rem 1rem
+  }
+
+  pre {
+    display: block;
   }
 }

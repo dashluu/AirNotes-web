@@ -64,7 +64,7 @@ function AISummary({editorContent}) {
 
     return (
         <div className="ai-summary-container">
-            <div className="title">Note summary</div>
+            <div className="title">Notes Summary</div>
             <button className="action-button summarize-button"
                     onClick={() => {
                         summarize();

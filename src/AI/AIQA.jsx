@@ -71,7 +71,7 @@ function AIQA({editorContent}) {
 
     return (
         <div className="ai-qa-container">
-            <div className="title">Note Q&A</div>
+            <div className="title">Notes Q&A</div>
             <textarea className="question" placeholder="Enter the question here..."
                       onChange={(e) => {
                           setQuestion(e.target.value);
