@@ -11,7 +11,7 @@ function AISummary({editorContent}) {
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
     const [getCopyDisabled, setCopyDisabled] = useState(true);
-    const [getCopyText, setCopyText] = useState("");
+    const [getCopyText, setCopyText] = useState("The summary is shown here.");
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );

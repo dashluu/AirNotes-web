@@ -88,7 +88,7 @@
     --ai-sidebar-input-border: #e0e0e0;
     --ai-sidebar-input-color: black;
     --ai-sidebar-output-background: transparent;
-    --ai-sidebar-output-border: transparent;
+    --ai-sidebar-output-border: #e0e0e0;
     --ai-sidebar-output-color: black;
     --ai-sidebar-action-button-background: rgba(225, 225, 225);
     --ai-sidebar-action-button-border: rgba(2225, 225, 225);

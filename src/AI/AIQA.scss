@@ -72,7 +72,8 @@
   }
 
   .qa-text {
-    width: 100%;
+    width: 97%;
+    height: 300px;
     margin-left: auto;
     margin-right: auto;
     background-color: var(--ai-sidebar-output-background);
@@ -81,6 +82,7 @@
     border-radius: 5px;
     font-size: 14px;
     font-weight: 500;
-    padding-top: 0;
+    padding: 5px;
+    overflow-y: auto;
   }
 }
