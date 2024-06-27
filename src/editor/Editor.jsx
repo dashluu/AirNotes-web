@@ -10,6 +10,7 @@ import {useNavigate} from "react-router-dom";
 import StatusController from "../StatusController.js";
 import BubbleMenuWrapper from "./BubbleMenuWrapper.jsx";
 import FloatingMenuWrapper from "./FloatingMenuWrapper.jsx";
+import Image from '@tiptap/extension-image'
 // import css from "highlight.js/lib/languages/css";
 // import js from "highlight.js/lib/languages/javascript";
 // import ts from "highlight.js/lib/languages/typescript";
@@ -36,6 +37,7 @@ const extensions = [
         placeholder: "Write something...",
     }),
     Underline,
+    Image,
     // CodeBlockLowlight.configure({
     //     lowlight,
     // }),

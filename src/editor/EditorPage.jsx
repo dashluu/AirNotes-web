@@ -2,7 +2,7 @@ import "./EditorPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useEffect, useState} from "react";
 import Editor from "./Editor.jsx";
-import Sidebar from "./Sidebar.jsx";
+import Sidebar from "../sidebar/Sidebar.jsx";
 
 function EditorPage({documentId, title, content, date, isNewDocument}) {
     const [getEditorGridLayout, setEditorGridLayout] = useState("1fr");

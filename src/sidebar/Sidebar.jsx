@@ -1,7 +1,7 @@
 import "./Sidebar.scss";
-import AISummary from "../AI/AISummary.jsx";
+import AISummary from "./AISummary.jsx";
 import {useState} from "react";
-import AIQA from "../AI/AIQA.jsx";
+import AIQA from "./AIQA.jsx";
 
 function Sidebar({sidebarDisplay, closeSidebar, editorContent, summaryDisplay, qaDisplay}) {
     return (
