@@ -153,6 +153,22 @@ function Editor({
                             title="New">
                         <span className="material-symbols-outlined">edit_square</span>
                     </button>
+                    <button className="editor-toolbar-button undo-button"
+                            onClick={() => editor.chain().focus().undo().run()}
+                            disabled={getUndoDisabled}
+                            title="Undo">
+                        <span className="material-symbols-outlined">undo</span>
+                    </button>
+                    <button className="editor-toolbar-button redo-button"
+                            onClick={() => editor.chain().focus().redo().run()}
+                            disabled={getRedoDisabled}
+                            title="Redo">
+                        <span className="material-symbols-outlined">redo</span>
+                    </button>
+                    <button className="editor-toolbar-button open-button"
+                            title="Open">
+                        <span className="material-symbols-outlined">folder_open</span>
+                    </button>
                     <button className="editor-toolbar-button summarize-button"
                             onClick={() => {
                                 openSidebar();
@@ -171,22 +187,6 @@ function Editor({
                             title="Q&A">
                         <span className="material-symbols-outlined">quiz</span>
                     </button>
-                    <button className="editor-toolbar-button undo-button"
-                            onClick={() => editor.chain().focus().undo().run()}
-                            disabled={getUndoDisabled}
-                            title="Undo">
-                        <span className="material-symbols-outlined">undo</span>
-                    </button>
-                    <button className="editor-toolbar-button redo-button"
-                            onClick={() => editor.chain().focus().redo().run()}
-                            disabled={getRedoDisabled}
-                            title="Redo">
-                        <span className="material-symbols-outlined">redo</span>
-                    </button>
-                    <button className="editor-toolbar-button open-button"
-                            title="Open">
-                        <span className="material-symbols-outlined">folder_open</span>
-                    </button>
                     <button className="editor-toolbar-button save-button" disabled={getSaveDisabled}
                             title="Save"
                             onClick={() => {
@@ -203,9 +203,9 @@ function Editor({
                         <span className="material-symbols-outlined">delete</span>
                     </button>
                 </div>
-                <div className="date" style={{display: `${getDateDisplay}`}}>
-                    Last modified: {getDate}
-                </div>
+                {/*<div className="date" style={{display: `${getDateDisplay}`}}>*/}
+                {/*    Last modified: {getDate}*/}
+                {/*</div>*/}
             </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}

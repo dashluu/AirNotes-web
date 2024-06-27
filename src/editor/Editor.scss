@@ -12,10 +12,8 @@
 
   .editor-toolbar {
     width: 100%;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 0;
-    margin-bottom: 10px;
+    padding: 0;
+    margin-bottom: 5px;
   }
 
   .editor-toolbar-button-container {
@@ -69,7 +67,7 @@
 
   .title {
     width: 100%;
-    padding: 5px 12px 5px 12px;
+    padding: 3px 12px 5px 12px;
     outline: none;
     border: none;
     background-color: transparent;
@@ -81,7 +79,7 @@
 
   .tiptap {
     overflow-y: auto;
-    max-height: 450px;
+    max-height: 500px;
     width: 100%;
     padding: 0 10px 0 10px;
     border-radius: 4px;
