@@ -13,7 +13,7 @@ function AIQA({editorContent}) {
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
     const [getCopyDisabled, setCopyDisabled] = useState(true);
-    const [getCopyText, setCopyText] = useState("The answer is shown here.");
+    const [getCopyText, setCopyText] = useState("");
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
@@ -94,7 +94,7 @@ function AIQA({editorContent}) {
                     messageClass={getStatusMessageClass}
                     icon={getStatusIcon}
                     message={getStatusMessage}/>
-            <div className="qa-text">{getCopyText}</div>
+            <div className="qa-text">Answer: {getCopyText}</div>
         </div>
     );
 }
