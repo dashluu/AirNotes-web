@@ -54,7 +54,8 @@ function Editor({
                     marginRight,
                     openSidebar,
                     setSummaryDisplay,
-                    setQADisplay
+                    setQADisplay,
+                    setImageToolsDisplay
                 }) {
     const navigate = useNavigate();
     const [getDocumentId, setDocumentId] = useState(documentId);
@@ -174,6 +175,7 @@ function Editor({
                                 openSidebar();
                                 setSummaryDisplay("block");
                                 setQADisplay("none");
+                                setImageToolsDisplay("none");
                             }}
                             title="Summarize">
                         <span className="material-symbols-outlined">notes</span>
@@ -183,9 +185,20 @@ function Editor({
                                 openSidebar();
                                 setQADisplay("block");
                                 setSummaryDisplay("none");
+                                setImageToolsDisplay("none");
                             }}
                             title="Q&A">
                         <span className="material-symbols-outlined">quiz</span>
+                    </button>
+                    <button className="editor-toolbar-button image-tools-button"
+                            onClick={() => {
+                                openSidebar();
+                                setImageToolsDisplay("block");
+                                setSummaryDisplay("none");
+                                setQADisplay("none");
+                            }}
+                            title="Image">
+                        <span className="material-symbols-outlined">image</span>
                     </button>
                     <button className="editor-toolbar-button save-button" disabled={getSaveDisabled}
                             title="Save"

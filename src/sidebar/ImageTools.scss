@@ -1,0 +1,64 @@
+@use "../LightTheme.css";
+
+.image-tools-container {
+  & {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+  }
+
+  .title {
+    font-weight: 500;
+    font-size: 24px;
+    text-align: center;
+    padding-left: 0;
+    margin-left: 0;
+    margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .image-url {
+    margin-bottom: 10px;
+    resize: none;
+    width: 97%;
+    padding: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    background-color: var(--ai-sidebar-input-background);
+    border: 1px solid var(--ai-sidebar-input-border);
+    color: var(--ai-sidebar-input-color);
+    border-radius: 5px;
+    outline: none;
+  }
+
+  .action-button {
+    width: 100%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: var(--ai-sidebar-action-button-background);
+    border: 1px solid var(--ai-sidebar-action-button-border);
+    color: var(--ai-sidebar-action-button-color);
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    padding-top: 5px;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+  }
+
+  .action-button:hover {
+    cursor: pointer;
+    background-color: var(--ai-sidebar-action-button-background-hover);
+    border: 1px solid var(--ai-sidebar-action-button-border-hover);
+    color: var(--ai-sidebar-action-button-color-hover);
+  }
+
+  .action-button:disabled {
+    cursor: auto;
+    background-color: var(--ai-sidebar-action-button-background-disabled);
+    border: 1px solid var(--ai-sidebar-action-button-border-disabled);
+    color: var(--ai-sidebar-action-button-color-disabled);
+  }
+}

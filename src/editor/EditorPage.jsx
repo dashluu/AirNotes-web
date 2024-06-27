@@ -12,6 +12,7 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
     const [getEditorContent, setEditorContent] = useState(content);
     const [getSummaryDisplay, setSummaryDisplay] = useState("none");
     const [getQADisplay, setQADisplay] = useState("none");
+    const [getImageToolsDisplay, setImageToolsDisplay] = useState("none");
 
     useEffect(() => {
         setEditorContent(content);
@@ -39,7 +40,8 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
                          closeSidebar={closeSidebar}
                          editorContent={getEditorContent}
                          summaryDisplay={getSummaryDisplay}
-                         qaDisplay={getQADisplay}/>
+                         qaDisplay={getQADisplay}
+                         imageToolsDisplay={getImageToolsDisplay}/>
                 <Editor documentId={documentId}
                         title={title}
                         getContent={getEditorContent}
@@ -50,7 +52,8 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
                         marginRight={getEditorMarginRight}
                         openSidebar={openSidebar}
                         setSummaryDisplay={setSummaryDisplay}
-                        setQADisplay={setQADisplay}/>
+                        setQADisplay={setQADisplay}
+                        setImageToolsDisplay={setImageToolsDisplay}/>
             </div>
         </div>
     );

@@ -2,8 +2,9 @@ import "./Sidebar.scss";
 import AISummary from "./AISummary.jsx";
 import {useState} from "react";
 import AIQA from "./AIQA.jsx";
+import ImageTools from "./ImageTools.jsx";
 
-function Sidebar({sidebarDisplay, closeSidebar, editorContent, summaryDisplay, qaDisplay}) {
+function Sidebar({sidebarDisplay, closeSidebar, editorContent, summaryDisplay, qaDisplay, imageToolsDisplay}) {
     return (
         <div className="sidebar" style={{display: sidebarDisplay}}>
             <div className="sidebar-toolbar">
@@ -21,6 +22,9 @@ function Sidebar({sidebarDisplay, closeSidebar, editorContent, summaryDisplay, q
                 </div>
                 <div className="sidebar-ui" style={{display: qaDisplay}}>
                     <AIQA editorContent={editorContent}/>
+                </div>
+                <div className="sidebar-ui" style={{display: imageToolsDisplay}}>
+                    <ImageTools/>
                 </div>
             </div>
         </div>
