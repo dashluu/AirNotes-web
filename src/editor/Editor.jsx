@@ -51,22 +51,21 @@ const extensions = [
 function Editor({
                     documentId,
                     title,
-                    getContent,
-                    setContent,
+                    content,
                     date,
                     isNewDocument,
-                    marginLeft,
-                    marginRight,
                     openSidebar,
                     setEditor,
                     setSummaryDisplay,
                     setQADisplay,
-                    setImageToolsDisplay
+                    setImgToolsDisplay,
+                    setAIImgDisplay
                 }) {
     const navigate = useNavigate();
     const [getDocumentId, setDocumentId] = useState(documentId);
     const [getTitle, setTitle] = useState(title);
     const [getLoadInitialContent, setLoadInitialContent] = useState(true);
+    const [getContent, setContent] = useState(content);
     const [getDate, setDate] = useState(date);
     const [getUndoDisabled, setUndoDisabled] = useState(true);
     const [getRedoDisabled, setRedoDisabled] = useState(true);
@@ -102,10 +101,10 @@ function Editor({
 
     useEffect(() => {
         if (editor && getLoadInitialContent) {
-            editor.commands.setContent(getContent);
+            editor.commands.setContent(content);
             setLoadInitialContent(false);
         }
-    }, [getContent]);
+    }, [content]);
 
     useEffect(() => {
         setDeleteDisplay(getDocumentId === "" ? "none" : "inline-block");
@@ -152,83 +151,91 @@ function Editor({
     }
 
     return (
-        <div className="editor-container"
-             style={{marginLeft: marginLeft, marginRight: marginRight}}>
+        <div className="editor-container">
             <div className="document-id-container">{getDocumentId}</div>
             <div className="editor-toolbar">
-                <div className="editor-toolbar-button-container">
-                    <button className="editor-toolbar-button new-button"
-                            onClick={() => {
-                                navigate(paths.newDocument);
-                            }}
-                            title="New">
-                        <span className="material-symbols-outlined">edit_square</span>
-                    </button>
-                    <button className="editor-toolbar-button undo-button"
-                            onClick={() => editor.chain().focus().undo().run()}
-                            disabled={getUndoDisabled}
-                            title="Undo">
-                        <span className="material-symbols-outlined">undo</span>
-                    </button>
-                    <button className="editor-toolbar-button redo-button"
-                            onClick={() => editor.chain().focus().redo().run()}
-                            disabled={getRedoDisabled}
-                            title="Redo">
-                        <span className="material-symbols-outlined">redo</span>
-                    </button>
-                    <button className="editor-toolbar-button open-button"
-                            title="Open">
-                        <span className="material-symbols-outlined">folder_open</span>
-                    </button>
-                    <button className="editor-toolbar-button summarize-button"
-                            onClick={() => {
-                                openSidebar();
-                                setSummaryDisplay("block");
-                                setQADisplay("none");
-                                setImageToolsDisplay("none");
-                            }}
-                            title="Summarize">
-                        <span className="material-symbols-outlined">notes</span>
-                    </button>
-                    <button className="editor-toolbar-button qa-button"
-                            onClick={() => {
-                                openSidebar();
-                                setQADisplay("block");
-                                setSummaryDisplay("none");
-                                setImageToolsDisplay("none");
-                            }}
-                            title="Q&A">
-                        <span className="material-symbols-outlined">quiz</span>
-                    </button>
-                    <button className="editor-toolbar-button image-tools-button"
-                            onClick={() => {
-                                openSidebar();
-                                setImageToolsDisplay("block");
-                                setSummaryDisplay("none");
-                                setQADisplay("none");
-                            }}
-                            title="Image">
-                        <span className="material-symbols-outlined">image</span>
-                    </button>
-                    <button className="editor-toolbar-button save-button" disabled={getSaveDisabled}
-                            title="Save"
-                            onClick={() => {
-                                afterSaveDocument();
-                            }}>
-                        <span className="material-symbols-outlined">save</span>
-                    </button>
-                    <button className="editor-toolbar-button delete-button"
-                            style={{display: `${getDeleteDisplay}`}}
-                            title="Delete"
-                            onClick={() => {
-                                afterDeleteDocument();
-                            }}>
-                        <span className="material-symbols-outlined">delete</span>
-                    </button>
-                </div>
-                {/*<div className="date" style={{display: `${getDateDisplay}`}}>*/}
-                {/*    Last modified: {getDate}*/}
-                {/*</div>*/}
+                <button className="editor-toolbar-button new-button"
+                        onClick={() => {
+                            navigate(paths.newDocument);
+                        }}
+                        title="New">
+                    <span className="material-symbols-outlined">edit_square</span>
+                </button>
+                <button className="editor-toolbar-button undo-button"
+                        onClick={() => editor.chain().focus().undo().run()}
+                        disabled={getUndoDisabled}
+                        title="Undo">
+                    <span className="material-symbols-outlined">undo</span>
+                </button>
+                <button className="editor-toolbar-button redo-button"
+                        onClick={() => editor.chain().focus().redo().run()}
+                        disabled={getRedoDisabled}
+                        title="Redo">
+                    <span className="material-symbols-outlined">redo</span>
+                </button>
+                <button className="editor-toolbar-button open-button"
+                        title="Open">
+                    <span className="material-symbols-outlined">folder_open</span>
+                </button>
+                <button className="editor-toolbar-button summarize-button"
+                        onClick={() => {
+                            openSidebar();
+                            setSummaryDisplay("block");
+                            setQADisplay("none");
+                            setImgToolsDisplay("none");
+                            setAIImgDisplay("none");
+                        }}
+                        title="Summarize">
+                    <span className="material-symbols-outlined">notes</span>
+                </button>
+                <button className="editor-toolbar-button qa-button"
+                        onClick={() => {
+                            openSidebar();
+                            setQADisplay("block");
+                            setSummaryDisplay("none");
+                            setImgToolsDisplay("none");
+                            setAIImgDisplay("none");
+                        }}
+                        title="Q&A">
+                    <span className="material-symbols-outlined">quiz</span>
+                </button>
+                <button className="editor-toolbar-button img-tools-button"
+                        onClick={() => {
+                            openSidebar();
+                            setImgToolsDisplay("block");
+                            setSummaryDisplay("none");
+                            setQADisplay("none");
+                            setAIImgDisplay("none");
+                        }}
+                        title="Image Tools">
+                    <span className="material-symbols-outlined">image</span>
+                </button>
+                <button className="editor-toolbar-button ai-img-button"
+                        onClick={() => {
+                            openSidebar();
+                            setAIImgDisplay("block");
+                            setSummaryDisplay("none");
+                            setQADisplay("none");
+                            setImgToolsDisplay("none");
+                        }}
+                        title="AI Image">
+                    <span className="material-symbols-outlined">brush</span>
+                </button>
+                <button className="editor-toolbar-button save-button" disabled={getSaveDisabled}
+                        title="Save"
+                        onClick={() => {
+                            afterSaveDocument();
+                        }}>
+                    <span className="material-symbols-outlined">save</span>
+                </button>
+                <button className="editor-toolbar-button delete-button"
+                        style={{display: `${getDeleteDisplay}`}}
+                        title="Delete"
+                        onClick={() => {
+                            afterDeleteDocument();
+                        }}>
+                    <span className="material-symbols-outlined">delete</span>
+                </button>
             </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}

@@ -2,11 +2,10 @@ import "./AIQA.scss";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import StatusController from "../StatusController.js";
-import {auth} from "../backend.js";
+import {auth, unauthorizedMessage} from "../backend.js";
 
-function AIQA({editorContent}) {
+function AIQA({editor}) {
     const [getQuestion, setQuestion] = useState("");
-    const [getContext, setContext] = useState(editorContent);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
@@ -19,10 +18,6 @@ function AIQA({editorContent}) {
     );
 
     useEffect(() => {
-        setContext(editorContent);
-    }, [editorContent]);
-
-    useEffect(() => {
         setCopyDisabled(getCopyText === "");
     }, [getCopyText]);
 
@@ -31,7 +26,7 @@ function AIQA({editorContent}) {
             statusController.displayProgress();
             const qaModel = {
                 question: getQuestion,
-                context: getContext
+                context: editor.getHTML()
             };
 
             const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/qa`, {
@@ -55,7 +50,7 @@ function AIQA({editorContent}) {
                 statusController.displayResult(false, await response.text());
             }
         } else {
-            statusController.displayResult(false, "Unauthorized access");
+            statusController.displayResult(false, unauthorizedMessage);
         }
     }
 

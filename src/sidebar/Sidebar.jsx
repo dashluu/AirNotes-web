@@ -2,8 +2,9 @@ import "./Sidebar.scss";
 import AISummary from "./AISummary.jsx";
 import AIQA from "./AIQA.jsx";
 import ImageTools from "./ImageTools.jsx";
+import AIImage from "./AIImage.jsx";
 
-function Sidebar({sidebarDisplay, closeSidebar, editorContent, editor, summaryDisplay, qaDisplay, imageToolsDisplay}) {
+function Sidebar({sidebarDisplay, closeSidebar, editor, summaryDisplay, qaDisplay, imgToolsDisplay, aiImgDisplay}) {
     return (
         <div className="sidebar" style={{display: sidebarDisplay}}>
             <div className="sidebar-toolbar">
@@ -17,13 +18,16 @@ function Sidebar({sidebarDisplay, closeSidebar, editorContent, editor, summaryDi
             </div>
             <div className="sidebar-ui-container">
                 <div className="sidebar-ui" style={{display: summaryDisplay}}>
-                    <AISummary editorContent={editorContent}/>
+                    <AISummary editor={editor}/>
                 </div>
                 <div className="sidebar-ui" style={{display: qaDisplay}}>
-                    <AIQA editorContent={editorContent}/>
+                    <AIQA editor={editor}/>
                 </div>
-                <div className="sidebar-ui" style={{display: imageToolsDisplay}}>
+                <div className="sidebar-ui" style={{display: imgToolsDisplay}}>
                     <ImageTools editor={editor}/>
+                </div>
+                <div className="sidebar-ui" style={{display: aiImgDisplay}}>
+                    <AIImage editor={editor}/>
                 </div>
             </div>
         </div>

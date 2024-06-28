@@ -29,6 +29,7 @@ export const db = getFirestore(app);
 export const imgStorage = getStorage();
 export const documentDAO = new DocumentDAO();
 export const signUpChecker = new SignUpChecker();
+export const unauthorizedMessage = "Unauthorized access";
 export const paths = {
     home: "/",
     signIn: "/sign-in",

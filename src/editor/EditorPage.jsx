@@ -1,36 +1,26 @@
 import "./EditorPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import Editor from "./Editor.jsx";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
 function EditorPage({documentId, title, content, date, isNewDocument}) {
     const [getEditorGridLayout, setEditorGridLayout] = useState("1fr");
     const [getSidebarDisplay, setSidebarDisplay] = useState("none");
-    const [getEditorMarginLeft, setEditorMarginLeft] = useState("auto");
-    const [getEditorMarginRight, setEditorMarginRight] = useState("auto");
-    const [getEditorContent, setEditorContent] = useState(content);
     const [getEditor, setEditor] = useState(null);
     const [getSummaryDisplay, setSummaryDisplay] = useState("none");
     const [getQADisplay, setQADisplay] = useState("none");
-    const [getImageToolsDisplay, setImageToolsDisplay] = useState("none");
-
-    useEffect(() => {
-        setEditorContent(content);
-    }, [content]);
+    const [getImgToolsDisplay, setImgToolsDisplay] = useState("none");
+    const [getAIImgDisplay, setAIImgDisplay] = useState("none");
 
     function openSidebar() {
         setEditorGridLayout("1fr 3fr");
         setSidebarDisplay("block");
-        setEditorMarginLeft("0px");
-        setEditorMarginRight("0px");
     }
 
     function closeSidebar() {
         setEditorGridLayout("1fr");
         setSidebarDisplay("none");
-        setEditorMarginLeft("auto");
-        setEditorMarginRight("auto");
     }
 
     return (
@@ -39,24 +29,22 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
             <div className="editor-grid" style={{gridTemplateColumns: getEditorGridLayout}}>
                 <Sidebar sidebarDisplay={getSidebarDisplay}
                          closeSidebar={closeSidebar}
-                         editorContent={getEditorContent}
                          editor={getEditor}
                          summaryDisplay={getSummaryDisplay}
                          qaDisplay={getQADisplay}
-                         imageToolsDisplay={getImageToolsDisplay}/>
+                         imgToolsDisplay={getImgToolsDisplay}
+                         aiImgDisplay={getAIImgDisplay}/>
                 <Editor documentId={documentId}
                         title={title}
-                        getContent={getEditorContent}
-                        setContent={setEditorContent}
+                        content={content}
                         date={date}
                         isNewDocument={isNewDocument}
-                        marginLeft={getEditorMarginLeft}
-                        marginRight={getEditorMarginRight}
                         openSidebar={openSidebar}
                         setEditor={setEditor}
                         setSummaryDisplay={setSummaryDisplay}
                         setQADisplay={setQADisplay}
-                        setImageToolsDisplay={setImageToolsDisplay}/>
+                        setImgToolsDisplay={setImgToolsDisplay}
+                        setAIImgDisplay={setAIImgDisplay}/>
             </div>
         </div>
     );

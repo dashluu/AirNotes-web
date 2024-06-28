@@ -4,6 +4,8 @@
   & {
     padding: 5px 0 5px 0;
     width: 80%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .document-id-container {
@@ -14,6 +16,8 @@
     width: 100%;
     padding: 0;
     margin-bottom: 5px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
   }
 
   .editor-toolbar-button-container {
@@ -51,14 +55,6 @@
     color: var(--editor-toolbar-button-color-hover);
     background-color: var(--editor-toolbar-button-background-hover);
     border: 1px solid var(--editor-toolbar-button-border-hover);
-  }
-
-  .date {
-    color: var(--editor-date-color);
-    font-size: 14px;
-    font-weight: 500;
-    margin-top: 10px;
-    padding-left: 15px;
   }
 
   .status-container {

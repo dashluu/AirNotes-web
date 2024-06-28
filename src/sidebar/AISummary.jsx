@@ -2,9 +2,9 @@ import "./AISummary.scss";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import StatusController from "../StatusController.js";
-import {auth} from "../backend.js";
+import {auth, unauthorizedMessage} from "../backend.js";
 
-function AISummary({editorContent}) {
+function AISummary({editor}) {
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
@@ -24,7 +24,7 @@ function AISummary({editorContent}) {
         if (auth.currentUser) {
             statusController.displayProgress();
             const summaryModel = {
-                text: editorContent
+                text: editor.getHTML()
             };
 
             const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/summarize`, {
@@ -48,7 +48,7 @@ function AISummary({editorContent}) {
                 statusController.displayResult(false, await response.text());
             }
         } else {
-            statusController.displayResult(false, "Unauthorized access");
+            statusController.displayResult(false, unauthorizedMessage);
         }
     }
 
