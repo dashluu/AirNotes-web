@@ -10,6 +10,7 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
     const [getEditorMarginLeft, setEditorMarginLeft] = useState("auto");
     const [getEditorMarginRight, setEditorMarginRight] = useState("auto");
     const [getEditorContent, setEditorContent] = useState(content);
+    const [getEditor, setEditor] = useState(null);
     const [getSummaryDisplay, setSummaryDisplay] = useState("none");
     const [getQADisplay, setQADisplay] = useState("none");
     const [getImageToolsDisplay, setImageToolsDisplay] = useState("none");
@@ -39,6 +40,7 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
                 <Sidebar sidebarDisplay={getSidebarDisplay}
                          closeSidebar={closeSidebar}
                          editorContent={getEditorContent}
+                         editor={getEditor}
                          summaryDisplay={getSummaryDisplay}
                          qaDisplay={getQADisplay}
                          imageToolsDisplay={getImageToolsDisplay}/>
@@ -51,6 +53,7 @@ function EditorPage({documentId, title, content, date, isNewDocument}) {
                         marginLeft={getEditorMarginLeft}
                         marginRight={getEditorMarginRight}
                         openSidebar={openSidebar}
+                        setEditor={setEditor}
                         setSummaryDisplay={setSummaryDisplay}
                         setQADisplay={setQADisplay}
                         setImageToolsDisplay={setImageToolsDisplay}/>

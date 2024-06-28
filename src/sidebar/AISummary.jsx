@@ -27,7 +27,7 @@ function AISummary({editorContent}) {
                 text: editorContent
             };
 
-            const response = await fetch("http://localhost:8000/summarize", {
+            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/summarize`, {
                 method: "post",
                 body: JSON.stringify(summaryModel),
                 headers: {

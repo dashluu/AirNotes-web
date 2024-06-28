@@ -34,7 +34,7 @@ function AIQA({editorContent}) {
                 context: getContext
             };
 
-            const response = await fetch("http://localhost:8000/qa", {
+            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/qa`, {
                 method: "post",
                 body: JSON.stringify(qaModel),
                 headers: {

@@ -1,6 +1,6 @@
 @use "../LightTheme.css";
 
-.image-tools-container {
+.img-tools-container {
   & {
     width: 100%;
     margin-left: auto;
@@ -22,6 +22,21 @@
     margin-bottom: 10px;
     resize: none;
     width: 97%;
+    padding: 5px;
+    font-weight: 500;
+    font-size: 14px;
+    background-color: var(--ai-sidebar-input-background);
+    border: 1px solid var(--ai-sidebar-input-border);
+    color: var(--ai-sidebar-input-color);
+    border-radius: 5px;
+    outline: none;
+  }
+
+  .img-description {
+    margin-bottom: 10px;
+    resize: none;
+    width: 97%;
+    height: 50px;
     padding: 5px;
     font-weight: 500;
     font-size: 14px;
@@ -60,5 +75,18 @@
     background-color: var(--ai-sidebar-action-button-background-disabled);
     border: 1px solid var(--ai-sidebar-action-button-border-disabled);
     color: var(--ai-sidebar-action-button-color-disabled);
+  }
+
+  .status-container {
+    width: 100%;
+    padding-left: 0;
+    margin-bottom: 10px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .img-gen {
+    width: 100%;
+    border-radius: 5px;
   }
 }

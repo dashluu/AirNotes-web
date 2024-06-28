@@ -37,7 +37,12 @@ const extensions = [
         placeholder: "Write something...",
     }),
     Underline,
-    Image,
+    Image.configure({
+        HTMLAttributes: {
+            class: "img",
+        },
+    })
+    ,
     // CodeBlockLowlight.configure({
     //     lowlight,
     // }),
@@ -53,6 +58,7 @@ function Editor({
                     marginLeft,
                     marginRight,
                     openSidebar,
+                    setEditor,
                     setSummaryDisplay,
                     setQADisplay,
                     setImageToolsDisplay
@@ -83,6 +89,10 @@ function Editor({
             setRedoDisabled(!editor.can().redo());
         }
     });
+
+    useEffect(() => {
+        setEditor(editor);
+    }, [editor]);
 
     useEffect(() => {
         setDocumentId(documentId);

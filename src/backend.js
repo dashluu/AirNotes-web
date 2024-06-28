@@ -5,7 +5,8 @@ import {initializeApp} from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 import {getAuth} from "firebase/auth";
 import {getFirestore} from "firebase/firestore";
-import DocumentDAO from "./editor/DocumentDAO.jsx";
+import {getStorage} from "firebase/storage";
+import DocumentDAO from "./daos/DocumentDAO.js";
 import SignUpChecker from "./auth/SignUpChecker.ts";
 
 // Your web app's Firebase configuration
@@ -25,6 +26,7 @@ const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const imgStorage = getStorage();
 export const documentDAO = new DocumentDAO();
 export const signUpChecker = new SignUpChecker();
 export const paths = {
