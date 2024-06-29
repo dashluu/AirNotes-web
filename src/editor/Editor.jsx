@@ -10,7 +10,9 @@ import {useNavigate} from "react-router-dom";
 import StatusController from "../StatusController.js";
 import BubbleMenuWrapper from "./BubbleMenuWrapper.jsx";
 import FloatingMenuWrapper from "./FloatingMenuWrapper.jsx";
-import Image from '@tiptap/extension-image'
+import {Image} from "@tiptap/extension-image";
+import {FileHandler} from "@tiptap-pro/extension-file-handler";
+import FileUploader from "./FileUploader.js";
 // import css from "highlight.js/lib/languages/css";
 // import js from "highlight.js/lib/languages/javascript";
 // import ts from "highlight.js/lib/languages/typescript";
@@ -39,10 +41,14 @@ const extensions = [
     Underline,
     Image.configure({
         HTMLAttributes: {
-            class: "img",
+            class: "img"
         },
+    }),
+    FileHandler.configure({
+        allowedMimeTypes: FileUploader.imageExtension,
+        onPaste: FileUploader.pasteFile,
+        onDrop: FileUploader.dropFile
     })
-    ,
     // CodeBlockLowlight.configure({
     //     lowlight,
     // }),
@@ -52,7 +58,6 @@ function Editor({
                     documentId,
                     title,
                     content,
-                    date,
                     isNewDocument,
                     openSidebar,
                     setEditor,
@@ -66,12 +71,10 @@ function Editor({
     const [getTitle, setTitle] = useState(title);
     const [getLoadInitialContent, setLoadInitialContent] = useState(true);
     const [getContent, setContent] = useState(content);
-    const [getDate, setDate] = useState(date);
     const [getUndoDisabled, setUndoDisabled] = useState(true);
     const [getRedoDisabled, setRedoDisabled] = useState(true);
     const [getSaveDisabled, setSaveDisabled] = useState(title === "");
     const [getDeleteDisplay, setDeleteDisplay] = useState(isNewDocument ? "none" : "inline-block");
-    const [getDateDisplay, setDateDisplay] = useState(date === "" ? "none" : "flex");
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
@@ -86,6 +89,10 @@ function Editor({
             setContent(editor.getHTML());
             setUndoDisabled(!editor.can().undo());
             setRedoDisabled(!editor.can().redo());
+        },
+        editorProps: {
+            handlePaste: FileUploader.pasteFile,
+            handleDrop: FileUploader.dropFile
         }
     });
 
@@ -96,8 +103,7 @@ function Editor({
     useEffect(() => {
         setDocumentId(documentId);
         setTitle(title);
-        setDate(date);
-    }, [documentId, title, date]);
+    }, [documentId, title]);
 
     useEffect(() => {
         if (editor && getLoadInitialContent) {
@@ -108,8 +114,7 @@ function Editor({
 
     useEffect(() => {
         setDeleteDisplay(getDocumentId === "" ? "none" : "inline-block");
-        setDateDisplay(getDate === "" ? "none" : "flex");
-    }, [getDate, getDocumentId]);
+    }, [getDocumentId]);
 
     useEffect(() => {
         if (getTitle === "") {
@@ -131,7 +136,6 @@ function Editor({
             .then((result) => {
                 statusController.displayResult(true, "Saved successfully");
                 setDocumentId(result.id);
-                setDate(result.date);
             })
             .catch((error) => {
                 statusController.displayResult(false, error);

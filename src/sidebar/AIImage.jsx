@@ -2,9 +2,8 @@ import "./AIImage.scss";
 import Status from "../status/Status.jsx";
 import {useState} from "react";
 import StatusController from "../StatusController.js";
-import {v4 as uuidv4} from "uuid";
-import {getDownloadURL, ref, uploadBytes} from "firebase/storage";
-import {auth, imgStorage, unauthorizedMessage} from "../backend.js";
+import {auth, unauthorizedMessage} from "../backend.js";
+import FileUploader from "../editor/FileUploader.js";
 
 function AIImage({editor}) {
     const [getImg, setImg] = useState(null);
@@ -23,19 +22,10 @@ function AIImage({editor}) {
     async function uploadGeneratedImg(img) {
         if (auth.currentUser) {
             statusController.displayProgress();
-            const imgId = uuidv4();
-            const imgRef = ref(imgStorage, `images/${imgId}.jpg`);
-
-            await uploadBytes(imgRef, img)
-                .then(async () => {
-                    await getDownloadURL(imgRef)
-                        .then((url) => {
-                            editor.chain().focus().setImage({src: url}).run();
-                            statusController.displayResult(true, "Image uploaded");
-                        })
-                        .catch((error) => {
-                            statusController.displayResult(false, error.message);
-                        });
+            await FileUploader.uploadFile(img, "png")
+                .then((url) => {
+                    editor.chain().focus().setImage({src: url}).run();
+                    statusController.displayResult(true, "Image uploaded");
                 })
                 .catch((error) => {
                     statusController.displayResult(false, error.message);

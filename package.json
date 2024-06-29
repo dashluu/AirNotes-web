@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@tiptap-pro/extension-file-handler": "^2.9.2",
+    "@tiptap-pro/extension-unique-id": "^2.9.2",
     "@tiptap/extension-bubble-menu": "^2.4.0",
     "@tiptap/extension-code-block-lowlight": "^2.4.0",
     "@tiptap/extension-floating-menu": "^2.4.0",
@@ -27,7 +29,10 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
-    "uuid": "^10.0.0"
+    "tiptap": "^1.32.2",
+    "tiptap-commands": "^1.17.1",
+    "uuid": "^10.0.0",
+    "vue": "^3.4.31"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

@@ -41,7 +41,6 @@ function EditDocumentPage() {
         <EditorPage documentId={getFullDocument ? getFullDocument.id : ""}
                     title={getFullDocument ? getFullDocument.title : ""}
                     content={getFullDocument ? getFullDocument.content : ""}
-                    date={getFullDocument ? getFullDocument.date : ""}
                     isNewDocument={false}/>
     );
 }

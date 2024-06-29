@@ -20,7 +20,7 @@ function NewDocumentPage() {
     }, []);
 
     return (
-        <EditorPage documentId="" title="" content="" date="" isNewDocument={true}/>
+        <EditorPage documentId="" title="" content="" isNewDocument={true}/>
     );
 }
 
