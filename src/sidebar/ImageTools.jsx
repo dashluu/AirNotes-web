@@ -1,11 +1,41 @@
 import "./ImageTools.scss";
-import {useState} from "react";
+import {useRef, useState} from "react";
+import FileDAO from "../daos/FileDAO.js";
 
 function ImageTools({editor}) {
+    const fileDAO = new FileDAO();
+    const fileInput = useRef(null);
     const [getImgUrl, setImgUrl] = useState("");
 
     function addImgByUrl(url) {
         editor.chain().focus().setImage({src: url}).run();
+    }
+
+    async function uploadImg(e) {
+        e.preventDefault();
+        const fileList = e.target.files;
+
+        for (const file of fileList) {
+            const reader = new FileReader();
+            const extension = file.name.split(".").pop();
+
+            await fileDAO.uploadFile(file, extension)
+                .then((url) => {
+                    reader.readAsDataURL(file);
+                    reader.onload = () => {
+                        // Insert an image at the current cursor position
+                        editor.chain().insertContentAt(editor.state.selection.anchor, {
+                            type: "image",
+                            attrs: {
+                                src: url,
+                            },
+                        }).focus().run();
+                    };
+                })
+                .catch((error) => {
+                    throw error;
+                });
+        }
     }
 
     return (
@@ -20,6 +50,16 @@ function ImageTools({editor}) {
                         addImgByUrl(getImgUrl);
                     }}>
                 Add image
+            </button>
+            <input type="file" ref={fileInput} multiple accept="image/*" style={{display: "none"}}
+                   onChange={(e) => {
+                       uploadImg(e);
+                   }}/>
+            <button className="action-button upload-img-files-button"
+                    onClick={() => {
+                        fileInput.current.click();
+                    }}>
+                Upload images
             </button>
         </div>
     );

@@ -1,5 +1,5 @@
 import DocumentUpdate from "../models/DocumentUpdate.js";
-import {auth, db} from "../backend.js";
+import {db} from "../backend.js";
 import {
     query,
     orderBy,
@@ -21,11 +21,11 @@ import DocumentSummary from "../models/DocumentSummary.js";
 export default class DocumentDAO {
     static documentsPerPage = 20;
 
-    async update(documentId, title, content) {
+    async update(userId, documentId, title, content) {
         // Get server time since it's more accurate
         // A placeholder only, server replaces this with real timestamp once data is uploaded
         const timestamp = serverTimestamp();
-        const documentUpdate = new DocumentUpdate(auth.currentUser.uid, title, content, timestamp);
+        const documentUpdate = new DocumentUpdate(userId, title, content, timestamp);
 
         if (!documentId) {
             // New document
@@ -43,18 +43,18 @@ export default class DocumentDAO {
             );
         }
 
-        return await this.getFullDocument(documentId);
+        return await this.getFullDocument(userId, documentId);
     }
 
     async delete(documentId) {
         await deleteDoc(doc(db, "documents", documentId));
     }
 
-    async getFullDocument(documentId) {
+    async getFullDocument(userId, documentId) {
         const documentRef = doc(db, "documents", documentId);
         const documentSnapshot = await getDoc(documentRef);
 
-        if (!documentSnapshot.exists() || documentSnapshot.data().userId !== auth.currentUser.uid) {
+        if (!documentSnapshot.exists() || documentSnapshot.data().userId !== userId) {
             return null;
         }
 

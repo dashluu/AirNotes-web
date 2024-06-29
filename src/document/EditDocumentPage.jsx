@@ -13,8 +13,8 @@ function EditDocumentPage() {
     const documentId = useLoaderData();
     const [getFullDocument, setFullDocument] = useState(null);
 
-    async function fetchDocument(documentId) {
-        await documentDAO.getFullDocument(documentId)
+    async function fetchDocument(userId, documentId) {
+        await documentDAO.getFullDocument(userId, documentId)
             .then((fullDocument) => {
                 setFullDocument(fullDocument);
             })
@@ -26,7 +26,7 @@ function EditDocumentPage() {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                fetchDocument(documentId);
+                fetchDocument(user.uid, documentId);
             } else {
                 navigate(paths.signIn);
             }

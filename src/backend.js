@@ -8,6 +8,7 @@ import {getFirestore} from "firebase/firestore";
 import {getStorage} from "firebase/storage";
 import DocumentDAO from "./daos/DocumentDAO.js";
 import SignUpChecker from "./auth/SignUpChecker.ts";
+import FileDAO from "./daos/FileDAO.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -29,7 +30,6 @@ export const db = getFirestore(app);
 export const storage = getStorage();
 export const documentDAO = new DocumentDAO();
 export const signUpChecker = new SignUpChecker();
-export const unauthorizedMessage = "Unauthorized access";
 export const paths = {
     home: "/",
     signIn: "/sign-in",
@@ -37,4 +37,14 @@ export const paths = {
     error: "/error",
     forgotPassword: "/forgot-password",
     newDocument: "/new"
-}
+};
+export const statusMessages = {
+    unauthorizedMessage: "Unauthorized access",
+    invalidClipboardDataType: "Invalid clipboard data",
+    copiedOk: "Copied successfully",
+    savedOk: "Saved successfully",
+    generatedSummaryOk: "Summary generated",
+    generatedAnswerOk: "Answer generated",
+    generatedImgOk: "Image generated",
+    imgOverSize: `Image over ${FileDAO.maxFileSize} MB`,
+};

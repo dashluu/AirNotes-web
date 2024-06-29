@@ -2,9 +2,11 @@ import "./AISummary.scss";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import StatusController from "../StatusController.js";
-import {auth, unauthorizedMessage} from "../backend.js";
+import {auth, statusMessages} from "../backend.js";
+import {onAuthStateChanged} from "firebase/auth";
 
 function AISummary({editor}) {
+    const [getUser, setUser] = useState(null);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
@@ -20,8 +22,18 @@ function AISummary({editor}) {
         setCopyDisabled(getCopyText === "");
     }, [getCopyText]);
 
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
     async function summarize() {
-        if (auth.currentUser) {
+        if (getUser) {
             statusController.displayProgress();
             const summaryModel = {
                 text: editor.getHTML()
@@ -39,7 +51,7 @@ function AISummary({editor}) {
                 await response.json()
                     .then((summaryText) => {
                         setCopyText(summaryText);
-                        statusController.displayResult(true, "Summary generated");
+                        statusController.displayResult(true, statusMessages.generatedSummaryOk);
                     })
                     .catch((error) => {
                         statusController.displayResult(false, error.message);
@@ -48,14 +60,14 @@ function AISummary({editor}) {
                 statusController.displayResult(false, await response.text());
             }
         } else {
-            statusController.displayResult(false, unauthorizedMessage);
+            statusController.displayResult(false, statusMessages.unauthorizedMessage);
         }
     }
 
     async function copyText() {
         await navigator.clipboard.writeText(getCopyText)
             .then(() => {
-                statusController.displaySuccess("Copied successfully");
+                statusController.displaySuccess(statusMessages.copiedOk);
             })
             .catch((error) => {
                 statusController.displayFailure(error.message);
@@ -69,14 +81,14 @@ function AISummary({editor}) {
                     onClick={() => {
                         summarize();
                     }}>
-                Summarize
+                Summarize text
             </button>
             <button className="action-button copy-button"
                     disabled={getCopyDisabled}
                     onClick={() => {
                         copyText();
                     }}>
-                Copy
+                Copy text
             </button>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}

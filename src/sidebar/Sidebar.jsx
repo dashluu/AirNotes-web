@@ -27,7 +27,7 @@ function Sidebar({sidebarDisplay, closeSidebar, editor, summaryDisplay, qaDispla
                     <ImageTools editor={editor}/>
                 </div>
                 <div className="sidebar-ui" style={{display: aiImgDisplay}}>
-                    <AIImage editor={editor}/>
+                    <AIImage/>
                 </div>
             </div>
         </div>

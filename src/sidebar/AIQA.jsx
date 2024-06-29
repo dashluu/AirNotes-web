@@ -2,9 +2,11 @@ import "./AIQA.scss";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import StatusController from "../StatusController.js";
-import {auth, unauthorizedMessage} from "../backend.js";
+import {auth, statusMessages} from "../backend.js";
+import {onAuthStateChanged} from "firebase/auth";
 
 function AIQA({editor}) {
+    const [getUser, setUser] = useState(null);
     const [getQuestion, setQuestion] = useState("");
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
@@ -21,8 +23,18 @@ function AIQA({editor}) {
         setCopyDisabled(getCopyText === "");
     }, [getCopyText]);
 
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
     async function answerQuestion() {
-        if (auth.currentUser) {
+        if (getUser) {
             statusController.displayProgress();
             const qaModel = {
                 question: getQuestion,
@@ -41,7 +53,7 @@ function AIQA({editor}) {
                 await response.json()
                     .then((answer) => {
                         setCopyText(answer);
-                        statusController.displayResult(true, "Answer generated");
+                        statusController.displayResult(true, statusMessages.generatedAnswerOk);
                     })
                     .catch((error) => {
                         statusController.displayResult(false, error.message);
@@ -50,14 +62,14 @@ function AIQA({editor}) {
                 statusController.displayResult(false, await response.text());
             }
         } else {
-            statusController.displayResult(false, unauthorizedMessage);
+            statusController.displayResult(false, statusMessages.unauthorizedMessage);
         }
     }
 
     async function copyText() {
         await navigator.clipboard.writeText(getCopyText)
             .then(() => {
-                statusController.displaySuccess("Copied successfully");
+                statusController.displaySuccess(statusMessages.copiedOk);
             })
             .catch((error) => {
                 statusController.displayFailure(error.message);
@@ -82,7 +94,7 @@ function AIQA({editor}) {
                     onClick={() => {
                         copyText();
                     }}>
-                Copy
+                Copy answer
             </button>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}

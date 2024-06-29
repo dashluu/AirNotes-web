@@ -3,7 +3,7 @@ import {EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
-import {documentDAO, paths} from "../backend.js";
+import {auth, documentDAO, statusMessages, paths} from "../backend.js";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -12,7 +12,8 @@ import BubbleMenuWrapper from "./BubbleMenuWrapper.jsx";
 import FloatingMenuWrapper from "./FloatingMenuWrapper.jsx";
 import {Image} from "@tiptap/extension-image";
 import {FileHandler} from "@tiptap-pro/extension-file-handler";
-import FileUploader from "./FileUploader.js";
+import {onAuthStateChanged} from "firebase/auth";
+import FileDAO from "../daos/FileDAO.js";
 // import css from "highlight.js/lib/languages/css";
 // import js from "highlight.js/lib/languages/javascript";
 // import ts from "highlight.js/lib/languages/typescript";
@@ -32,28 +33,6 @@ import FileUploader from "./FileUploader.js";
 // lowlight.register({cpp});
 // lowlight.register({java});
 
-// define your extension array
-const extensions = [
-    StarterKit,
-    Placeholder.configure({
-        placeholder: "Write something...",
-    }),
-    Underline,
-    Image.configure({
-        HTMLAttributes: {
-            class: "img"
-        },
-    }),
-    FileHandler.configure({
-        allowedMimeTypes: FileUploader.imageExtension,
-        onPaste: FileUploader.pasteFile,
-        onDrop: FileUploader.dropFile
-    })
-    // CodeBlockLowlight.configure({
-    //     lowlight,
-    // }),
-];
-
 function Editor({
                     documentId,
                     title,
@@ -67,6 +46,8 @@ function Editor({
                     setAIImgDisplay
                 }) {
     const navigate = useNavigate();
+    const fileDAO = new FileDAO();
+    const [getUser, setUser] = useState(null);
     const [getDocumentId, setDocumentId] = useState(documentId);
     const [getTitle, setTitle] = useState(title);
     const [getLoadInitialContent, setLoadInitialContent] = useState(true);
@@ -83,18 +64,48 @@ function Editor({
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
+
+    // define your extension array
+    const extensions = [
+        StarterKit,
+        Placeholder.configure({
+            placeholder: "Write something...",
+        }),
+        Underline,
+        Image.configure({
+            HTMLAttributes: {
+                class: "img"
+            },
+        }),
+        FileHandler.configure({
+            allowedMimeTypes: FileDAO.extensions,
+            onPaste: pasteFile,
+            onDrop: dropFile
+        })
+        // CodeBlockLowlight.configure({
+        //     lowlight,
+        // }),
+    ];
+
     let editor = useEditor({
-        extensions,
-        onUpdate({editor}) {
-            setContent(editor.getHTML());
-            setUndoDisabled(!editor.can().undo());
-            setRedoDisabled(!editor.can().redo());
-        },
-        editorProps: {
-            handlePaste: FileUploader.pasteFile,
-            handleDrop: FileUploader.dropFile
-        }
-    });
+            extensions,
+            onUpdate({editor}) {
+                setContent(editor.getHTML());
+                setUndoDisabled(!editor.can().undo());
+                setRedoDisabled(!editor.can().redo());
+            }
+        })
+    ;
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, []);
 
     useEffect(() => {
         setEditor(editor);
@@ -130,28 +141,83 @@ function Editor({
         }
     }, [getTitle]);
 
-    async function afterSaveDocument() {
-        statusController.displayProgress();
-        await documentDAO.update(getDocumentId, getTitle, getContent)
-            .then((result) => {
-                statusController.displayResult(true, "Saved successfully");
-                setDocumentId(result.id);
+    async function addFileToEditor(editor, file, pos) {
+        const reader = new FileReader();
+        const extension = file.name.split(".").pop();
+
+        await fileDAO.uploadFile(file, extension)
+            .then((url) => {
+                reader.readAsDataURL(file);
+                reader.onload = () => {
+                    editor.chain().insertContentAt(pos, {
+                        type: "image",
+                        attrs: {
+                            src: url,
+                        },
+                    }).focus().run();
+                };
             })
             .catch((error) => {
-                statusController.displayResult(false, error);
+                throw error;
             });
     }
 
+    function getFileSize(file) {
+        return (file.size / 1024 / 1024).toFixed(2);
+    }
+
+    async function dropPasteFile(editor, fileList, pos) {
+        Array.from(fileList).forEach(file => {
+            if (getFileSize(file) <= FileDAO.maxFileSize) {
+                addFileToEditor(editor, file, pos);
+            } else {
+                this.statusController.displayResult(false, statusMessages.imgOverSize);
+            }
+        });
+    }
+
+    function pasteFile(editor, fileList, htmlContent) {
+        if (htmlContent) {
+            return false;
+        }
+
+        dropPasteFile(editor, fileList, editor.state.selection.anchor);
+    }
+
+    function dropFile(editor, fileList, pos) {
+        dropPasteFile(editor, fileList, pos);
+    }
+
+    async function afterSaveDocument() {
+        if (getUser) {
+            statusController.displayProgress();
+            await documentDAO.update(getUser.uid, getDocumentId, getTitle, getContent)
+                .then((result) => {
+                    statusController.displayResult(true, statusMessages.savedOk);
+                    setDocumentId(result.id);
+                })
+                .catch((error) => {
+                    statusController.displayResult(false, error);
+                });
+        } else {
+            statusController.displayResult(false, statusMessages.unauthorizedMessage);
+        }
+    }
+
     async function afterDeleteDocument() {
-        statusController.displayProgress();
-        await documentDAO.delete(getDocumentId)
-            .then(() => {
-                statusController.hideStatus();
-                navigate(paths.home);
-            })
-            .catch((error) => {
-                statusController.displayResult(false, error);
-            });
+        if (getUser) {
+            statusController.displayProgress();
+            await documentDAO.delete(getDocumentId)
+                .then(() => {
+                    statusController.hideStatus();
+                    navigate(paths.home);
+                })
+                .catch((error) => {
+                    statusController.displayResult(false, error);
+                });
+        } else {
+            statusController.displayResult(false, statusMessages.unauthorizedMessage);
+        }
     }
 
     return (

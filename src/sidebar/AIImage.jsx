@@ -1,11 +1,12 @@
 import "./AIImage.scss";
 import Status from "../status/Status.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import StatusController from "../StatusController.js";
-import {auth, unauthorizedMessage} from "../backend.js";
-import FileUploader from "../editor/FileUploader.js";
+import {auth, statusMessages} from "../backend.js";
+import {onAuthStateChanged} from "firebase/auth";
 
-function AIImage({editor}) {
+function AIImage() {
+    const [getUser, setUser] = useState(null);
     const [getImg, setImg] = useState(null);
     const [getImgDescription, setImgDescription] = useState("");
     const [getImgGenDisplay, setImgGenDisplay] = useState("none");
@@ -19,24 +20,33 @@ function AIImage({editor}) {
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
 
-    async function uploadGeneratedImg(img) {
-        if (auth.currentUser) {
-            statusController.displayProgress();
-            await FileUploader.uploadFile(img, "png")
-                .then((url) => {
-                    editor.chain().focus().setImage({src: url}).run();
-                    statusController.displayResult(true, "Image uploaded");
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => {
+            unsubscribe();
+        };
+    }, []);
+
+    async function copyGeneratedImg(img) {
+        if (ClipboardItem.supports(img.type)) {
+            const data = [new ClipboardItem({[img.type]: img})];
+            await navigator.clipboard.write(data)
+                .then(() => {
+                    statusController.displaySuccess(statusMessages.copiedOk);
                 })
                 .catch((error) => {
-                    statusController.displayResult(false, error.message);
+                    statusController.displayFailure(error.message);
                 });
         } else {
-            statusController.displayResult(false, unauthorizedMessage);
+            statusController.displayResult(false, statusMessages.invalidClipboardDataType);
         }
     }
 
     async function generateImg() {
-        if (auth.currentUser) {
+        if (getUser) {
             statusController.displayProgress();
             const textToImgModel = {
                 text: getImgDescription
@@ -56,7 +66,7 @@ function AIImage({editor}) {
                         setImg(blob);
                         setImgGenDisplay("block");
                         setImgGenUrl(URL.createObjectURL(blob));
-                        statusController.displayResult(true, "Image generated");
+                        statusController.displayResult(true, statusMessages.generatedImgOk);
                     })
                     .catch((error) => {
                         statusController.displayResult(false, error.message);
@@ -65,7 +75,7 @@ function AIImage({editor}) {
                 statusController.displayResult(false, await response.text());
             }
         } else {
-            statusController.displayResult(false, unauthorizedMessage);
+            statusController.displayResult(false, statusMessages.unauthorizedMessage);
         }
     }
 
@@ -84,9 +94,9 @@ function AIImage({editor}) {
             </button>
             <button className="action-button add-generated-img-button"
                     onClick={() => {
-                        uploadGeneratedImg(getImg);
+                        copyGeneratedImg(getImg);
                     }}>
-                Add image
+                Copy image
             </button>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}
