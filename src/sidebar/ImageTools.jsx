@@ -31,9 +31,6 @@ function ImageTools({editor}) {
                             },
                         }).focus().run();
                     };
-                })
-                .catch((error) => {
-                    throw error;
                 });
         }
     }

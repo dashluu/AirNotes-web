@@ -14,7 +14,7 @@ function EditDocumentPage() {
     const [getFullDocument, setFullDocument] = useState(null);
 
     async function fetchDocument(userId, documentId) {
-        await documentDAO.getFullDocument(userId, documentId)
+        await documentDAO.accessFullDocument(userId, documentId)
             .then((fullDocument) => {
                 setFullDocument(fullDocument);
             })
@@ -39,6 +39,7 @@ function EditDocumentPage() {
 
     return (
         <EditorPage documentId={getFullDocument ? getFullDocument.id : ""}
+                    thumbnail={getFullDocument ? getFullDocument.thumbnail : ""}
                     title={getFullDocument ? getFullDocument.title : ""}
                     content={getFullDocument ? getFullDocument.content : ""}
                     isNewDocument={false}/>

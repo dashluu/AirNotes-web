@@ -40,6 +40,10 @@
     padding: 0 5px 0 5px;
   }
 
+  .summary-wrapper {
+    width: 100%;
+  }
+
   .summary-id {
     display: none;
   }
@@ -49,7 +53,7 @@
     font-size: 19px;
     font-weight: bold;
     margin-bottom: 10px;
-    width: 90%;
+    width: 100%;
     word-break: break-word;
     overflow: hidden;
     display: -webkit-box;

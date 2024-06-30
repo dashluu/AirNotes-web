@@ -16,10 +16,10 @@ function App() {
 
         const page = documentSummaryList.map(
             (documentSummary, i) => <Card key={i}
-                                          thumbnail="/thumbnail.jpg"
-                                          documentId={`${documentSummary.id}`}
-                                          title={`${documentSummary.title}`}
-                                          date={`${documentSummary.date}`}/>
+                                          documentId={documentSummary.id}
+                                          thumbnail={documentSummary.thumbnail}
+                                          title={documentSummary.title}
+                                          lastModified={documentSummary.lastModified}/>
         );
 
         setCardList(page);

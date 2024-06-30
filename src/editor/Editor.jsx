@@ -35,6 +35,7 @@ import FileDAO from "../daos/FileDAO.js";
 
 function Editor({
                     documentId,
+                    thumbnail,
                     title,
                     content,
                     isNewDocument,
@@ -49,6 +50,7 @@ function Editor({
     const fileDAO = new FileDAO();
     const [getUser, setUser] = useState(null);
     const [getDocumentId, setDocumentId] = useState(documentId);
+    const [getThumbnail, setThumbnail] = useState(thumbnail);
     const [getTitle, setTitle] = useState(title);
     const [getLoadInitialContent, setLoadInitialContent] = useState(true);
     const [getContent, setContent] = useState(content);
@@ -113,8 +115,9 @@ function Editor({
 
     useEffect(() => {
         setDocumentId(documentId);
+        setThumbnail(thumbnail);
         setTitle(title);
-    }, [documentId, title]);
+    }, [documentId, thumbnail, title]);
 
     useEffect(() => {
         if (editor && getLoadInitialContent) {
@@ -158,7 +161,7 @@ function Editor({
                 };
             })
             .catch((error) => {
-                throw error;
+                statusController.displayResult(false, error.message);
             });
     }
 
@@ -171,7 +174,7 @@ function Editor({
             if (getFileSize(file) <= FileDAO.maxFileSize) {
                 addFileToEditor(editor, file, pos);
             } else {
-                this.statusController.displayResult(false, statusMessages.imgOverSize);
+                statusController.displayResult(false, statusMessages.imgOverSize);
             }
         });
     }
@@ -191,7 +194,7 @@ function Editor({
     async function afterSaveDocument() {
         if (getUser) {
             statusController.displayProgress();
-            await documentDAO.update(getUser.uid, getDocumentId, getTitle, getContent)
+            await documentDAO.update(getUser.uid, getDocumentId, getThumbnail, getTitle, getContent)
                 .then((result) => {
                     statusController.displayResult(true, statusMessages.savedOk);
                     setDocumentId(result.id);

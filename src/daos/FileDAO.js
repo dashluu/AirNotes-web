@@ -10,14 +10,7 @@ export default class FileDAO {
         const fileId = uuidv4();
         const fileRef = ref(storage, `files/${fileId}.${extension}`);
 
-        await uploadBytes(fileRef, file)
-            .catch((error) => {
-                throw error;
-            });
-
-        return await getDownloadURL(fileRef)
-            .catch((error) => {
-                throw error;
-            });
+        await uploadBytes(fileRef, file);
+        return await getDownloadURL(fileRef);
     }
 }

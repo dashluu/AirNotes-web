@@ -2,7 +2,7 @@ import "./Card.scss";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
-const Card = ({thumbnail, documentId, title, date}) => {
+const Card = ({thumbnail, documentId, title, lastModified}) => {
     const navigate = useNavigate();
     const [getThumbnailClass, setThumbnailClass] = useState("thumbnail");
     const [getDateClass, setDateClass] = useState("summary-date");
@@ -28,7 +28,7 @@ const Card = ({thumbnail, documentId, title, date}) => {
                 <div className="summary-wrapper">
                     <div className="summary-id">{documentId}</div>
                     <div className="summary-title">{title}</div>
-                    <div className={`${getDateClass}`}>{date}</div>
+                    <div className={`${getDateClass}`}>{lastModified}</div>
                 </div>
             </div>
         </div>

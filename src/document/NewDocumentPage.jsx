@@ -20,7 +20,11 @@ function NewDocumentPage() {
     }, []);
 
     return (
-        <EditorPage documentId="" title="" content="" isNewDocument={true}/>
+        <EditorPage documentId=""
+                    thumbnail="/thumbnail.jpg"
+                    title=""
+                    content=""
+                    isNewDocument={true}/>
     );
 }
 

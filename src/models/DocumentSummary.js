@@ -1,12 +1,18 @@
 export default class DocumentSummary {
-    constructor(id, title, date) {
+    constructor(id, thumbnail, title, lastModified, lastAccessed) {
         this.id = id;
+        this.thumbnail = thumbnail;
         this.title = title;
-        this.date = date;
+        this.lastModified = lastModified;
+        this.lastAccessed = lastAccessed;
     }
 
     toString() {
-        return `id: ${this.id}\ntitle:${this.title}\ndate:${this.date}`;
+        return `id: ${this.id}\n
+        thumbnail: ${this.thumbnail}\n
+        title: ${this.title}\n
+        last modified: ${this.lastModified}\n
+        last accessed: ${this.lastAccessed}\n`;
     }
 
     static getDateStr(timestamp) {
@@ -16,6 +22,12 @@ export default class DocumentSummary {
 
     static toDocumentSummary(snapshot) {
         const data = snapshot.data();
-        return new DocumentSummary(snapshot.id, data.title, this.getDateStr(data.date));
+        return new DocumentSummary(
+            snapshot.id,
+            data.thumbnail,
+            data.title,
+            this.getDateStr(data.lastModified),
+            this.getDateStr(data.lastAccessed)
+        );
     }
 }

@@ -21,20 +21,21 @@ import DocumentSummary from "../models/DocumentSummary.js";
 export default class DocumentDAO {
     static documentsPerPage = 20;
 
-    async update(userId, documentId, title, content) {
+    async update(userId, documentId, thumbnail, title, content) {
         // Get server time since it's more accurate
         // A placeholder only, server replaces this with real timestamp once data is uploaded
-        const timestamp = serverTimestamp();
-        const documentUpdate = new DocumentUpdate(userId, title, content, timestamp);
+        const lastModified = serverTimestamp();
+        const lastAccessed = serverTimestamp();
+        const documentUpdate = new DocumentUpdate(userId, thumbnail, title, content, lastModified, lastAccessed);
 
         if (!documentId) {
             // New document
-            const documentRef = await addDoc(
+            await addDoc(
                 collection(db, "documents"),
                 DocumentUpdate.fromDocumentUpdate(documentUpdate)
-            );
-
-            documentId = documentRef.id;
+            ).then((documentRef) => {
+                documentId = documentRef.id;
+            });
         } else {
             // Updating existing document
             await updateDoc(
@@ -48,6 +49,17 @@ export default class DocumentDAO {
 
     async delete(documentId) {
         await deleteDoc(doc(db, "documents", documentId));
+    }
+
+    async accessFullDocument(userId, documentId) {
+        await updateDoc(
+            doc(db, "documents", documentId),
+            {
+                lastAccessed: serverTimestamp()
+            }
+        );
+
+        return await this.getFullDocument(userId, documentId);
     }
 
     async getFullDocument(userId, documentId) {
@@ -68,14 +80,14 @@ export default class DocumentDAO {
             documentQuery = query(
                 collection(db, "documents"),
                 where("userId", "==", userId),
-                orderBy("date", "desc"),
+                orderBy("lastAccessed", "desc"),
                 limit(DocumentDAO.documentsPerPage)
             );
         } else {
             documentQuery = query(
                 collection(db, "documents"),
                 where("userId", "==", userId),
-                orderBy("date", "desc"),
+                orderBy("lastAccessed", "desc"),
                 startAfter(cursor),
                 limit(DocumentDAO.documentsPerPage)
             );
