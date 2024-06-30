@@ -61,4 +61,12 @@
     border: 1px solid var(--ai-sidebar-action-button-border-disabled);
     color: var(--ai-sidebar-action-button-color-disabled);
   }
+
+  .status-container {
+    width: 100%;
+    padding-left: 0;
+    margin-bottom: 10px;
+    text-align: center;
+    justify-content: center;
+  }
 }

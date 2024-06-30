@@ -1,5 +1,5 @@
 export default class FullDocument {
-    constructor(id, thumbnail, userId, title, content, lastModified, lastAccessed) {
+    constructor(id, userId, thumbnail, title, content, lastModified, lastAccessed) {
         this.id = id;
         this.userId = userId;
         this.thumbnail = thumbnail;

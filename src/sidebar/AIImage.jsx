@@ -46,36 +46,37 @@ function AIImage() {
     }
 
     async function generateImg() {
-        if (getUser) {
-            statusController.displayProgress();
-            const textToImgModel = {
-                text: getImgDescription
-            };
-
-            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/text-to-img`, {
-                method: "post",
-                body: JSON.stringify(textToImgModel),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            if (response.ok) {
-                await response.blob()
-                    .then(async (blob) => {
-                        setImg(blob);
-                        setImgGenDisplay("block");
-                        setImgGenUrl(URL.createObjectURL(blob));
-                        statusController.displayResult(true, statusMessages.generatedImgOk);
-                    })
-                    .catch((error) => {
-                        statusController.displayResult(false, error.message);
-                    });
-            } else {
-                statusController.displayResult(false, await response.text());
-            }
-        } else {
+        if (!getUser) {
             statusController.displayResult(false, statusMessages.unauthorizedMessage);
+            return;
+        }
+
+        statusController.displayProgress();
+        const textToImgModel = {
+            text: getImgDescription
+        };
+
+        const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/text-to-img`, {
+            method: "post",
+            body: JSON.stringify(textToImgModel),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            await response.blob()
+                .then(async (blob) => {
+                    setImg(blob);
+                    setImgGenDisplay("block");
+                    setImgGenUrl(URL.createObjectURL(blob));
+                    statusController.displayResult(true, statusMessages.generatedImgOk);
+                })
+                .catch((error) => {
+                    statusController.displayResult(false, error.message);
+                });
+        } else {
+            statusController.displayResult(false, await response.text());
         }
     }
 

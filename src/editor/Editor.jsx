@@ -41,6 +41,7 @@ function Editor({
                     isNewDocument,
                     openSidebar,
                     setEditor,
+                    setOpenNoteDisplay,
                     setSummaryDisplay,
                     setQADisplay,
                     setImgToolsDisplay,
@@ -115,13 +116,20 @@ function Editor({
 
     useEffect(() => {
         setDocumentId(documentId);
+    }, [documentId]);
+
+    useEffect(() => {
         setThumbnail(thumbnail);
+    }, [thumbnail]);
+
+    useEffect(() => {
         setTitle(title);
-    }, [documentId, thumbnail, title]);
+    }, [title]);
 
     useEffect(() => {
         if (editor && getLoadInitialContent) {
             editor.commands.setContent(content);
+            setContent(content);
             setLoadInitialContent(false);
         }
     }, [content]);
@@ -165,17 +173,9 @@ function Editor({
             });
     }
 
-    function getFileSize(file) {
-        return (file.size / 1024 / 1024).toFixed(2);
-    }
-
     async function dropPasteFile(editor, fileList, pos) {
         Array.from(fileList).forEach(file => {
-            if (getFileSize(file) <= FileDAO.maxFileSize) {
-                addFileToEditor(editor, file, pos);
-            } else {
-                statusController.displayResult(false, statusMessages.imgOverSize);
-            }
+            addFileToEditor(editor, file, pos);
         });
     }
 
@@ -247,6 +247,14 @@ function Editor({
                     <span className="material-symbols-outlined">redo</span>
                 </button>
                 <button className="editor-toolbar-button open-button"
+                        onClick={() => {
+                            openSidebar();
+                            setOpenNoteDisplay("block");
+                            setSummaryDisplay("none");
+                            setQADisplay("none");
+                            setImgToolsDisplay("none");
+                            setAIImgDisplay("none");
+                        }}
                         title="Open">
                     <span className="material-symbols-outlined">folder_open</span>
                 </button>
@@ -254,6 +262,7 @@ function Editor({
                         onClick={() => {
                             openSidebar();
                             setSummaryDisplay("block");
+                            setOpenNoteDisplay("none");
                             setQADisplay("none");
                             setImgToolsDisplay("none");
                             setAIImgDisplay("none");
@@ -265,6 +274,7 @@ function Editor({
                         onClick={() => {
                             openSidebar();
                             setQADisplay("block");
+                            setOpenNoteDisplay("none");
                             setSummaryDisplay("none");
                             setImgToolsDisplay("none");
                             setAIImgDisplay("none");
@@ -276,6 +286,7 @@ function Editor({
                         onClick={() => {
                             openSidebar();
                             setImgToolsDisplay("block");
+                            setOpenNoteDisplay("none");
                             setSummaryDisplay("none");
                             setQADisplay("none");
                             setAIImgDisplay("none");
@@ -287,6 +298,7 @@ function Editor({
                         onClick={() => {
                             openSidebar();
                             setAIImgDisplay("block");
+                            setOpenNoteDisplay("none");
                             setSummaryDisplay("none");
                             setQADisplay("none");
                             setImgToolsDisplay("none");

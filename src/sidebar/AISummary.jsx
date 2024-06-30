@@ -33,34 +33,35 @@ function AISummary({editor}) {
     }, []);
 
     async function summarize() {
-        if (getUser) {
-            statusController.displayProgress();
-            const summaryModel = {
-                text: editor.getHTML()
-            };
-
-            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/summarize`, {
-                method: "post",
-                body: JSON.stringify(summaryModel),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            if (response.ok) {
-                await response.json()
-                    .then((summaryText) => {
-                        setCopyText(summaryText);
-                        statusController.displayResult(true, statusMessages.generatedSummaryOk);
-                    })
-                    .catch((error) => {
-                        statusController.displayResult(false, error.message);
-                    });
-            } else {
-                statusController.displayResult(false, await response.text());
-            }
-        } else {
+        if (!getUser) {
             statusController.displayResult(false, statusMessages.unauthorizedMessage);
+            return;
+        }
+
+        statusController.displayProgress();
+        const summaryModel = {
+            text: editor.getHTML()
+        };
+
+        const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/summarize`, {
+            method: "post",
+            body: JSON.stringify(summaryModel),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            await response.json()
+                .then((summaryText) => {
+                    setCopyText(summaryText);
+                    statusController.displayResult(true, statusMessages.generatedSummaryOk);
+                })
+                .catch((error) => {
+                    statusController.displayResult(false, error.message);
+                });
+        } else {
+            statusController.displayResult(false, await response.text());
         }
     }
 

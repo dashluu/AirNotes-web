@@ -6,11 +6,17 @@
 
     --background: white;
 
-    --thumbnail-border: 1px solid #eeeeee;
-    --card-title-color: black;
-    --card-date-color: #9E9E9E;
-    --card-date-color-hover: #616161;
+    --thumbnail-border: #e0e0e0;
+    --thumbnail-border-hover: #bdbdbd;
+    --summary-title-color: black;
+    --summary-date-color: #9E9E9E;
+    --summary-date-color-hover: #616161;
     --card-width: 360px;
+
+    --recent-note-background: transparent;
+    --recent-note-border: transparent;
+    --recent-note-background-hover: #eeeeee;
+    --recent-note-border-hover: #eeeeee;
 
     --sidebar-toolbar-button-background: transparent;
     --sidebar-toolbar-button-border: transparent;

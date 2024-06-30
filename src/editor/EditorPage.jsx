@@ -12,6 +12,7 @@ function EditorPage({documentId, thumbnail, title, content, isNewDocument}) {
     const [getQADisplay, setQADisplay] = useState("none");
     const [getImgToolsDisplay, setImgToolsDisplay] = useState("none");
     const [getAIImgDisplay, setAIImgDisplay] = useState("none");
+    const [getOpenNoteDisplay, setOpenNoteDisplay] = useState("none");
 
     function openSidebar() {
         setEditorGridLayout("1fr 3fr");
@@ -30,6 +31,7 @@ function EditorPage({documentId, thumbnail, title, content, isNewDocument}) {
                 <Sidebar sidebarDisplay={getSidebarDisplay}
                          closeSidebar={closeSidebar}
                          editor={getEditor}
+                         openNoteDisplay={getOpenNoteDisplay}
                          summaryDisplay={getSummaryDisplay}
                          qaDisplay={getQADisplay}
                          imgToolsDisplay={getImgToolsDisplay}
@@ -41,6 +43,7 @@ function EditorPage({documentId, thumbnail, title, content, isNewDocument}) {
                         isNewDocument={isNewDocument}
                         openSidebar={openSidebar}
                         setEditor={setEditor}
+                        setOpenNoteDisplay={setOpenNoteDisplay}
                         setSummaryDisplay={setSummaryDisplay}
                         setQADisplay={setQADisplay}
                         setImgToolsDisplay={setImgToolsDisplay}

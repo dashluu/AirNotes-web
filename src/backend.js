@@ -46,5 +46,6 @@ export const statusMessages = {
     generatedSummaryOk: "Summary generated",
     generatedAnswerOk: "Answer generated",
     generatedImgOk: "Image generated",
+    uploadedImgOk: "Image uploaded",
     imgOverSize: `Image over ${FileDAO.maxFileSize} MB`,
 };

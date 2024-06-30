@@ -24,41 +24,40 @@
   .thumbnail, .thumbnail-hover {
     width: 100%;
     border-radius: 8px;
-    border: var(--thumbnail-border);
     transition: transform .2s;
   }
 
+  .thumbnail {
+    border: 1px solid var(--thumbnail-border);
+  }
+
   .thumbnail-hover {
+    border: 1px solid var(--thumbnail-border-hover);
     transform: scale(1.05);
   }
 
   .summary-container {
     height: 100%;
     width: 100%;
-    display: flex;
-    align-items: center;
+    display: block;
     padding: 0 5px 0 5px;
   }
 
-  .summary-wrapper {
-    width: 100%;
-  }
-
-  .summary-id {
+  .document-id {
     display: none;
   }
 
   .summary-title {
-    color: var(--card-title-color);
+    color: var(--summary-title-color);
     font-size: 19px;
     font-weight: bold;
-    margin-bottom: 10px;
-    width: 100%;
+    margin-bottom: 5px;
+    width: 96%;
     word-break: break-word;
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
     -webkit-box-orient: vertical;
     //-webkit-mask-image: linear-gradient(180deg, black 0%, transparent);
     //mask-image: linear-gradient(180deg, black 0%, transparent);
@@ -68,13 +67,14 @@
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 5px;
+    width: 96%;
   }
 
   .summary-date {
-    color: var(--card-date-color);
+    color: var(--summary-date-color);
   }
 
   .summary-date-hover {
-    color: var(--card-date-color-hover);
+    color: var(--summary-date-color-hover);
   }
 }

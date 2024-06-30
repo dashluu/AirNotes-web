@@ -34,35 +34,36 @@ function AIQA({editor}) {
     }, []);
 
     async function answerQuestion() {
-        if (getUser) {
-            statusController.displayProgress();
-            const qaModel = {
-                question: getQuestion,
-                context: editor.getHTML()
-            };
-
-            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/qa`, {
-                method: "post",
-                body: JSON.stringify(qaModel),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-
-            if (response.ok) {
-                await response.json()
-                    .then((answer) => {
-                        setCopyText(answer);
-                        statusController.displayResult(true, statusMessages.generatedAnswerOk);
-                    })
-                    .catch((error) => {
-                        statusController.displayResult(false, error.message);
-                    });
-            } else {
-                statusController.displayResult(false, await response.text());
-            }
-        } else {
+        if (!getUser) {
             statusController.displayResult(false, statusMessages.unauthorizedMessage);
+            return;
+        }
+
+        statusController.displayProgress();
+        const qaModel = {
+            question: getQuestion,
+            context: editor.getHTML()
+        };
+
+        const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/qa`, {
+            method: "post",
+            body: JSON.stringify(qaModel),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            await response.json()
+                .then((answer) => {
+                    setCopyText(answer);
+                    statusController.displayResult(true, statusMessages.generatedAnswerOk);
+                })
+                .catch((error) => {
+                    statusController.displayResult(false, error.message);
+                });
+        } else {
+            statusController.displayResult(false, await response.text());
         }
     }
 

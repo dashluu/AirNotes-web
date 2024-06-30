@@ -3,8 +3,18 @@ import AISummary from "./AISummary.jsx";
 import AIQA from "./AIQA.jsx";
 import ImageTools from "./ImageTools.jsx";
 import AIImage from "./AIImage.jsx";
+import OpenNote from "./OpenNote.jsx";
 
-function Sidebar({sidebarDisplay, closeSidebar, editor, summaryDisplay, qaDisplay, imgToolsDisplay, aiImgDisplay}) {
+function Sidebar({
+                     sidebarDisplay,
+                     closeSidebar,
+                     editor,
+                     openNoteDisplay,
+                     summaryDisplay,
+                     qaDisplay,
+                     imgToolsDisplay,
+                     aiImgDisplay
+                 }) {
     return (
         <div className="sidebar" style={{display: sidebarDisplay}}>
             <div className="sidebar-toolbar">
@@ -28,6 +38,9 @@ function Sidebar({sidebarDisplay, closeSidebar, editor, summaryDisplay, qaDispla
                 </div>
                 <div className="sidebar-ui" style={{display: aiImgDisplay}}>
                     <AIImage/>
+                </div>
+                <div className="sidebar-ui" style={{display: openNoteDisplay}}>
+                    <OpenNote/>
                 </div>
             </div>
         </div>
