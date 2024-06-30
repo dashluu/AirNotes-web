@@ -24,7 +24,7 @@ export default class FullDocument {
         return `${date.toLocaleDateString("en-US")} ${date.toLocaleTimeString("en-US")}`;
     }
 
-    static toFullDocument(snapshot) {
+    static toFullDoc(snapshot) {
         const data = snapshot.data();
         return new FullDocument(
             snapshot.id,

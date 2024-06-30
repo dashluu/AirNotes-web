@@ -28,7 +28,7 @@ const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage();
-export const documentDAO = new DocumentDAO();
+export const docDAO = new DocumentDAO();
 export const signUpChecker = new SignUpChecker();
 export const paths = {
     home: "/",
@@ -36,7 +36,7 @@ export const paths = {
     signUp: "/sign-up",
     error: "/error",
     forgotPassword: "/forgot-password",
-    newDocument: "/new"
+    newDoc: "/new"
 };
 export const statusMessages = {
     unauthorizedMessage: "Unauthorized access",

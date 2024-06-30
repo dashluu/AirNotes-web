@@ -21,12 +21,12 @@ function ImageTools({editor}) {
     );
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubUser = onAuthStateChanged(auth, (user) => {
             setUser(user);
         });
 
         return () => {
-            unsubscribe();
+            unsubUser();
         };
     }, []);
 

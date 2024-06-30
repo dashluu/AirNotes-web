@@ -2,7 +2,7 @@ import "./Card.scss";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
-const Card = ({documentId, thumbnail, title, lastModified}) => {
+const Card = ({docId, thumbnail, title, lastModified}) => {
     const navigate = useNavigate();
     const [getThumbnailClass, setThumbnailClass] = useState("thumbnail");
     const [getDateClass, setDateClass] = useState("summary-date");
@@ -10,7 +10,7 @@ const Card = ({documentId, thumbnail, title, lastModified}) => {
     return (
         <div className="card-container"
              onClick={() => {
-                 navigate(`/notes/${documentId}`);
+                 navigate(`/notes/${docId}`);
              }}
              onMouseEnter={() => {
                  setThumbnailClass("thumbnail-hover");
@@ -25,7 +25,7 @@ const Card = ({documentId, thumbnail, title, lastModified}) => {
                 <img className={getThumbnailClass} src={thumbnail} alt="Thumbnail"/>
             </div>
             <div className="summary-container">
-                <div className="document-id">{documentId}</div>
+                <div className="doc-id">{docId}</div>
                 <div className="summary-title">{title}</div>
                 <div className={getDateClass}>{lastModified}</div>
             </div>

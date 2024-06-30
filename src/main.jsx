@@ -6,7 +6,7 @@ import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} fr
 import ErrorPage from "./error/ErrorPage.jsx";
 import SignUpPage from "./auth/SignUpPage.jsx";
 import NewDocumentPage from "./document/NewDocumentPage.jsx";
-import EditDocumentPage, {loader as editDocumentLoader} from "./document/EditDocumentPage.jsx";
+import EditDocumentPage, {loader as editDocLoader} from "./document/EditDocumentPage.jsx";
 import SignInPage from "./auth/SignInPage.jsx";
 import AppRouter from "./app_router/AppRouter.jsx";
 import Settings from "./settings/Settings.jsx";
@@ -19,7 +19,7 @@ const router = createBrowserRouter(
             <Route path="sign-up" element={<SignUpPage/>}/>
             <Route path="sign-in" element={<SignInPage/>}/>
             <Route path="new" element={<NewDocumentPage/>}/>
-            <Route path="notes/:documentId" element={<EditDocumentPage/>} loader={editDocumentLoader}/>
+            <Route path="notes/:docId" element={<EditDocumentPage/>} loader={editDocLoader}/>
             <Route path="settings" element={<Settings/>}/>
             <Route path="password-reset" element={<PasswordResetPage/>}/>
             <Route path="*" element={<ErrorPage/>}/>

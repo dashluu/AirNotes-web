@@ -17,14 +17,14 @@ export default class DocumentUpdate {
         last accessed: ${this.lastAccessed}\n`;
     }
 
-    static fromDocumentUpdate(documentUpdate) {
+    static fromDocUpdate(docUpdate) {
         return {
-            userId: documentUpdate.userId,
-            thumbnail: documentUpdate.thumbnail,
-            title: documentUpdate.title,
-            content: documentUpdate.content,
-            lastModified: documentUpdate.lastModified,
-            lastAccessed: documentUpdate.lastAccessed
+            userId: docUpdate.userId,
+            thumbnail: docUpdate.thumbnail,
+            title: docUpdate.title,
+            content: docUpdate.content,
+            lastModified: docUpdate.lastModified,
+            lastAccessed: docUpdate.lastAccessed
         };
     }
 }

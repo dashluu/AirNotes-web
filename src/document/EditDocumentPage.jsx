@@ -1,22 +1,22 @@
 import EditorPage from "../editor/EditorPage.jsx";
 import {useLoaderData, useNavigate} from "react-router-dom";
-import {auth, documentDAO, paths} from "../backend.js";
+import {auth, docDAO, paths} from "../backend.js";
 import {useEffect, useState} from "react";
 import {onAuthStateChanged} from "firebase/auth";
 
 export async function loader({params}) {
-    return params.documentId;
+    return params.docId;
 }
 
 function EditDocumentPage() {
     const navigate = useNavigate();
-    const documentId = useLoaderData();
-    const [getFullDocument, setFullDocument] = useState(null);
+    const docId = useLoaderData();
+    const [getFullDoc, setFullDoc] = useState(null);
 
-    async function fetchDocument(userId, documentId) {
-        await documentDAO.accessFullDocument(userId, documentId)
-            .then((fullDocument) => {
-                setFullDocument(fullDocument);
+    async function fetchDoc(userId, docId) {
+        await docDAO.accessFullDoc(userId, docId)
+            .then((fullDoc) => {
+                setFullDoc(fullDoc);
             })
             .catch(() => {
                 navigate(paths.error);
@@ -24,25 +24,25 @@ function EditDocumentPage() {
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubUser = onAuthStateChanged(auth, (user) => {
             if (user) {
-                fetchDocument(user.uid, documentId);
+                fetchDoc(user.uid, docId);
             } else {
                 navigate(paths.signIn);
             }
         });
 
         return () => {
-            unsubscribe();
+            unsubUser();
         };
     }, []);
 
     return (
-        <EditorPage documentId={getFullDocument ? getFullDocument.id : ""}
-                    thumbnail={getFullDocument ? getFullDocument.thumbnail : ""}
-                    title={getFullDocument ? getFullDocument.title : ""}
-                    content={getFullDocument ? getFullDocument.content : ""}
-                    isNewDocument={false}/>
+        <EditorPage docId={getFullDoc ? getFullDoc.id : ""}
+                    thumbnail={getFullDoc ? getFullDoc.thumbnail : ""}
+                    title={getFullDoc ? getFullDoc.title : ""}
+                    content={getFullDoc ? getFullDoc.content : ""}
+                    isNewDoc={false}/>
     );
 }
 

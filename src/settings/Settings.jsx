@@ -11,7 +11,7 @@ function Settings() {
 
     // Fetch data once
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubUser = onAuthStateChanged(auth, (user) => {
             if (user) {
                 setUser(user);
             } else {
@@ -20,7 +20,7 @@ function Settings() {
         });
 
         return () => {
-            unsubscribe();
+            unsubUser();
         };
     }, []);
 

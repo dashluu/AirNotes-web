@@ -3,30 +3,34 @@ import NavBar from "./navbar/NavBar.jsx";
 import Card from "./card_grid/Card.jsx";
 import CardGrid from "./card_grid/CardGrid.jsx";
 import {useEffect, useState} from "react";
-import {auth, documentDAO, paths} from "./backend.js";
+import {auth, docDAO, paths} from "./backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 
 function App() {
     const navigate = useNavigate();
+    const [getUnsubSummaryList, setUnsubSummaryList] = useState(null);
     const [getCardList, setCardList] = useState([]);
 
     async function fetchCardList(userId) {
-        const documentSummaryList = await documentDAO.getDocumentSummaryList(userId, 0, null);
-
-        const page = documentSummaryList.map(
-            (documentSummary, i) => <Card key={i}
-                                          documentId={documentSummary.id}
-                                          thumbnail={documentSummary.thumbnail}
-                                          title={documentSummary.title}
-                                          lastModified={documentSummary.lastModified}/>
+        const [unsubSummaryList, summaryList] = await docDAO.getDocSummaryList(
+            userId, 0, null
         );
 
+        const page = summaryList.map(
+            (summary, i) => <Card key={i}
+                                  docId={summary.id}
+                                  thumbnail={summary.thumbnail}
+                                  title={summary.title}
+                                  lastModified={summary.lastModified}/>
+        );
+
+        setUnsubSummaryList(unsubSummaryList);
         setCardList(page);
     }
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubUser = onAuthStateChanged(auth, (user) => {
             if (user) {
                 fetchCardList(user.uid);
             } else {
@@ -35,7 +39,11 @@ function App() {
         });
 
         return () => {
-            unsubscribe();
+            unsubUser();
+
+            if (getUnsubSummaryList) {
+                getUnsubSummaryList();
+            }
         };
     }, []);
 
@@ -46,7 +54,7 @@ function App() {
                 <div className="toolbar">
                     <button className="toolbar-button new-button"
                             onClick={() => {
-                                navigate(paths.newDocument);
+                                navigate(paths.newDoc);
                             }}
                             title="New">
                         <span className="material-symbols-outlined">edit_square</span>

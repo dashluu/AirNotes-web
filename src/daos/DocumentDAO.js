@@ -12,98 +12,104 @@ import {
     doc,
     serverTimestamp,
     getDoc,
+    updateDoc,
     getDocs,
-    updateDoc
+    onSnapshot
 } from "firebase/firestore";
 import FullDocument from "../models/FullDocument.js";
 import DocumentSummary from "../models/DocumentSummary.js";
 
 export default class DocumentDAO {
-    static documentsPerPage = 20;
+    static docsPerPage = 20;
 
-    async update(userId, documentId, thumbnail, title, content) {
+    async update(userId, docId, thumbnail, title, content) {
         // Get server time since it's more accurate
         // A placeholder only, server replaces this with real timestamp once data is uploaded
         const lastModified = serverTimestamp();
         const lastAccessed = serverTimestamp();
-        const documentUpdate = new DocumentUpdate(userId, thumbnail, title, content, lastModified, lastAccessed);
+        const docUpdate = new DocumentUpdate(userId, thumbnail, title, content, lastModified, lastAccessed);
 
-        if (!documentId) {
+        if (!docId) {
             // New document
             await addDoc(
                 collection(db, "documents"),
-                DocumentUpdate.fromDocumentUpdate(documentUpdate)
-            ).then((documentRef) => {
-                documentId = documentRef.id;
+                DocumentUpdate.fromDocUpdate(docUpdate)
+            ).then((docRef) => {
+                docId = docRef.id;
             });
         } else {
             // Updating existing document
             await updateDoc(
-                doc(db, "documents", documentId),
-                DocumentUpdate.fromDocumentUpdate(documentUpdate)
+                doc(db, "documents", docId),
+                DocumentUpdate.fromDocUpdate(docUpdate)
             );
         }
 
-        return await this.getFullDocument(userId, documentId);
+        return await this.getFullDoc(userId, docId);
     }
 
-    async delete(documentId) {
-        await deleteDoc(doc(db, "documents", documentId));
+    async delete(docId) {
+        await deleteDoc(doc(db, "documents", docId));
     }
 
-    async accessFullDocument(userId, documentId) {
+    async accessFullDoc(userId, docId) {
         await updateDoc(
-            doc(db, "documents", documentId),
+            doc(db, "documents", docId),
             {
                 lastAccessed: serverTimestamp()
             }
         );
 
-        return await this.getFullDocument(userId, documentId);
+        return await this.getFullDoc(userId, docId);
     }
 
-    async getFullDocument(userId, documentId) {
-        const documentRef = doc(db, "documents", documentId);
-        const documentSnapshot = await getDoc(documentRef);
+    async getFullDoc(userId, docId) {
+        const docRef = doc(db, "documents", docId);
+        const docSnapshot = await getDoc(docRef);
 
-        if (!documentSnapshot.exists() || documentSnapshot.data().userId !== userId) {
+        if (!docSnapshot.exists() || docSnapshot.data().userId !== userId) {
             return null;
         }
 
-        return FullDocument.toFullDocument(documentSnapshot);
+        return FullDocument.toFullDoc(docSnapshot);
     }
 
-    async getDocumentSummaryList(userId, page, cursor) {
-        let documentQuery;
+    #updateDocSummaryList(snapshot, docSummaryList) {
+        snapshot.forEach((docSnapshot) => {
+            const docSummary = DocumentSummary.toDocSummary(docSnapshot);
+            docSummaryList.push(docSummary);
+        });
+    }
+
+    async getDocSummaryList(userId, page, cursor) {
+        let docQuery;
 
         if (page === 0) {
-            documentQuery = query(
+            docQuery = query(
                 collection(db, "documents"),
                 where("userId", "==", userId),
                 orderBy("lastAccessed", "desc"),
-                limit(DocumentDAO.documentsPerPage)
+                limit(DocumentDAO.docsPerPage)
             );
         } else {
-            documentQuery = query(
+            docQuery = query(
                 collection(db, "documents"),
                 where("userId", "==", userId),
                 orderBy("lastAccessed", "desc"),
                 startAfter(cursor),
-                limit(DocumentDAO.documentsPerPage)
+                limit(DocumentDAO.docsPerPage)
             );
         }
 
-        const documentSnapshotList = await getDocs(documentQuery);
-        let documentSummaryList = [];
-        let documentSnapshot;
-        let documentSummary;
+        let docSummaryList = [];
+        const docSnapshotList = await getDocs(docQuery);
+        this.#updateDocSummaryList(docSnapshotList, docSummaryList);
 
-        for (let i = 0; i < documentSnapshotList.size; i++) {
-            documentSnapshot = documentSnapshotList.docs[i];
-            documentSummary = DocumentSummary.toDocumentSummary(documentSnapshot);
-            documentSummaryList.push(documentSummary);
-        }
+        const unsub = onSnapshot(docQuery, (querySnapshot) => {
+            docSummaryList = [];
+            this.#updateDocSummaryList(querySnapshot, docSummaryList);
+        });
 
-        return documentSummaryList;
+        return [unsub, docSummaryList];
     }
 }

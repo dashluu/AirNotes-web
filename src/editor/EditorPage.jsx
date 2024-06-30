@@ -4,7 +4,7 @@ import {useState} from "react";
 import Editor from "./Editor.jsx";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
-function EditorPage({documentId, thumbnail, title, content, isNewDocument}) {
+function EditorPage({docId, thumbnail, title, content, isNewDoc}) {
     const [getEditorGridLayout, setEditorGridLayout] = useState("1fr");
     const [getSidebarDisplay, setSidebarDisplay] = useState("none");
     const [getEditor, setEditor] = useState(null);
@@ -36,11 +36,11 @@ function EditorPage({documentId, thumbnail, title, content, isNewDocument}) {
                          qaDisplay={getQADisplay}
                          imgToolsDisplay={getImgToolsDisplay}
                          aiImgDisplay={getAIImgDisplay}/>
-                <Editor documentId={documentId}
+                <Editor docId={docId}
                         thumbnail={thumbnail}
                         title={title}
                         content={content}
-                        isNewDocument={isNewDocument}
+                        isNewDoc={isNewDoc}
                         openSidebar={openSidebar}
                         setEditor={setEditor}
                         setOpenNoteDisplay={setOpenNoteDisplay}

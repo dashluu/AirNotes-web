@@ -3,7 +3,7 @@ import {EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
-import {auth, documentDAO, statusMessages, paths} from "../backend.js";
+import {auth, docDAO, statusMessages, paths} from "../backend.js";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -34,11 +34,11 @@ import FileDAO from "../daos/FileDAO.js";
 // lowlight.register({java});
 
 function Editor({
-                    documentId,
+                    docId,
                     thumbnail,
                     title,
                     content,
-                    isNewDocument,
+                    isNewDoc,
                     openSidebar,
                     setEditor,
                     setOpenNoteDisplay,
@@ -50,7 +50,7 @@ function Editor({
     const navigate = useNavigate();
     const fileDAO = new FileDAO();
     const [getUser, setUser] = useState(null);
-    const [getDocumentId, setDocumentId] = useState(documentId);
+    const [getDocId, setDocId] = useState(docId);
     const [getThumbnail, setThumbnail] = useState(thumbnail);
     const [getTitle, setTitle] = useState(title);
     const [getLoadInitialContent, setLoadInitialContent] = useState(true);
@@ -58,7 +58,7 @@ function Editor({
     const [getUndoDisabled, setUndoDisabled] = useState(true);
     const [getRedoDisabled, setRedoDisabled] = useState(true);
     const [getSaveDisabled, setSaveDisabled] = useState(title === "");
-    const [getDeleteDisplay, setDeleteDisplay] = useState(isNewDocument ? "none" : "inline-block");
+    const [getDeleteDisplay, setDeleteDisplay] = useState(isNewDoc ? "none" : "inline-block");
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
@@ -101,12 +101,12 @@ function Editor({
     ;
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
+        const unsubUser = onAuthStateChanged(auth, (user) => {
             setUser(user);
         });
 
         return () => {
-            unsubscribe();
+            unsubUser();
         };
     }, []);
 
@@ -115,8 +115,8 @@ function Editor({
     }, [editor]);
 
     useEffect(() => {
-        setDocumentId(documentId);
-    }, [documentId]);
+        setDocId(docId);
+    }, [docId]);
 
     useEffect(() => {
         setThumbnail(thumbnail);
@@ -135,8 +135,8 @@ function Editor({
     }, [content]);
 
     useEffect(() => {
-        setDeleteDisplay(getDocumentId === "" ? "none" : "inline-block");
-    }, [getDocumentId]);
+        setDeleteDisplay(getDocId === "" ? "none" : "inline-block");
+    }, [getDocId]);
 
     useEffect(() => {
         if (getTitle === "") {
@@ -191,13 +191,13 @@ function Editor({
         dropPasteFile(editor, fileList, pos);
     }
 
-    async function afterSaveDocument() {
+    async function afterSaveDoc() {
         if (getUser) {
             statusController.displayProgress();
-            await documentDAO.update(getUser.uid, getDocumentId, getThumbnail, getTitle, getContent)
+            await docDAO.update(getUser.uid, getDocId, getThumbnail, getTitle, getContent)
                 .then((result) => {
                     statusController.displayResult(true, statusMessages.savedOk);
-                    setDocumentId(result.id);
+                    setDocId(result.id);
                 })
                 .catch((error) => {
                     statusController.displayResult(false, error);
@@ -207,10 +207,10 @@ function Editor({
         }
     }
 
-    async function afterDeleteDocument() {
+    async function afterDeleteDoc() {
         if (getUser) {
             statusController.displayProgress();
-            await documentDAO.delete(getDocumentId)
+            await docDAO.delete(getDocId)
                 .then(() => {
                     statusController.hideStatus();
                     navigate(paths.home);
@@ -225,11 +225,11 @@ function Editor({
 
     return (
         <div className="editor-container">
-            <div className="document-id-container">{getDocumentId}</div>
+            <div className="doc-id-container">{getDocId}</div>
             <div className="editor-toolbar">
                 <button className="editor-toolbar-button new-button"
                         onClick={() => {
-                            navigate(paths.newDocument);
+                            navigate(paths.newDoc);
                         }}
                         title="New">
                     <span className="material-symbols-outlined">edit_square</span>
@@ -309,7 +309,7 @@ function Editor({
                 <button className="editor-toolbar-button save-button" disabled={getSaveDisabled}
                         title="Save"
                         onClick={() => {
-                            afterSaveDocument();
+                            afterSaveDoc();
                         }}>
                     <span className="material-symbols-outlined">save</span>
                 </button>
@@ -317,7 +317,7 @@ function Editor({
                         style={{display: `${getDeleteDisplay}`}}
                         title="Delete"
                         onClick={() => {
-                            afterDeleteDocument();
+                            afterDeleteDoc();
                         }}>
                     <span className="material-symbols-outlined">delete</span>
                 </button>
