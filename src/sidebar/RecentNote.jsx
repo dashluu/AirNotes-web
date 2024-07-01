@@ -1,7 +1,7 @@
 import "./RecentNote.scss";
 import {useState} from "react";
 
-function RecentNote({docId, thumbnail, title, lastModified}) {
+function RecentNote({docSummary}) {
     const [getThumbnailClass, setThumbnailClass] = useState("thumbnail");
     const [getDateClass, setDateClass] = useState("summary-date");
 
@@ -16,15 +16,15 @@ function RecentNote({docId, thumbnail, title, lastModified}) {
                  setDateClass("summary-date");
              }}>
             <div className="thumbnail-container">
-                <img className={getThumbnailClass} src={thumbnail} alt="Thumbnail"/>
+                <img className={getThumbnailClass} src={docSummary.thumbnail} alt="Thumbnail"/>
             </div>
             <div className="summary-container">
-                <div className="doc-id">{docId}</div>
-                <div className="summary-title">{title}</div>
-                <div className={getDateClass}>{lastModified}</div>
+                <div className="doc-id">{docSummary.id}</div>
+                <div className="summary-title">{docSummary.title}</div>
+                <div className={getDateClass}>{docSummary.lastModified}</div>
                 <button className="action-button"
                         onClick={() => {
-                            window.open(`/notes/${docId}`, "_blank");
+                            window.open(`/notes/${docSummary.id}`, "_blank");
                         }}>
                     Open in new tab
                 </button>

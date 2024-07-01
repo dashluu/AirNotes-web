@@ -18,11 +18,7 @@ function OpenNote({docId, loadRecent}) {
         await docDAO.getDocSummaryList(userId, getDocId, 4, null)
             .then(([unsubSummaryList, summaryList]) => {
                 const recentNoteList = summaryList.map(
-                    (summary, i) => <RecentNote key={i}
-                                                docId={summary.id}
-                                                thumbnail={summary.thumbnail}
-                                                title={summary.title}
-                                                lastModified={summary.lastModified}/>
+                    (summary, i) => <RecentNote key={i} docSummary={summary}/>
                 );
 
                 setUnsubSummaryList(unsubSummaryList);

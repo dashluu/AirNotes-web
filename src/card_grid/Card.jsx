@@ -2,7 +2,7 @@ import "./Card.scss";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 
-const Card = ({docId, thumbnail, title, lastModified}) => {
+const Card = ({docSummary}) => {
     const navigate = useNavigate();
     const [getThumbnailClass, setThumbnailClass] = useState("thumbnail");
     const [getDateClass, setDateClass] = useState("summary-date");
@@ -10,7 +10,7 @@ const Card = ({docId, thumbnail, title, lastModified}) => {
     return (
         <div className="card-container"
              onClick={() => {
-                 navigate(`/notes/${docId}`);
+                 navigate(`/notes/${docSummary.id}`);
              }}
              onMouseEnter={() => {
                  setThumbnailClass("thumbnail-hover");
@@ -22,12 +22,12 @@ const Card = ({docId, thumbnail, title, lastModified}) => {
              }}
         >
             <div className="thumbnail-container">
-                <img className={getThumbnailClass} src={thumbnail} alt="Thumbnail"/>
+                <img className={getThumbnailClass} src={docSummary.thumbnail} alt="Thumbnail"/>
             </div>
             <div className="summary-container">
-                <div className="doc-id">{docId}</div>
-                <div className="summary-title">{title}</div>
-                <div className={getDateClass}>{lastModified}</div>
+                <div className="doc-id">{docSummary.id}</div>
+                <div className="summary-title">{docSummary.title}</div>
+                <div className={getDateClass}>{docSummary.lastModified}</div>
             </div>
         </div>
     );

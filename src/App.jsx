@@ -16,11 +16,7 @@ function App() {
         await docDAO.getDocSummaryPage(userId, 0, null)
             .then(([unsubSummaryList, summaryList]) => {
                 const cardList = summaryList.map(
-                    (summary, i) => <Card key={i}
-                                          docId={summary.id}
-                                          thumbnail={summary.thumbnail}
-                                          title={summary.title}
-                                          lastModified={summary.lastModified}/>
+                    (summary, i) => <Card key={i} docSummary={summary}/>
                 );
 
                 setUnsubSummaryList(unsubSummaryList);

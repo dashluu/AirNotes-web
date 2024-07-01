@@ -4,7 +4,7 @@ import {useState} from "react";
 import Editor from "./Editor.jsx";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
-function EditorPage({docId, thumbnail, title, content, isNewDoc, loadRecent}) {
+function EditorPage({fullDoc, isNewDoc, loadRecent}) {
     const [getEditorGridLayout, setEditorGridLayout] = useState("1fr");
     const [getSidebarDisplay, setSidebarDisplay] = useState("none");
     const [getEditor, setEditor] = useState(null);
@@ -28,7 +28,7 @@ function EditorPage({docId, thumbnail, title, content, isNewDoc, loadRecent}) {
         <div className="editor-page">
             <NavBar/>
             <div className="editor-grid" style={{gridTemplateColumns: getEditorGridLayout}}>
-                <Sidebar docId={docId}
+                <Sidebar docId={fullDoc.id}
                          loadRecent={loadRecent}
                          sidebarDisplay={getSidebarDisplay}
                          closeSidebar={closeSidebar}
@@ -38,10 +38,10 @@ function EditorPage({docId, thumbnail, title, content, isNewDoc, loadRecent}) {
                          qaDisplay={getQADisplay}
                          imgToolsDisplay={getImgToolsDisplay}
                          aiImgDisplay={getAIImgDisplay}/>
-                <Editor docId={docId}
-                        thumbnail={thumbnail}
-                        title={title}
-                        content={content}
+                <Editor docId={fullDoc.id}
+                        thumbnail={fullDoc.thumbnail}
+                        title={fullDoc.title}
+                        content={fullDoc.content}
                         isNewDoc={isNewDoc}
                         openSidebar={openSidebar}
                         setEditor={setEditor}
