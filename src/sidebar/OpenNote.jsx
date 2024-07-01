@@ -1,23 +1,54 @@
 import "./OpenNote.scss";
 import {useEffect, useState} from "react";
 import RecentNote from "./RecentNote.jsx";
+import {onAuthStateChanged} from "firebase/auth";
+import {auth, docDAO} from "../backend.js";
 
-function OpenNote() {
+function OpenNote({docId, loadRecent}) {
+    const [getUser, setUser] = useState(null);
+    const [getDocId, setDocId] = useState(docId);
+    const [getUnsubSummaryList, setUnsubSummaryList] = useState(null);
     const [getRecentNoteList, setRecentNoteList] = useState([]);
 
     useEffect(() => {
-        const recentNoteList = [];
+        setDocId(docId);
+    }, [docId]);
 
-        for (let i = 0; i < 4; i++) {
-            recentNoteList.push(<RecentNote key={i}
-                                            docId=""
-                                            thumbnail="https://firebasestorage.googleapis.com/v0/b/airnotes-8ae79.appspot.com/o/files%2Fthumbnail.jpg?alt=media&token=30c22fd4-197d-4dcc-8058-cda1effc4442"
-                                            title="Hellojsndjsndjsndsjdnjsndjsndjsndjnsdjnsjdnjsdhhdbhfbdhfbdhfbhdbfhdbf"
-                                            lastModiffied="06/30/2024"/>);
+    async function fetchRecentNoteList(userId) {
+        await docDAO.getDocSummaryList(userId, getDocId, 4, null)
+            .then(([unsubSummaryList, summaryList]) => {
+                const recentNoteList = summaryList.map(
+                    (summary, i) => <RecentNote key={i}
+                                                docId={summary.id}
+                                                thumbnail={summary.thumbnail}
+                                                title={summary.title}
+                                                lastModified={summary.lastModified}/>
+                );
+
+                setUnsubSummaryList(unsubSummaryList);
+                setRecentNoteList(recentNoteList);
+            });
+    }
+
+    useEffect(() => {
+        const unsubUser = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => {
+            unsubUser();
+
+            if (getUnsubSummaryList) {
+                getUnsubSummaryList();
+            }
         }
-
-        setRecentNoteList(recentNoteList);
     }, []);
+
+    useEffect(() => {
+        if (getUser && loadRecent && getDocId) {
+            fetchRecentNoteList(getUser.uid);
+        }
+    }, [getUser, loadRecent, getDocId]);
 
     return (
         <div className="open-note-container">

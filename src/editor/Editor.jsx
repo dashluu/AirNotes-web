@@ -255,7 +255,7 @@ function Editor({
                             setImgToolsDisplay("none");
                             setAIImgDisplay("none");
                         }}
-                        title="Open">
+                        title="Open Recent">
                     <span className="material-symbols-outlined">folder_open</span>
                 </button>
                 <button className="editor-toolbar-button summarize-button"

@@ -74,17 +74,10 @@ export default class DocumentDAO {
         return FullDocument.toFullDoc(docSnapshot);
     }
 
-    #updateDocSummaryList(snapshot, docSummaryList) {
-        snapshot.forEach((docSnapshot) => {
-            const docSummary = DocumentSummary.toDocSummary(docSnapshot);
-            docSummaryList.push(docSummary);
-        });
-    }
-
-    async getDocSummaryList(userId, page, cursor) {
+    async getDocSummaryPage(userId, page, cursor) {
         let docQuery;
 
-        if (page === 0) {
+        if (!cursor) {
             docQuery = query(
                 collection(db, "documents"),
                 where("userId", "==", userId),
@@ -103,11 +96,66 @@ export default class DocumentDAO {
 
         let docSummaryList = [];
         const docSnapshotList = await getDocs(docQuery);
-        this.#updateDocSummaryList(docSnapshotList, docSummaryList);
+
+        docSnapshotList.forEach((docSnapshot) => {
+            const docSummary = DocumentSummary.toDocSummary(docSnapshot);
+            docSummaryList.push(docSummary);
+        });
 
         const unsub = onSnapshot(docQuery, (querySnapshot) => {
             docSummaryList = [];
-            this.#updateDocSummaryList(querySnapshot, docSummaryList);
+
+            querySnapshot.forEach((docSnapshot) => {
+                const docSummary = DocumentSummary.toDocSummary(docSnapshot);
+                docSummaryList.push(docSummary);
+            });
+        });
+
+        return [unsub, docSummaryList];
+    }
+
+    async getDocSummaryList(userId, excludedDocId, numItems, cursor) {
+        let docQuery;
+
+        if (!cursor) {
+            docQuery = query(
+                collection(db, "documents"),
+                where("userId", "==", userId),
+                orderBy("lastAccessed", "desc"),
+                limit(numItems + 1)
+            );
+        } else {
+            docQuery = query(
+                collection(db, "documents"),
+                where("userId", "==", userId),
+                orderBy("lastAccessed", "desc"),
+                startAfter(cursor),
+                limit(numItems + 1)
+            );
+        }
+
+        let docSummaryList = [];
+        const docSnapshotList = await getDocs(docQuery);
+        let i = 0;
+
+        docSnapshotList.forEach((docSnapshot) => {
+            if (i < docSnapshotList.size && docSnapshot.id !== excludedDocId) {
+                const docSummary = DocumentSummary.toDocSummary(docSnapshot);
+                docSummaryList.push(docSummary);
+                i++;
+            }
+        });
+
+        const unsub = onSnapshot(docQuery, (querySnapshot) => {
+            docSummaryList = [];
+            i = 0;
+
+            querySnapshot.forEach((docSnapshot) => {
+                if (i < querySnapshot.size && docSnapshot.id !== excludedDocId) {
+                    const docSummary = DocumentSummary.toDocSummary(docSnapshot);
+                    docSummaryList.push(docSummary);
+                }
+            });
         });
 
         return [unsub, docSummaryList];

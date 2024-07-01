@@ -12,11 +12,13 @@ function EditDocumentPage() {
     const navigate = useNavigate();
     const docId = useLoaderData();
     const [getFullDoc, setFullDoc] = useState(null);
+    const [getLoadRecent, setLoadRecent] = useState(false);
 
     async function fetchDoc(userId, docId) {
         await docDAO.accessFullDoc(userId, docId)
             .then((fullDoc) => {
                 setFullDoc(fullDoc);
+                setLoadRecent(true);
             })
             .catch(() => {
                 navigate(paths.error);
@@ -42,7 +44,8 @@ function EditDocumentPage() {
                     thumbnail={getFullDoc ? getFullDoc.thumbnail : ""}
                     title={getFullDoc ? getFullDoc.title : ""}
                     content={getFullDoc ? getFullDoc.content : ""}
-                    isNewDoc={false}/>
+                    isNewDoc={false}
+                    loadRecent={getLoadRecent}/>
     );
 }
 

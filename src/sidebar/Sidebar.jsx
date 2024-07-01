@@ -4,8 +4,11 @@ import AIQA from "./AIQA.jsx";
 import ImageTools from "./ImageTools.jsx";
 import AIImage from "./AIImage.jsx";
 import OpenNote from "./OpenNote.jsx";
+import {useEffect} from "react";
 
 function Sidebar({
+                     docId,
+                     loadRecent,
                      sidebarDisplay,
                      closeSidebar,
                      editor,
@@ -40,7 +43,7 @@ function Sidebar({
                     <AIImage/>
                 </div>
                 <div className="sidebar-ui" style={{display: openNoteDisplay}}>
-                    <OpenNote/>
+                    <OpenNote docId={docId} loadRecent={loadRecent}/>
                 </div>
             </div>
         </div>

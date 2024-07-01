@@ -13,20 +13,19 @@ function App() {
     const [getCardList, setCardList] = useState([]);
 
     async function fetchCardList(userId) {
-        const [unsubSummaryList, summaryList] = await docDAO.getDocSummaryList(
-            userId, 0, null
-        );
+        await docDAO.getDocSummaryPage(userId, 0, null)
+            .then(([unsubSummaryList, summaryList]) => {
+                const cardList = summaryList.map(
+                    (summary, i) => <Card key={i}
+                                          docId={summary.id}
+                                          thumbnail={summary.thumbnail}
+                                          title={summary.title}
+                                          lastModified={summary.lastModified}/>
+                );
 
-        const page = summaryList.map(
-            (summary, i) => <Card key={i}
-                                  docId={summary.id}
-                                  thumbnail={summary.thumbnail}
-                                  title={summary.title}
-                                  lastModified={summary.lastModified}/>
-        );
-
-        setUnsubSummaryList(unsubSummaryList);
-        setCardList(page);
+                setUnsubSummaryList(unsubSummaryList);
+                setCardList(cardList);
+            });
     }
 
     useEffect(() => {

@@ -1,7 +1,7 @@
 import "./RecentNote.scss";
 import {useState} from "react";
 
-function RecentNote({docId, thumbnail, title, lastModiffied}) {
+function RecentNote({docId, thumbnail, title, lastModified}) {
     const [getThumbnailClass, setThumbnailClass] = useState("thumbnail");
     const [getDateClass, setDateClass] = useState("summary-date");
 
@@ -21,7 +21,7 @@ function RecentNote({docId, thumbnail, title, lastModiffied}) {
             <div className="summary-container">
                 <div className="doc-id">{docId}</div>
                 <div className="summary-title">{title}</div>
-                <div className={getDateClass}>{lastModiffied}</div>
+                <div className={getDateClass}>{lastModified}</div>
                 <button className="action-button"
                         onClick={() => {
                             window.open(`/notes/${docId}`, "_blank");
