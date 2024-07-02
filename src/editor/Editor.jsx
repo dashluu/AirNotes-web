@@ -53,7 +53,6 @@ function Editor({
     const [getDocId, setDocId] = useState(docId);
     const [getThumbnail, setThumbnail] = useState(thumbnail);
     const [getTitle, setTitle] = useState(title);
-    const [getLoadInitialContent, setLoadInitialContent] = useState(true);
     const [getContent, setContent] = useState(content);
     const [getUndoDisabled, setUndoDisabled] = useState(true);
     const [getRedoDisabled, setRedoDisabled] = useState(true);
@@ -127,10 +126,9 @@ function Editor({
     }, [title]);
 
     useEffect(() => {
-        if (editor && getLoadInitialContent) {
+        if (editor) {
             editor.commands.setContent(content);
             setContent(content);
-            setLoadInitialContent(false);
         }
     }, [content]);
 

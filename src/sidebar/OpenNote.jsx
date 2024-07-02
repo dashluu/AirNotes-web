@@ -4,7 +4,7 @@ import RecentNote from "./RecentNote.jsx";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth, docDAO} from "../backend.js";
 
-function OpenNote({docId, loadRecent}) {
+function OpenNote({docId, setFullDoc, getLoadRecent, setLoadRecent}) {
     const [getUser, setUser] = useState(null);
     const [getDocId, setDocId] = useState(docId);
     const [getUnsubSummaryList, setUnsubSummaryList] = useState(null);
@@ -18,11 +18,17 @@ function OpenNote({docId, loadRecent}) {
         await docDAO.getDocSummaryList(userId, getDocId, 4, null)
             .then(([unsubSummaryList, summaryList]) => {
                 const recentNoteList = summaryList.map(
-                    (summary, i) => <RecentNote key={i} docSummary={summary}/>
+                    (summary, i) => <RecentNote key={i}
+                                                docSummary={summary}
+                                                setFullDoc={setFullDoc}
+                                                setLoadRecent={setLoadRecent}/>
                 );
 
                 setUnsubSummaryList(unsubSummaryList);
                 setRecentNoteList(recentNoteList);
+            })
+            .catch(() => {
+                setUnsubSummaryList(null);
             });
     }
 
@@ -41,10 +47,10 @@ function OpenNote({docId, loadRecent}) {
     }, []);
 
     useEffect(() => {
-        if (getUser && loadRecent && getDocId) {
+        if (getUser && getLoadRecent && getDocId) {
             fetchRecentNoteList(getUser.uid);
         }
-    }, [getUser, loadRecent, getDocId]);
+    }, [getUser, getLoadRecent, getDocId]);
 
     return (
         <div className="open-note-container">

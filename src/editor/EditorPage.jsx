@@ -1,10 +1,12 @@
 import "./EditorPage.scss";
 import NavBar from "../navbar/NavBar.jsx";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Editor from "./Editor.jsx";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
 function EditorPage({fullDoc, isNewDoc, loadRecent}) {
+    const [getFullDoc, setFullDoc] = useState(fullDoc);
+    const [getLoadRecent, setLoadRecent] = useState(loadRecent);
     const [getEditorGridLayout, setEditorGridLayout] = useState("1fr");
     const [getSidebarDisplay, setSidebarDisplay] = useState("none");
     const [getEditor, setEditor] = useState(null);
@@ -13,6 +15,14 @@ function EditorPage({fullDoc, isNewDoc, loadRecent}) {
     const [getImgToolsDisplay, setImgToolsDisplay] = useState("none");
     const [getAIImgDisplay, setAIImgDisplay] = useState("none");
     const [getOpenNoteDisplay, setOpenNoteDisplay] = useState("none");
+
+    useEffect(() => {
+        setFullDoc(fullDoc);
+    }, [fullDoc]);
+
+    useEffect(() => {
+        setLoadRecent(loadRecent);
+    }, [loadRecent]);
 
     function openSidebar() {
         setEditorGridLayout("1fr 3fr");
@@ -28,8 +38,10 @@ function EditorPage({fullDoc, isNewDoc, loadRecent}) {
         <div className="editor-page">
             <NavBar/>
             <div className="editor-grid" style={{gridTemplateColumns: getEditorGridLayout}}>
-                <Sidebar docId={fullDoc.id}
-                         loadRecent={loadRecent}
+                <Sidebar docId={getFullDoc.id}
+                         setFullDoc={setFullDoc}
+                         getLoadRecent={getLoadRecent}
+                         setLoadRecent={setLoadRecent}
                          sidebarDisplay={getSidebarDisplay}
                          closeSidebar={closeSidebar}
                          editor={getEditor}
@@ -38,10 +50,10 @@ function EditorPage({fullDoc, isNewDoc, loadRecent}) {
                          qaDisplay={getQADisplay}
                          imgToolsDisplay={getImgToolsDisplay}
                          aiImgDisplay={getAIImgDisplay}/>
-                <Editor docId={fullDoc.id}
-                        thumbnail={fullDoc.thumbnail}
-                        title={fullDoc.title}
-                        content={fullDoc.content}
+                <Editor docId={getFullDoc.id}
+                        thumbnail={getFullDoc.thumbnail}
+                        title={getFullDoc.title}
+                        content={getFullDoc.content}
                         isNewDoc={isNewDoc}
                         openSidebar={openSidebar}
                         setEditor={setEditor}

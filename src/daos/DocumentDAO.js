@@ -1,26 +1,27 @@
 import DocumentUpdate from "../models/DocumentUpdate.js";
 import {db} from "../backend.js";
 import {
-    query,
-    orderBy,
-    limit,
-    startAfter,
-    where,
     addDoc,
     collection,
     deleteDoc,
     doc,
-    serverTimestamp,
+    getCountFromServer,
     getDoc,
-    updateDoc,
     getDocs,
-    onSnapshot
+    limit,
+    onSnapshot,
+    orderBy,
+    query,
+    serverTimestamp,
+    startAfter,
+    updateDoc,
+    where
 } from "firebase/firestore";
 import FullDocument from "../models/FullDocument.js";
 import DocumentSummary from "../models/DocumentSummary.js";
 
 export default class DocumentDAO {
-    static docsPerPage = 20;
+    static docsPerPage = 1;
 
     async update(userId, docId, thumbnail, title, content) {
         // Get server time since it's more accurate
@@ -74,7 +75,7 @@ export default class DocumentDAO {
         return FullDocument.toFullDoc(docSnapshot);
     }
 
-    async getDocSummaryPage(userId, page, cursor) {
+    async getDocSummaryPage(userId, cursor) {
         let docQuery;
 
         if (!cursor) {
@@ -94,24 +95,7 @@ export default class DocumentDAO {
             );
         }
 
-        let docSummaryList = [];
-        const docSnapshotList = await getDocs(docQuery);
-
-        docSnapshotList.forEach((docSnapshot) => {
-            const docSummary = DocumentSummary.toDocSummary(docSnapshot);
-            docSummaryList.push(docSummary);
-        });
-
-        const unsub = onSnapshot(docQuery, (querySnapshot) => {
-            docSummaryList = [];
-
-            querySnapshot.forEach((docSnapshot) => {
-                const docSummary = DocumentSummary.toDocSummary(docSnapshot);
-                docSummaryList.push(docSummary);
-            });
-        });
-
-        return [unsub, docSummaryList];
+        return await getDocs(docQuery);
     }
 
     async getDocSummaryList(userId, excludedDocId, numItems, cursor) {
@@ -159,5 +143,15 @@ export default class DocumentDAO {
         });
 
         return [unsub, docSummaryList];
+    }
+
+    async countPages(userId) {
+        let docQuery = query(
+            collection(db, "documents"),
+            where("userId", "==", userId)
+        );
+
+        const snapshot = await getCountFromServer(docQuery);
+        return Math.ceil(snapshot.data().count / DocumentDAO.docsPerPage);
     }
 }

@@ -1,12 +1,54 @@
 import "./RecentNote.scss";
-import {useState} from "react";
+import {useEffect, useState} from "react";
+import {auth, docDAO, paths} from "../backend.js";
+import {useNavigate} from "react-router-dom";
+import {onAuthStateChanged} from "firebase/auth";
 
-function RecentNote({docSummary}) {
+function RecentNote({docSummary, setFullDoc, setLoadRecent}) {
+    const navigate = useNavigate();
+    const [getUser, setUser] = useState(null);
+    const [getDocSummary, setDocSummary] = useState(docSummary);
     const [getThumbnailClass, setThumbnailClass] = useState("thumbnail");
     const [getDateClass, setDateClass] = useState("summary-date");
 
+    useEffect(() => {
+        const unsubUser = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => {
+            unsubUser();
+        };
+    }, []);
+
+    useEffect(() => {
+        setDocSummary(docSummary);
+    }, [docSummary]);
+
+    async function fetchDoc(userId, docId) {
+        await docDAO.accessFullDoc(userId, docId)
+            .then((fullDoc) => {
+                setFullDoc(fullDoc);
+                setLoadRecent(true);
+            })
+            .catch(() => {
+                navigate(paths.error);
+            });
+    }
+
+    function loadDoc() {
+        if (getUser) {
+            fetchDoc(getUser.uid, getDocSummary.id);
+        } else {
+            navigate(paths.signIn);
+        }
+    }
+
     return (
         <div className="recent-note-container"
+             onClick={() => {
+                 loadDoc();
+             }}
              onMouseEnter={() => {
                  setThumbnailClass("thumbnail-hover");
                  setDateClass("summary-date-hover");
