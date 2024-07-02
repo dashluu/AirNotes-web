@@ -48,7 +48,7 @@ function SignUpPage() {
         return validatePassword();
     }
 
-    async function signUp() {
+    function signUp() {
         if (!validateInput()) {
             return;
         }
@@ -57,7 +57,7 @@ function SignUpPage() {
         passwordStatusController.displayProgress();
 
         // Send sign-up data to the server
-        await createUserWithEmailAndPassword(auth, emailInput.current.value, passwordInput.current.value)
+        createUserWithEmailAndPassword(auth, emailInput.current.value, passwordInput.current.value)
             .then(() => {
                 emailStatusController.hideStatus();
                 passwordStatusController.hideStatus();
@@ -71,9 +71,9 @@ function SignUpPage() {
             })
             .catch((error) => {
                 if (error.message.toLowerCase().indexOf("email") >= 0) {
-                    emailStatusController.displayResult(false, error.message);
+                    emailStatusController.displayFailure(error.message);
                 } else {
-                    passwordStatusController.displayResult(false, error.message);
+                    passwordStatusController.displayFailure(error.message);
                 }
             });
     }

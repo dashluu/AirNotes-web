@@ -38,7 +38,7 @@ function ImageTools({editor}) {
         e.preventDefault();
 
         if (!getUser) {
-            statusController.displayResult(false, statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedMessage);
             return;
         }
 
@@ -49,27 +49,24 @@ function ImageTools({editor}) {
             for (const file of fileList) {
                 const reader = new FileReader();
                 const extension = file.name.split(".").pop();
+                const url = await fileDAO.uploadFile(file, extension);
+                reader.readAsDataURL(file);
 
-                await fileDAO.uploadFile(file, extension)
-                    .then((url) => {
-                        reader.readAsDataURL(file);
-
-                        reader.onload = () => {
-                            // Insert an image at the current cursor position
-                            editor.chain().insertContentAt(editor.state.selection.anchor, {
-                                type: "image",
-                                attrs: {
-                                    src: url,
-                                },
-                            }).focus().run();
-                        };
-                    });
+                reader.onload = () => {
+                    // Insert an image at the current cursor position
+                    editor.chain().insertContentAt(editor.state.selection.anchor, {
+                        type: "image",
+                        attrs: {
+                            src: url,
+                        },
+                    }).focus().run();
+                };
             }
 
-            statusController.displayResult(true, statusMessages.uploadedImgOk);
+            statusController.displaySuccess(statusMessages.uploadedImgOk);
         } catch (error) {
             e.target.value = "";
-            statusController.displayResult(false, error.message);
+            statusController.displayFailure(error.message);
         }
     }
 

@@ -3,7 +3,7 @@ import {EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
-import {auth, docDAO, statusMessages, paths} from "../backend.js";
+import {auth, defaultThumbnail, docDAO, paths, statusMessages, storage} from "../backend.js";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -14,6 +14,7 @@ import {Image} from "@tiptap/extension-image";
 import {FileHandler} from "@tiptap-pro/extension-file-handler";
 import {onAuthStateChanged} from "firebase/auth";
 import FileDAO from "../daos/FileDAO.js";
+import {getDownloadURL, ref} from "firebase/storage";
 // import css from "highlight.js/lib/languages/css";
 // import js from "highlight.js/lib/languages/javascript";
 // import ts from "highlight.js/lib/languages/typescript";
@@ -154,24 +155,26 @@ function Editor({
         const reader = new FileReader();
         const extension = file.name.split(".").pop();
 
-        await fileDAO.uploadFile(file, extension)
-            .then((url) => {
-                reader.readAsDataURL(file);
-                reader.onload = () => {
-                    editor.chain().insertContentAt(pos, {
-                        type: "image",
-                        attrs: {
-                            src: url,
-                        },
-                    }).focus().run();
-                };
-            })
-            .catch((error) => {
-                statusController.displayResult(false, error.message);
-            });
+        try {
+            const url = await fileDAO.uploadFile(file, extension);
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                editor.chain().insertContentAt(pos, {
+                    type: "image",
+                    attrs: {
+                        src: url,
+                    },
+                }).focus().run();
+            };
+
+            statusController.displaySuccess(statusMessages.uploadedImgOk);
+        } catch (error) {
+            statusController.displayFailure(error.message);
+        }
     }
 
     async function dropPasteFile(editor, fileList, pos) {
+        statusController.displayProgress();
         Array.from(fileList).forEach(file => {
             addFileToEditor(editor, file, pos);
         });
@@ -189,35 +192,50 @@ function Editor({
         dropPasteFile(editor, fileList, pos);
     }
 
+    async function updateThumbnail() {
+        const tmpContent = document.createElement("div");
+        tmpContent.innerHTML = getContent;
+        const imgList = tmpContent.getElementsByTagName("img");
+
+        if (imgList.length === 0) {
+            return await getDownloadURL(ref(storage, defaultThumbnail));
+        }
+
+        const firstImg = imgList[0];
+        setThumbnail(firstImg.src);
+        return firstImg.src;
+    }
+
     async function afterSaveDoc() {
         if (getUser) {
             statusController.displayProgress();
-            await docDAO.update(getUser.uid, getDocId, getThumbnail, getTitle, getContent)
-                .then((result) => {
-                    statusController.displayResult(true, statusMessages.savedOk);
-                    setDocId(result.id);
-                })
-                .catch((error) => {
-                    statusController.displayResult(false, error);
-                });
+
+            try {
+                const updatedThumbnail = await updateThumbnail();
+                const result = await docDAO.update(getUser.uid, getDocId, updatedThumbnail, getTitle, getContent);
+                setDocId(result.id);
+                statusController.displaySuccess(statusMessages.savedOk);
+            } catch (error) {
+                statusController.displayFailure(error.message);
+            }
         } else {
-            statusController.displayResult(false, statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedMessage);
         }
     }
 
     async function afterDeleteDoc() {
         if (getUser) {
             statusController.displayProgress();
-            await docDAO.delete(getDocId)
-                .then(() => {
-                    statusController.hideStatus();
-                    navigate(paths.home);
-                })
-                .catch((error) => {
-                    statusController.displayResult(false, error);
-                });
+
+            try {
+                await docDAO.delete(getDocId);
+                statusController.hideStatus();
+                navigate(paths.home);
+            } catch (error) {
+                statusController.displayFailure(error.message);
+            }
         } else {
-            statusController.displayResult(false, statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedMessage);
         }
     }
 

@@ -21,7 +21,8 @@ import FullDocument from "../models/FullDocument.js";
 import DocumentSummary from "../models/DocumentSummary.js";
 
 export default class DocumentDAO {
-    static docsPerPage = 1;
+    static docsPerPage = 2;
+    static recentNumDocs = 4;
 
     async update(userId, docId, thumbnail, title, content) {
         // Get server time since it's more accurate
@@ -32,12 +33,11 @@ export default class DocumentDAO {
 
         if (!docId) {
             // New document
-            await addDoc(
+            const docRef = await addDoc(
                 collection(db, "documents"),
                 DocumentUpdate.fromDocUpdate(docUpdate)
-            ).then((docRef) => {
-                docId = docRef.id;
-            });
+            );
+            docId = docRef.id;
         } else {
             // Updating existing document
             await updateDoc(
@@ -98,25 +98,13 @@ export default class DocumentDAO {
         return await getDocs(docQuery);
     }
 
-    async getDocSummaryList(userId, excludedDocId, numItems, cursor) {
-        let docQuery;
-
-        if (!cursor) {
-            docQuery = query(
-                collection(db, "documents"),
-                where("userId", "==", userId),
-                orderBy("lastAccessed", "desc"),
-                limit(numItems + 1)
-            );
-        } else {
-            docQuery = query(
-                collection(db, "documents"),
-                where("userId", "==", userId),
-                orderBy("lastAccessed", "desc"),
-                startAfter(cursor),
-                limit(numItems + 1)
-            );
-        }
+    async getDocSummaryList(userId, excludedDocId, numItems) {
+        let docQuery = query(
+            collection(db, "documents"),
+            where("userId", "==", userId),
+            orderBy("lastAccessed", "desc"),
+            limit(numItems + 1)
+        );
 
         let docSummaryList = [];
         const docSnapshotList = await getDocs(docQuery);

@@ -29,12 +29,12 @@ function SignInPage() {
         setPasswordStatusDisplay, setPasswordStatusIconClass, setPasswordStatusMessageClass, setPasswordStatusIcon, setPasswordStatusMessage
     );
 
-    async function signIn(email, password) {
+    function signIn(email, password) {
         emailStatusController.displayProgress();
         passwordStatusController.displayProgress();
 
         // Send sign-in data to the server
-        await signInWithEmailAndPassword(auth, email, password)
+        signInWithEmailAndPassword(auth, email, password)
             .then(() => {
                 emailStatusController.hideStatus();
                 passwordStatusController.hideStatus();
@@ -48,9 +48,9 @@ function SignInPage() {
             })
             .catch((error) => {
                 if (error.message.toLowerCase().indexOf("email") >= 0) {
-                    emailStatusController.displayResult(false, error.message);
+                    emailStatusController.displayFailure(error.message);
                 } else {
-                    passwordStatusController.displayResult(false, error.message);
+                    passwordStatusController.displayFailure(error.message);
                 }
             });
     }

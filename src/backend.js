@@ -30,6 +30,7 @@ export const db = getFirestore(app);
 export const storage = getStorage();
 export const docDAO = new DocumentDAO();
 export const signUpChecker = new SignUpChecker();
+export const defaultThumbnail = "files/thumbnail.jpg";
 export const paths = {
     home: "/",
     signIn: "/sign-in",

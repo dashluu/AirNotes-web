@@ -31,23 +31,25 @@ function AIImage() {
     }, []);
 
     async function copyGeneratedImg(img) {
+        statusController.displayProgress();
+
         if (ClipboardItem.supports(img.type)) {
             const data = [new ClipboardItem({[img.type]: img})];
-            await navigator.clipboard.write(data)
-                .then(() => {
-                    statusController.displaySuccess(statusMessages.copiedOk);
-                })
-                .catch((error) => {
-                    statusController.displayFailure(error.message);
-                });
+
+            try {
+                await navigator.clipboard.write(data);
+                statusController.displaySuccess(statusMessages.copiedOk);
+            } catch (error) {
+                statusController.displayFailure(error.message);
+            }
         } else {
-            statusController.displayResult(false, statusMessages.invalidClipboardDataType);
+            statusController.displayFailure(statusMessages.invalidClipboardDataType);
         }
     }
 
     async function generateImg() {
         if (!getUser) {
-            statusController.displayResult(false, statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedMessage);
             return;
         }
 
@@ -56,27 +58,26 @@ function AIImage() {
             text: getImgDescription
         };
 
-        const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/text-to-img`, {
-            method: "post",
-            body: JSON.stringify(textToImgModel),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        try {
+            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/text-to-img`, {
+                method: "post",
+                body: JSON.stringify(textToImgModel),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
 
-        if (response.ok) {
-            await response.blob()
-                .then(async (blob) => {
-                    setImg(blob);
-                    setImgGenDisplay("block");
-                    setImgGenUrl(URL.createObjectURL(blob));
-                    statusController.displayResult(true, statusMessages.generatedImgOk);
-                })
-                .catch((error) => {
-                    statusController.displayResult(false, error.message);
-                });
-        } else {
-            statusController.displayResult(false, await response.text());
+            if (response.ok) {
+                const blob = await response.blob();
+                setImg(blob);
+                setImgGenDisplay("block");
+                setImgGenUrl(URL.createObjectURL(blob));
+                statusController.displaySuccess(statusMessages.generatedImgOk);
+            } else {
+                statusController.displayFailure(await response.text());
+            }
+        } catch (error) {
+            statusController.displayFailure(error.message);
         }
     }
 

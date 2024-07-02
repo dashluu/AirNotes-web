@@ -34,7 +34,7 @@ function AISummary({editor}) {
 
     async function summarize() {
         if (!getUser) {
-            statusController.displayResult(false, statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedMessage);
             return;
         }
 
@@ -43,36 +43,36 @@ function AISummary({editor}) {
             text: editor.getHTML()
         };
 
-        const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/summarize`, {
-            method: "post",
-            body: JSON.stringify(summaryModel),
-            headers: {
-                "Content-Type": "application/json"
-            }
-        });
+        try {
+            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/summarize`, {
+                method: "post",
+                body: JSON.stringify(summaryModel),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
 
-        if (response.ok) {
-            await response.json()
-                .then((summaryText) => {
-                    setCopyText(summaryText);
-                    statusController.displayResult(true, statusMessages.generatedSummaryOk);
-                })
-                .catch((error) => {
-                    statusController.displayResult(false, error.message);
-                });
-        } else {
-            statusController.displayResult(false, await response.text());
+            if (response.ok) {
+                const summaryText = await response.json();
+                setCopyText(summaryText);
+                statusController.displaySuccess(statusMessages.generatedSummaryOk);
+            } else {
+                statusController.displayFailure(await response.text());
+            }
+        } catch (error) {
+            statusController.displayFailure(error.message);
         }
     }
 
     async function copyText() {
-        await navigator.clipboard.writeText(getCopyText)
-            .then(() => {
-                statusController.displaySuccess(statusMessages.copiedOk);
-            })
-            .catch((error) => {
-                statusController.displayFailure(error.message);
-            });
+        statusController.displayProgress();
+
+        try {
+            await navigator.clipboard.writeText(getCopyText);
+            statusController.displaySuccess(statusMessages.copiedOk);
+        } catch (error) {
+            statusController.displayFailure(error.message);
+        }
     }
 
     return (

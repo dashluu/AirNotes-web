@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import RecentNote from "./RecentNote.jsx";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth, docDAO} from "../backend.js";
+import DocumentDAO from "../daos/DocumentDAO.js";
 
 function OpenNote({docId, setFullDoc, getLoadRecent, setLoadRecent}) {
     const [getUser, setUser] = useState(null);
@@ -15,21 +16,23 @@ function OpenNote({docId, setFullDoc, getLoadRecent, setLoadRecent}) {
     }, [docId]);
 
     async function fetchRecentNoteList(userId) {
-        await docDAO.getDocSummaryList(userId, getDocId, 4, null)
-            .then(([unsubSummaryList, summaryList]) => {
-                const recentNoteList = summaryList.map(
-                    (summary, i) => <RecentNote key={i}
-                                                docSummary={summary}
-                                                setFullDoc={setFullDoc}
-                                                setLoadRecent={setLoadRecent}/>
-                );
+        try {
+            const [unsubSummaryList, summaryList] = await docDAO.getDocSummaryList(
+                userId, getDocId, DocumentDAO.recentNumDocs
+            );
 
-                setUnsubSummaryList(unsubSummaryList);
-                setRecentNoteList(recentNoteList);
-            })
-            .catch(() => {
-                setUnsubSummaryList(null);
-            });
+            const recentNoteList = summaryList.map(
+                (summary, i) => <RecentNote key={i}
+                                            docSummary={summary}
+                                            setFullDoc={setFullDoc}
+                                            setLoadRecent={setLoadRecent}/>
+            );
+
+            setUnsubSummaryList(unsubSummaryList);
+            setRecentNoteList(recentNoteList);
+        } catch (error) {
+            setUnsubSummaryList(null);
+        }
     }
 
     useEffect(() => {

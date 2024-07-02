@@ -17,13 +17,13 @@ function App() {
     const [getNumPages, setNumPages] = useState(0);
     const [getCurrPage, setCurrPage] = useState(1);
     const [getPrevPageDisabled, setPrevPageDisabled] = useState(true);
-    const [getNextPageDisabled, setNextPageDisabled] = useState(false);
+    const [getNextPageDisabled, setNextPageDisabled] = useState(true);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
-    const pagination = new Pagination();
+    const [getPagination, setPagination] = useState(new Pagination());
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
@@ -31,43 +31,68 @@ function App() {
     async function fetchPage(userId, pageNum) {
         statusController.displayProgress();
 
-        await pagination.fetchPage(userId, pageNum)
-            .then((page) => {
-                const cardList = page.map((docSummary, i) => <Card key={i} docSummary={docSummary}/>);
-                setCardList(cardList);
-                statusController.displayResult(true, statusMessages.loadedPageOk);
-            })
-            .catch(() => {
-                // TODO: handle error
-            });
+        try {
+            const page = await getPagination.fetchPage(userId, pageNum);
+            const cardList = page.map((docSummary, i) => <Card key={i} docSummary={docSummary}/>);
+            setCardList(cardList);
+            statusController.displaySuccess(statusMessages.loadedPageOk);
+        } catch (error) {
+            // TODO: handle error
+        }
     }
 
     async function fetchNumPages(userId) {
-        await docDAO.countPages(userId)
-            .then((numPages) => {
-                setNumPages(numPages);
-            })
-            .catch(() => {
-                // TODO: handle error
-            });
+        try {
+            const numPages = await docDAO.countPages(userId);
+            setNumPages(numPages);
+        } catch (error) {
+            // TODO: handle error
+        }
     }
 
-    function prevPage() {
+    async function prevPage() {
         if (getUser) {
-            pagination.prevPage(getUser.uid);
-            setCurrPage(pagination.currPage);
+            setPrevPageDisabled(true);
+            setNextPageDisabled(true);
+            statusController.displayProgress();
+
+            try {
+                const page = await getPagination.prevPage(getUser.uid);
+                const cardList = page.map((docSummary, i) => <Card key={i} docSummary={docSummary}/>);
+                setCardList(cardList);
+                setCurrPage(getPagination.currPage);
+                statusController.displaySuccess(statusMessages.loadedPageOk);
+            } catch (error) {
+                statusController.displayFailure(error.message);
+            }
         } else {
             navigate(paths.signIn);
         }
     }
 
-    function nextPage() {
+    async function nextPage() {
         if (getUser) {
-            pagination.nextPage(getUser.uid);
-            setCurrPage(pagination.currPage);
+            setPrevPageDisabled(true);
+            setNextPageDisabled(true);
+            statusController.displayProgress();
+
+            try {
+                const page = await getPagination.nextPage(getUser.uid);
+                const cardList = page.map((docSummary, i) => <Card key={i} docSummary={docSummary}/>);
+                setCardList(cardList);
+                setCurrPage(getPagination.currPage);
+                statusController.displaySuccess(statusMessages.loadedPageOk);
+            } catch (error) {
+                statusController.displayFailure(error.message);
+            }
         } else {
             navigate(paths.signIn);
         }
+    }
+
+    async function loadFirstPage(userId) {
+        await fetchPage(userId, getCurrPage);
+        await fetchNumPages(userId);
     }
 
     useEffect(() => {
@@ -75,8 +100,7 @@ function App() {
             setUser(user);
 
             if (user) {
-                fetchPage(user.uid, getCurrPage);
-                fetchNumPages(user.uid);
+                loadFirstPage(user.uid);
             } else {
                 navigate(paths.signIn);
             }

@@ -25,9 +25,12 @@ function Settings() {
     }, []);
 
     async function signOutApp() {
-        await signOut(auth).then(() => {
+        try {
+            await signOut(auth);
             navigate(paths.signIn);
-        });
+        } catch (error) {
+            navigate(paths.error);
+        }
     }
 
     return (

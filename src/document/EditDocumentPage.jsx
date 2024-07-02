@@ -18,14 +18,13 @@ function EditDocumentPage() {
     const [getLoadRecent, setLoadRecent] = useState(false);
 
     async function fetchDoc(userId, docId) {
-        await docDAO.accessFullDoc(userId, docId)
-            .then((fullDoc) => {
-                setFullDoc(fullDoc);
-                setLoadRecent(true);
-            })
-            .catch(() => {
-                navigate(paths.error);
-            });
+        try {
+            const fullDoc = await docDAO.accessFullDoc(userId, docId);
+            setFullDoc(fullDoc);
+            setLoadRecent(true);
+        } catch (error) {
+            navigate(paths.error);
+        }
     }
 
     useEffect(() => {

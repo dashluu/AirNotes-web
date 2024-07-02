@@ -1,21 +1,31 @@
 import EditorPage from "../editor/EditorPage.jsx";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {onAuthStateChanged} from "firebase/auth";
-import {auth, paths} from "../backend.js";
+import {auth, defaultThumbnail, paths, storage} from "../backend.js";
 import {useNavigate} from "react-router-dom";
 import FullDocument from "../models/FullDocument.js";
+import {getDownloadURL, ref} from "firebase/storage";
 
 function NewDocumentPage() {
     const navigate = useNavigate();
-    const fullDoc = new FullDocument(
-        "", "",
-        "https://firebasestorage.googleapis.com/v0/b/airnotes-8ae79.appspot.com/o/files%2Fthumbnail.jpg?alt=media&token=30c22fd4-197d-4dcc-8058-cda1effc4442",
-        "", "", "", ""
-    );
+    const [getFullDoc, setFullDoc] = useState(new FullDocument(
+        "", "", "", "", "", "", ""
+    ));
+
+    async function fetchThumbnail() {
+        try {
+            const url = await getDownloadURL(ref(storage, defaultThumbnail));
+            setFullDoc(new FullDocument("", "", url, "", "", "", ""));
+        } catch (error) {
+            navigate(paths.error);
+        }
+    }
 
     useEffect(() => {
         const unsubUser = onAuthStateChanged(auth, (user) => {
-            if (!user) {
+            if (user) {
+                fetchThumbnail();
+            } else {
                 navigate(paths.signIn);
             }
         });
@@ -26,7 +36,7 @@ function NewDocumentPage() {
     }, []);
 
     return (
-        <EditorPage fullDoc={fullDoc}
+        <EditorPage fullDoc={getFullDoc}
                     isNewDoc={true}
                     loadRecent={true}/>
     );

@@ -21,30 +21,24 @@ export default class Pagination {
         const cursor = this.pageList.length === 0 ? null : this.docSnapshotList.docs[this.docSnapshotList.docs.length - 1];
         let page = [];
         let i = this.numItems;
-        let docSnapshotList;
+        this.docSnapshotList = await docDAO.getDocSummaryPage(userId, cursor);
 
-        await docDAO.getDocSummaryPage(userId, cursor)
-            .then((result) => {
-                docSnapshotList = result;
-
-                result.forEach((docSnapshot) => {
-                    const docSummary = DocumentSummary.toDocSummary(docSnapshot);
-                    page.push(docSummary);
-                    i++;
-                });
-            });
+        this.docSnapshotList.forEach((docSnapshot) => {
+            const docSummary = DocumentSummary.toDocSummary(docSnapshot);
+            page.push(docSummary);
+            i++;
+        });
 
         this.numItems = i;
         this.pageList.push(page);
-        this.docSnapshotList = docSnapshotList;
         return page;
     }
 
-    prevPage(userId) {
-        this.fetchPage(userId, --this.currPage);
+    async prevPage(userId) {
+        return await this.fetchPage(userId, --this.currPage);
     }
 
-    nextPage(userId) {
-        this.fetchPage(userId, ++this.currPage);
+    async nextPage(userId) {
+        return await this.fetchPage(userId, ++this.currPage);
     }
 }
