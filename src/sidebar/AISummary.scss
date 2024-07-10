@@ -30,7 +30,7 @@
     font-size: 14px;
     font-weight: 500;
     padding-top: 5px;
-    padding-bottom: 8px;
+    padding-bottom: 6px;
     margin-bottom: 10px;
   }
 
@@ -58,7 +58,7 @@
 
   .summary-text {
     width: 97%;
-    height: 400px;
+    height: 75vh;
     margin-left: auto;
     margin-right: auto;
     background-color: var(--ai-sidebar-output-background);
@@ -67,7 +67,7 @@
     border-radius: 5px;
     font-size: 14px;
     font-weight: 500;
-    padding: 5px;
+    padding: 0 5px 5px 5px;
     overflow-y: auto;
   }
 }

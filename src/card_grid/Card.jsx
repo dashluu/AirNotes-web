@@ -25,11 +25,9 @@ const Card = ({docSummary}) => {
                 <img className={getThumbnailClass} src={docSummary.thumbnail} alt="Thumbnail"/>
             </div>
             <div className="summary-container">
-                <div className="summary-wrapper">
-                    <div className="doc-id">{docSummary.id}</div>
-                    <div className="summary-title">{docSummary.title}</div>
-                    <div className={getDateClass}>{docSummary.lastModified}</div>
-                </div>
+                <div className="doc-id">{docSummary.id}</div>
+                <div className="summary-title">{docSummary.title}</div>
+                <div className={getDateClass}>{docSummary.lastModified}</div>
             </div>
         </div>
     );

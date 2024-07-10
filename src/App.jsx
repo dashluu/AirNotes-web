@@ -37,7 +37,7 @@ function App() {
             setCardList(cardList);
             statusController.displaySuccess(statusMessages.loadedPageOk);
         } catch (error) {
-            // TODO: handle error
+            navigate(paths.error);
         }
     }
 
@@ -46,7 +46,7 @@ function App() {
             const numPages = await docDAO.countPages(userId);
             setNumPages(numPages);
         } catch (error) {
-            // TODO: handle error
+            navigate(paths.error);
         }
     }
 

@@ -41,7 +41,7 @@ function AIQA({editor}) {
 
         statusController.displayProgress();
         const qaModel = {
-            question: getQuestion,
+            query: getQuestion,
             context: editor.getHTML()
         };
 
@@ -55,9 +55,15 @@ function AIQA({editor}) {
             });
 
             if (response.ok) {
-                const answer = await response.json();
-                setCopyText(answer);
                 statusController.displaySuccess(statusMessages.generatedAnswerOk);
+                let ans = "";
+
+                for await (const chunk of response.body) {
+                    for (const byte of chunk) {
+                        ans += String.fromCharCode(byte);
+                        setCopyText(ans);
+                    }
+                }
             } else {
                 statusController.displayFailure(await response.text());
             }
