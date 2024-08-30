@@ -9,12 +9,19 @@
   }
 
   .title {
-    font-weight: 500;
-    font-size: 24px;
+    font-weight: bold;
+    font-size: 20px;
     text-align: center;
     padding-left: 0;
     margin-left: 0;
     margin-bottom: 10px;
+    width: 100%;
+  }
+
+  .instruction {
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 15px;
     width: 100%;
   }
 
@@ -27,10 +34,10 @@
     border: 1px solid var(--ai-sidebar-action-button-border);
     color: var(--ai-sidebar-action-button-color);
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     padding-top: 5px;
-    padding-bottom: 6px;
+    padding-bottom: 5px;
     margin-bottom: 10px;
   }
 
@@ -65,7 +72,7 @@
     border: 1px solid var(--ai-sidebar-output-border);
     color: 1px solid var(--ai-sidebar-output-color);
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     padding: 0 5px 5px 5px;
     overflow-y: auto;

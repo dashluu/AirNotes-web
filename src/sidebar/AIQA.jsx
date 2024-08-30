@@ -1,13 +1,14 @@
 import "./AIQA.scss";
 import Status from "../status/Status.jsx";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import StatusController from "../StatusController.js";
 import {auth, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 
-function AIQA({editor}) {
+function AIQA({editor, sidebarDisplay, qaDisplay}) {
     const [getUser, setUser] = useState(null);
     const [getQuestion, setQuestion] = useState("");
+    const questionInput = useRef(null);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
@@ -20,6 +21,7 @@ function AIQA({editor}) {
     );
 
     useEffect(() => {
+        // Disable the copy button if there is no text to be copied
         setCopyDisabled(getCopyText === "");
     }, [getCopyText]);
 
@@ -33,6 +35,13 @@ function AIQA({editor}) {
         };
     }, []);
 
+    useEffect(() => {
+        if (sidebarDisplay !== "hidden" && qaDisplay !== "none") {
+            // If the sidebar and QA UI are displayed, focus on the question input
+            questionInput.current.focus();
+        }
+    }, [sidebarDisplay, qaDisplay]);
+
     async function answerQuestion() {
         if (!getUser) {
             statusController.displayFailure(statusMessages.unauthorizedMessage);
@@ -40,9 +49,15 @@ function AIQA({editor}) {
         }
 
         statusController.displayProgress();
+        // API for text selection
+        const {view, state} = editor
+        const {from, to} = view.state.selection
+        const text = state.doc.textBetween(from, to, " ")
+        // If there is a selection of text, use that selection, otherwise, use the whole text
+        const context = text === "" ? editor.getHTML() : text;
         const qaModel = {
             query: getQuestion,
-            context: editor.getHTML()
+            context: context
         };
 
         try {
@@ -86,7 +101,11 @@ function AIQA({editor}) {
     return (
         <div className="ai-qa-container">
             <div className="title">Notes Q&A</div>
-            <textarea className="question" placeholder="Enter the question here..."
+            <div className="instruction">
+                Instruction: select a piece of text to provide the context for the question. If no text is selected,
+                the whole document will be provided as the context.
+            </div>
+            <textarea className="question" placeholder="Enter the question here..." ref={questionInput}
                       onChange={(e) => {
                           setQuestion(e.target.value);
                       }}></textarea>

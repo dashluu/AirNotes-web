@@ -7,14 +7,11 @@ import Sidebar from "../sidebar/Sidebar.jsx";
 function EditorPage({fullDoc, isNewDoc, loadRecent}) {
     const [getFullDoc, setFullDoc] = useState(fullDoc);
     const [getLoadRecent, setLoadRecent] = useState(loadRecent);
-    const [getEditorGridLayout, setEditorGridLayout] = useState("1fr");
+    const [getGridLayout, setGridLayout] = useState("0 1fr");
     const [getSidebarDisplay, setSidebarDisplay] = useState("none");
+    const [getSidebarAnimation, setSidebarAnimation] = useState("none");
     const [getEditor, setEditor] = useState(null);
-    const [getSummaryDisplay, setSummaryDisplay] = useState("none");
-    const [getQADisplay, setQADisplay] = useState("none");
-    const [getImgToolsDisplay, setImgToolsDisplay] = useState("none");
-    const [getAIImgDisplay, setAIImgDisplay] = useState("none");
-    const [getOpenNoteDisplay, setOpenNoteDisplay] = useState("none");
+    const [getSidebarMode, setSidebarMode] = useState(null);
 
     useEffect(() => {
         setFullDoc(fullDoc);
@@ -25,31 +22,30 @@ function EditorPage({fullDoc, isNewDoc, loadRecent}) {
     }, [loadRecent]);
 
     function openSidebar() {
-        setEditorGridLayout("1fr 3fr");
-        setSidebarDisplay("block");
+        setSidebarDisplay("visible");
+        setSidebarAnimation("sidebarIn 0.5s");
+        setGridLayout("1fr 3fr");
     }
 
     function closeSidebar() {
-        setEditorGridLayout("1fr");
-        setSidebarDisplay("none");
+        setSidebarDisplay("hidden");
+        setSidebarAnimation("sidebarOut 0.5s")
+        setGridLayout("0 1fr");
     }
 
     return (
         <div className="editor-page">
             <NavBar/>
-            <div className="editor-grid" style={{gridTemplateColumns: getEditorGridLayout}}>
+            <div className="editor-grid" style={{gridTemplateColumns: getGridLayout}}>
                 <Sidebar docId={getFullDoc.id}
                          setFullDoc={setFullDoc}
                          getLoadRecent={getLoadRecent}
                          setLoadRecent={setLoadRecent}
                          sidebarDisplay={getSidebarDisplay}
+                         sidebarAnimation={getSidebarAnimation}
                          closeSidebar={closeSidebar}
                          editor={getEditor}
-                         openNoteDisplay={getOpenNoteDisplay}
-                         summaryDisplay={getSummaryDisplay}
-                         qaDisplay={getQADisplay}
-                         imgToolsDisplay={getImgToolsDisplay}
-                         aiImgDisplay={getAIImgDisplay}/>
+                         mode={getSidebarMode}/>
                 <Editor docId={getFullDoc.id}
                         thumbnail={getFullDoc.thumbnail}
                         title={getFullDoc.title}
@@ -57,11 +53,7 @@ function EditorPage({fullDoc, isNewDoc, loadRecent}) {
                         isNewDoc={isNewDoc}
                         openSidebar={openSidebar}
                         setEditor={setEditor}
-                        setOpenNoteDisplay={setOpenNoteDisplay}
-                        setSummaryDisplay={setSummaryDisplay}
-                        setQADisplay={setQADisplay}
-                        setImgToolsDisplay={setImgToolsDisplay}
-                        setAIImgDisplay={setAIImgDisplay}/>
+                        setSidebarMode={setSidebarMode}/>
             </div>
         </div>
     );

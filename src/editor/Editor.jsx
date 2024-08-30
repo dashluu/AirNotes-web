@@ -42,11 +42,7 @@ function Editor({
                     isNewDoc,
                     openSidebar,
                     setEditor,
-                    setOpenNoteDisplay,
-                    setSummaryDisplay,
-                    setQADisplay,
-                    setImgToolsDisplay,
-                    setAIImgDisplay
+                    setSidebarMode
                 }) {
     const navigate = useNavigate();
     const fileDAO = new FileDAO();
@@ -239,6 +235,31 @@ function Editor({
         }
     }
 
+    function showOpenNote() {
+        openSidebar();
+        setSidebarMode({name: "openNote"});
+    }
+
+    function showSummary(triggered) {
+        openSidebar();
+        setSidebarMode({name: "summary", triggered: triggered});
+    }
+
+    function showQA() {
+        openSidebar();
+        setSidebarMode({name: "QA"});
+    }
+
+    function showImgTools() {
+        openSidebar();
+        setSidebarMode({name: "imgTools"});
+    }
+
+    function showAIImg() {
+        openSidebar();
+        setSidebarMode({name: "AIImg"});
+    }
+
     return (
         <div className="editor-container">
             <div className="doc-id-container">{getDocId}</div>
@@ -264,60 +285,35 @@ function Editor({
                 </button>
                 <button className="editor-toolbar-button open-button"
                         onClick={() => {
-                            openSidebar();
-                            setOpenNoteDisplay("block");
-                            setSummaryDisplay("none");
-                            setQADisplay("none");
-                            setImgToolsDisplay("none");
-                            setAIImgDisplay("none");
+                            showOpenNote();
                         }}
                         title="Open Recent">
                     <span className="material-symbols-outlined">folder_open</span>
                 </button>
                 <button className="editor-toolbar-button summarize-button"
                         onClick={() => {
-                            openSidebar();
-                            setSummaryDisplay("block");
-                            setOpenNoteDisplay("none");
-                            setQADisplay("none");
-                            setImgToolsDisplay("none");
-                            setAIImgDisplay("none");
+                            showSummary(false);
                         }}
                         title="Summarize">
                     <span className="material-symbols-outlined">notes</span>
                 </button>
                 <button className="editor-toolbar-button qa-button"
                         onClick={() => {
-                            openSidebar();
-                            setQADisplay("block");
-                            setOpenNoteDisplay("none");
-                            setSummaryDisplay("none");
-                            setImgToolsDisplay("none");
-                            setAIImgDisplay("none");
+                            showQA();
                         }}
                         title="Q&A">
                     <span className="material-symbols-outlined">quiz</span>
                 </button>
                 <button className="editor-toolbar-button img-tools-button"
                         onClick={() => {
-                            openSidebar();
-                            setImgToolsDisplay("block");
-                            setOpenNoteDisplay("none");
-                            setSummaryDisplay("none");
-                            setQADisplay("none");
-                            setAIImgDisplay("none");
+                            showImgTools();
                         }}
                         title="Image Tools">
                     <span className="material-symbols-outlined">image</span>
                 </button>
                 <button className="editor-toolbar-button ai-img-button"
                         onClick={() => {
-                            openSidebar();
-                            setAIImgDisplay("block");
-                            setOpenNoteDisplay("none");
-                            setSummaryDisplay("none");
-                            setQADisplay("none");
-                            setImgToolsDisplay("none");
+                            showAIImg();
                         }}
                         title="AI Image">
                     <span className="material-symbols-outlined">brush</span>
@@ -348,7 +344,7 @@ function Editor({
                    onChange={(e) => {
                        setTitle(e.target.value);
                    }}/>
-            {editor && <BubbleMenuWrapper editor={editor}/>}
+            {editor && <BubbleMenuWrapper editor={editor} showSummary={showSummary}/>}
             {editor && <FloatingMenuWrapper editor={editor}/>}
             <EditorContent editor={editor}/>
         </div>

@@ -1,7 +1,7 @@
 import "./BubbleMenuWrapper.scss";
 import {BubbleMenu} from "@tiptap/react";
 
-function BubbleMenuWrapper({editor}) {
+function BubbleMenuWrapper({editor, showSummary}) {
     return (
         <BubbleMenu editor={editor} tippyOptions={{duration: 100}}>
             <div className="bubble-menu">
@@ -29,6 +29,12 @@ function BubbleMenuWrapper({editor}) {
                         onClick={() => editor.chain().focus().toggleCodeBlock().run()}
                         className={`${editor.isActive("codeBlock") ? "bubble-menu-button-is-active" : ""}`}>
                     <span className="material-symbols-outlined">code</span>
+                </button>
+                <button title="Summarize"
+                        onClick={() => {
+                            showSummary(true);
+                        }}>
+                    <span className="material-symbols-outlined">notes</span>
                 </button>
             </div>
         </BubbleMenu>

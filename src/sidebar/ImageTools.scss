@@ -9,8 +9,8 @@
   }
 
   .title {
-    font-weight: 500;
-    font-size: 24px;
+    font-weight: bold;
+    font-size: 20px;
     text-align: center;
     padding-left: 0;
     margin-left: 0;
@@ -24,7 +24,8 @@
     width: 97%;
     padding: 5px;
     font-weight: 500;
-    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
     background-color: var(--ai-sidebar-input-background);
     border: 1px solid var(--ai-sidebar-input-border);
     color: var(--ai-sidebar-input-color);
@@ -41,10 +42,10 @@
     border: 1px solid var(--ai-sidebar-action-button-border);
     color: var(--ai-sidebar-action-button-color);
     border-radius: 5px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
     padding-top: 5px;
-    padding-bottom: 6px;
+    padding-bottom: 5px;
     margin-bottom: 10px;
   }
 

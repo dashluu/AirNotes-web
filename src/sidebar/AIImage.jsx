@@ -1,14 +1,15 @@
 import "./AIImage.scss";
 import Status from "../status/Status.jsx";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import StatusController from "../StatusController.js";
 import {auth, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 
-function AIImage() {
+function AIImage({sidebarDisplay, aiImgDisplay}) {
     const [getUser, setUser] = useState(null);
     const [getImg, setImg] = useState(null);
     const [getImgDescription, setImgDescription] = useState("");
+    const imgDescriptionInput = useRef(null);
     const [getImgGenDisplay, setImgGenDisplay] = useState("none");
     const [getImgGenUrl, setImgGenUrl] = useState("");
     const [getStatusDisplay, setStatusDisplay] = useState("none");
@@ -29,6 +30,13 @@ function AIImage() {
             unsubUser();
         };
     }, []);
+
+    useEffect(() => {
+        if (sidebarDisplay !== "hidden" && aiImgDisplay !== "none") {
+            // If the sidebar and AI image UI are displayed, focus on the image description input
+            imgDescriptionInput.current.focus();
+        }
+    }, [sidebarDisplay, aiImgDisplay]);
 
     async function copyGeneratedImg(img) {
         statusController.displayProgress();
@@ -85,6 +93,7 @@ function AIImage() {
         <div className="ai-img-container">
             <div className="title">Notes AI Image</div>
             <textarea className="img-description" placeholder="Enter the image description here..."
+                      ref={imgDescriptionInput}
                       onChange={(e) => {
                           setImgDescription(e.target.value);
                       }}></textarea>

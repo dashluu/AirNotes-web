@@ -5,7 +5,7 @@ import StatusController from "../StatusController.js";
 import {auth, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 
-function AISummary({editor}) {
+function AISummary({editor, triggered}) {
     const [getUser, setUser] = useState(null);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
@@ -32,6 +32,12 @@ function AISummary({editor}) {
         };
     }, []);
 
+    useEffect(() => {
+        if (triggered) {
+            summarize();
+        }
+    }, [triggered]);
+
     async function summarize() {
         if (!getUser) {
             statusController.displayFailure(statusMessages.unauthorizedMessage);
@@ -39,8 +45,14 @@ function AISummary({editor}) {
         }
 
         statusController.displayProgress();
+        // API for text selection
+        const {view, state} = editor
+        const {from, to} = view.state.selection
+        const text = state.doc.textBetween(from, to, " ")
+        // If there is a selection of text, use that selection, otherwise, use the whole text
+        const context = text === "" ? editor.getHTML() : text;
         const summaryModel = {
-            text: editor.getHTML()
+            text: context
         };
 
         try {
@@ -78,18 +90,22 @@ function AISummary({editor}) {
     return (
         <div className="ai-summary-container">
             <div className="title">Notes Summary</div>
+            <div className="instruction">
+                Instruction: select a piece of text to provide the context for the summary. If no text is selected,
+                the whole document will be provided as the context.
+            </div>
             <button className="action-button summarize-button"
                     onClick={() => {
                         summarize();
                     }}>
-                Summarize text
+                Summarize
             </button>
             <button className="action-button copy-button"
                     disabled={getCopyDisabled}
                     onClick={() => {
                         copyText();
                     }}>
-                Copy text
+                Copy summary
             </button>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}

@@ -6,11 +6,12 @@ import {onAuthStateChanged} from "firebase/auth";
 import {auth, statusMessages} from "../backend.js";
 import Status from "../status/Status.jsx";
 
-function ImageTools({editor}) {
+function ImageTools({editor, sidebarDisplay, imgToolsDisplay}) {
     const fileDAO = new FileDAO();
     const [getUser, setUser] = useState(null);
     const fileInput = useRef(null);
     const [getImgUrl, setImgUrl] = useState("");
+    const urlInput = useRef(null);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
@@ -29,6 +30,13 @@ function ImageTools({editor}) {
             unsubUser();
         };
     }, []);
+
+    useEffect(() => {
+        if (sidebarDisplay !== "hidden" && imgToolsDisplay !== "none") {
+            // If the sidebar and image tools are displayed, focus on the URL input
+            urlInput.current.focus();
+        }
+    }, [sidebarDisplay, imgToolsDisplay]);
 
     function addImgByUrl(url) {
         editor.chain().focus().setImage({src: url}).run();
@@ -73,7 +81,7 @@ function ImageTools({editor}) {
     return (
         <div className="img-tools-container">
             <div className="title">Notes Image</div>
-            <input type="text" className="img-url" placeholder="Enter URL..."
+            <input type="text" className="img-url" placeholder="Enter URL..." ref={urlInput}
                    onChange={(e) => {
                        setImgUrl(e.target.value);
                    }}/>

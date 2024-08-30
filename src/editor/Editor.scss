@@ -67,9 +67,8 @@
     outline: none;
     border: none;
     background-color: transparent;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
-    font-size: 40px;
+    font-size: 32px;
     color: var(--editor-title-color);
   }
 
@@ -82,6 +81,7 @@
     outline: none;
     background-color: transparent;
     font-weight: 500;
+    font-size: 18px;
     border: none;
     text-align: left;
     color: var(--editor-tiptap-color);
@@ -99,13 +99,9 @@
     background: var(--editor-code-background);
     border-radius: .5rem;
     color: var(--editor-code-color);
-    font-family: JetBrainsMono, monospace;
+    font-family: "JetBrains Mono", monospace;
     margin: 1.5rem 0;
     padding: .75rem 1rem
-  }
-
-  pre {
-    display: block;
   }
 
   .img {
