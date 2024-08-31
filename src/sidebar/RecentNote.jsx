@@ -63,8 +63,9 @@ function RecentNote({docSummary, setFullDoc, setLoadRecent}) {
                 <div className="doc-id">{docSummary.id}</div>
                 <div className="summary-title">{docSummary.title}</div>
                 <div className={getDateClass}>{docSummary.lastModified}</div>
-                <button className="action-button"
-                        onClick={() => {
+                <button className="sidebar-action-button"
+                        onClick={(e) => {
+                            e.stopPropagation();
                             window.open(`/notes/${docSummary.id}`, "_blank");
                         }}>
                     Open in new tab

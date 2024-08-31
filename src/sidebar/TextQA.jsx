@@ -1,12 +1,14 @@
-import "./AISummary.scss";
+import "./TextQA.scss";
 import Status from "../status/Status.jsx";
-import {useEffect, useState} from "react";
-import StatusController from "../StatusController.js";
+import {useEffect, useRef, useState} from "react";
+import StatusController from "../ui_elements/StatusController.js";
 import {auth, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 
-function AISummary({editor, triggered}) {
+function TextQA({editor, qaDisplay}) {
     const [getUser, setUser] = useState(null);
+    const [getQuestion, setQuestion] = useState("");
+    const questionInput = useRef(null);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
@@ -19,6 +21,7 @@ function AISummary({editor, triggered}) {
     );
 
     useEffect(() => {
+        // Disable the copy button if there is no text to be copied
         setCopyDisabled(getCopyText === "");
     }, [getCopyText]);
 
@@ -33,12 +36,13 @@ function AISummary({editor, triggered}) {
     }, []);
 
     useEffect(() => {
-        if (triggered) {
-            summarize();
+        if (qaDisplay !== "none") {
+            // If the QA UI are displayed, focus on the question input
+            questionInput.current.focus();
         }
-    }, [triggered]);
+    }, [qaDisplay]);
 
-    async function summarize() {
+    async function answerQuestion() {
         if (!getUser) {
             statusController.displayFailure(statusMessages.unauthorizedMessage);
             return;
@@ -51,23 +55,30 @@ function AISummary({editor, triggered}) {
         const text = state.doc.textBetween(from, to, " ")
         // If there is a selection of text, use that selection, otherwise, use the whole text
         const context = text === "" ? editor.getHTML() : text;
-        const summaryModel = {
-            text: context
+        const qaModel = {
+            query: getQuestion,
+            context: context
         };
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/summarize`, {
+            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/qa`, {
                 method: "post",
-                body: JSON.stringify(summaryModel),
+                body: JSON.stringify(qaModel),
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
 
             if (response.ok) {
-                const summaryText = await response.json();
-                setCopyText(summaryText);
-                statusController.displaySuccess(statusMessages.generatedSummaryOk);
+                statusController.displaySuccess(statusMessages.generatedAnswerOk);
+                let ans = "";
+
+                for await (const chunk of response.body) {
+                    for (const byte of chunk) {
+                        ans += String.fromCharCode(byte);
+                        setCopyText(ans);
+                    }
+                }
             } else {
                 statusController.displayFailure(await response.text());
             }
@@ -88,33 +99,37 @@ function AISummary({editor, triggered}) {
     }
 
     return (
-        <div className="ai-summary-container">
-            <div className="title">Notes Summary</div>
-            <div className="instruction">
-                Instruction: select a piece of text to provide the context for the summary. If no text is selected,
+        <div className="qa-container sidebar-container" style={{display: qaDisplay}}>
+            <div className="sidebar-title">Notes Q&A</div>
+            <div className="sidebar-instruction">
+                Instruction: select a piece of text to provide the context for the question. If no text is selected,
                 the whole document will be provided as the context.
             </div>
-            <button className="action-button summarize-button"
+            <textarea className="text-input question" placeholder="Enter the question here..." ref={questionInput}
+                      onChange={(e) => {
+                          setQuestion(e.target.value);
+                      }}></textarea>
+            <button className="sidebar-action-button"
                     onClick={() => {
-                        summarize();
+                        answerQuestion();
                     }}>
-                Summarize
+                Answer question
             </button>
-            <button className="action-button copy-button"
+            <button className="sidebar-action-button"
                     disabled={getCopyDisabled}
                     onClick={() => {
                         copyText();
                     }}>
-                Copy summary
+                Copy answer
             </button>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}
                     messageClass={getStatusMessageClass}
                     icon={getStatusIcon}
                     message={getStatusMessage}/>
-            <div className="summary-text">Summary: {getCopyText}</div>
+            <div className="qa-text">Answer: {getCopyText}</div>
         </div>
     );
 }
 
-export default AISummary;
+export default TextQA;

@@ -1,4 +1,4 @@
-import "./PasswordResetPage.scss"
+import "./AuthCommon.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useRef, useState} from "react";
 import {signUpChecker} from "../backend.js";
@@ -41,10 +41,10 @@ function PasswordResetPage() {
     return (
         <div className="password-reset-page">
             <NavBar/>
-            <div className="password-reset-form">
-                <div className="form-title">Password Reset</div>
-                <div className="input-container">
-                    <input type="password" placeholder="Password" className="auth-input password-input"
+            <div className="auth-form">
+                <div className="auth-title">Password Reset</div>
+                <div className="auth-input-container">
+                    <input type="password" placeholder="Password" className="text-input"
                            required
                            minLength="6" maxLength="4096" ref={passwordInput}
                            onChange={
@@ -56,8 +56,8 @@ function PasswordResetPage() {
                             icon={getPasswordStatusIcon}
                             message={getPasswordStatusMessage}/>
                 </div>
-                <div className="action-container">
-                    <button className="action-button password-reset-button"
+                <div className="auth-action-container">
+                    <button className="auth-action-button auth-primary-button"
                             onClick={() => {
                             }}>
                         Reset password

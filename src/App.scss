@@ -1,7 +1,13 @@
-@media screen and (min-width: 800px) {
+@use "ui_elements/TextInputCommon";
+
+@media screen and (min-width: 1000px) {
   .home-page {
     .toolbar {
-      grid-template-columns: 3fr 1fr;
+      grid-template-columns: 4fr 1fr;
+    }
+
+    .search-input {
+      width: 50%;
     }
 
     .page-navigator {
@@ -10,14 +16,18 @@
   }
 }
 
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1000px) {
   .home-page {
     .toolbar {
       grid-template-columns: 1fr;
     }
 
+    .search-input {
+      width: 100%;
+    }
+
     .page-navigator {
-      justify-content: left;
+      justify-content: center;
     }
   }
 }

@@ -1,11 +1,11 @@
-import "./SignUpPage.scss";
+import "./AuthCommon.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useNavigate} from "react-router-dom";
 import {useRef, useState} from "react";
 import {auth, signUpChecker, paths} from "../backend.js"
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import Status from "../status/Status.jsx";
-import StatusController from "../StatusController.js";
+import StatusController from "../ui_elements/StatusController.js";
 
 function SignUpPage() {
     const navigate = useNavigate();
@@ -81,10 +81,10 @@ function SignUpPage() {
     return (
         <div className="sign-up-page">
             <NavBar/>
-            <div className="sign-up-form">
-                <div className="form-title">Sign Up</div>
-                <div className="input-container">
-                    <input type="email" placeholder="Email" className="auth-input email-input" required
+            <div className="auth-form">
+                <div className="auth-title">Sign Up</div>
+                <div className="auth-input-container">
+                    <input type="email" placeholder="Email" className="text-input" required
                            ref={emailInput}
                            onChange={
                                (e) => validateEmail(e.target)
@@ -95,8 +95,8 @@ function SignUpPage() {
                             icon={getEmailStatusIcon}
                             message={getEmailStatusMessage}/>
                 </div>
-                <div className="input-container">
-                    <input type="password" placeholder="Password" className="auth-input password-input"
+                <div className="auth-input-container">
+                    <input type="password" placeholder="Password" className="text-input"
                            required
                            minLength="6" maxLength="4096" ref={passwordInput}
                            onChange={
@@ -108,14 +108,14 @@ function SignUpPage() {
                             icon={getPasswordStatusIcon}
                             message={getPasswordStatusMessage}/>
                 </div>
-                <div className="action-container">
-                    <button className="action-button sign-up-button"
+                <div className="auth-action-container">
+                    <button className="auth-action-button auth-primary-button"
                             onClick={() => {
                                 signUp();
                             }}>
                         Sign up
                     </button>
-                    <button className="action-button sign-in-button"
+                    <button className="auth-action-button auth-secondary-button"
                             onClick={() => {
                                 navigate(paths.signIn);
                             }}>

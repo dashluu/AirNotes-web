@@ -1,11 +1,11 @@
-import "./SignInPage.scss";
+import "./AuthCommon.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import {useLocation, useNavigate} from "react-router-dom";
 import {useRef, useState} from "react";
 import {auth, paths} from "../backend.js"
 import {signInWithEmailAndPassword} from "firebase/auth";
 import Status from "../status/Status.jsx";
-import StatusController from "../StatusController.js";
+import StatusController from "../ui_elements/StatusController.js";
 
 function SignInPage() {
     const navigate = useNavigate();
@@ -58,10 +58,10 @@ function SignInPage() {
     return (
         <div className="sign-in-page">
             <NavBar/>
-            <div className="sign-in-form">
-                <div className="form-title">Sign In</div>
-                <div className="input-container">
-                    <input type="email" placeholder="Email" className="auth-input email-input" required
+            <div className="auth-form">
+                <div className="auth-title">Sign In</div>
+                <div className="auth-input-container">
+                    <input type="email" placeholder="Email" className="text-input" required
                            ref={emailInput}/>
                     <Status display={getEmailStatusDisplay}
                             iconClass={getEmailStatusIconClass}
@@ -69,8 +69,8 @@ function SignInPage() {
                             icon={getEmailStatusIcon}
                             message={getEmailStatusMessage}/>
                 </div>
-                <div className="input-container">
-                    <input type="password" placeholder="Password" className="auth-input password-input"
+                <div className="auth-input-container">
+                    <input type="password" placeholder="Password" className="text-input"
                            required minLength="6" maxLength="4096" ref={passwordInput}/>
                     <Status display={getPasswordStatusDisplay}
                             iconClass={getPasswordStatusIconClass}
@@ -78,20 +78,20 @@ function SignInPage() {
                             icon={getPasswordStatusIcon}
                             message={getPasswordStatusMessage}/>
                 </div>
-                <div className="action-container">
-                    <button className="action-button sign-in-button"
+                <div className="auth-action-container">
+                    <button className="auth-action-button auth-primary-button"
                             onClick={() => {
                                 signIn(emailInput.current.value, passwordInput.current.value);
                             }}>
                         Sign in
                     </button>
-                    <button className="action-button sign-up-button"
+                    <button className="auth-action-button auth-secondary-button"
                             onClick={() => {
                                 navigate(paths.signUp);
                             }}>
                         Sign up
                     </button>
-                    <button className="action-button forgot-password-button"
+                    <button className="auth-action-button auth-secondary-button"
                             onClick={() => {
                                 navigate(paths.forgotPassword);
                             }}>

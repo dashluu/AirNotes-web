@@ -7,8 +7,8 @@ import Sidebar from "../sidebar/Sidebar.jsx";
 function EditorPage({fullDoc, isNewDoc, loadRecent}) {
     const [getFullDoc, setFullDoc] = useState(fullDoc);
     const [getLoadRecent, setLoadRecent] = useState(loadRecent);
-    const [getGridLayout, setGridLayout] = useState("0 1fr");
-    const [getSidebarDisplay, setSidebarDisplay] = useState("none");
+    const [getGridLayout, setGridLayout] = useState("0fr 1fr");
+    const [getSidebarDisplay, setSidebarDisplay] = useState("hidden");
     const [getSidebarAnimation, setSidebarAnimation] = useState("none");
     const [getEditor, setEditor] = useState(null);
     const [getSidebarMode, setSidebarMode] = useState(null);
@@ -23,14 +23,14 @@ function EditorPage({fullDoc, isNewDoc, loadRecent}) {
 
     function openSidebar() {
         setSidebarDisplay("visible");
-        setSidebarAnimation("sidebarIn 0.5s");
+        setSidebarAnimation("sidebar-in 0.5s");
         setGridLayout("1fr 3fr");
     }
 
     function closeSidebar() {
         setSidebarDisplay("hidden");
-        setSidebarAnimation("sidebarOut 0.5s")
-        setGridLayout("0 1fr");
+        setSidebarAnimation("sidebar-out 0.5s")
+        setGridLayout("0fr 1fr");
     }
 
     return (

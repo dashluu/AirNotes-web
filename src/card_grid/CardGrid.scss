@@ -10,7 +10,20 @@
     height: auto;
     width: 100%;
     display: grid;
-    gap: 30px 50px;
+    gap: 30px 30px;
     grid-template-columns: repeat(auto-fill, minmax(var(--card-width), 1fr));
+    animation: grid-load 0.4s ease-in;
+  }
+
+  @keyframes grid-load {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 }

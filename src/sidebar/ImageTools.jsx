@@ -1,12 +1,12 @@
 import "./ImageTools.scss";
 import {useEffect, useRef, useState} from "react";
 import FileDAO from "../daos/FileDAO.js";
-import StatusController from "../StatusController.js";
+import StatusController from "../ui_elements/StatusController.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth, statusMessages} from "../backend.js";
 import Status from "../status/Status.jsx";
 
-function ImageTools({editor, sidebarDisplay, imgToolsDisplay}) {
+function ImageTools({editor, imgToolsDisplay}) {
     const fileDAO = new FileDAO();
     const [getUser, setUser] = useState(null);
     const fileInput = useRef(null);
@@ -32,11 +32,11 @@ function ImageTools({editor, sidebarDisplay, imgToolsDisplay}) {
     }, []);
 
     useEffect(() => {
-        if (sidebarDisplay !== "hidden" && imgToolsDisplay !== "none") {
-            // If the sidebar and image tools are displayed, focus on the URL input
+        if (imgToolsDisplay !== "none") {
+            // If the image tools are displayed, focus on the URL input
             urlInput.current.focus();
         }
-    }, [sidebarDisplay, imgToolsDisplay]);
+    }, [imgToolsDisplay]);
 
     function addImgByUrl(url) {
         editor.chain().focus().setImage({src: url}).run();
@@ -79,13 +79,13 @@ function ImageTools({editor, sidebarDisplay, imgToolsDisplay}) {
     }
 
     return (
-        <div className="img-tools-container">
-            <div className="title">Notes Image</div>
-            <input type="text" className="img-url" placeholder="Enter URL..." ref={urlInput}
+        <div className="img-tools-container sidebar-container" style={{display: imgToolsDisplay}}>
+            <div className="sidebar-title">Notes Image</div>
+            <input type="text" className="text-input img-url" placeholder="Enter URL..." ref={urlInput}
                    onChange={(e) => {
                        setImgUrl(e.target.value);
                    }}/>
-            <button className="action-button add-img-by-url-button"
+            <button className="sidebar-action-button"
                     onClick={() => {
                         addImgByUrl(getImgUrl);
                     }}>
@@ -95,7 +95,7 @@ function ImageTools({editor, sidebarDisplay, imgToolsDisplay}) {
                    onChange={(e) => {
                        uploadImg(e);
                    }}/>
-            <button className="action-button upload-img-files-button"
+            <button className="sidebar-action-button"
                     onClick={() => {
                         fileInput.current.click();
                     }}>

@@ -17,22 +17,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0 0 10px 0;
-  }
-
-  .thumbnail, .thumbnail-hover {
-    height: 100%;
+    padding: 0;
     border-radius: 8px;
+    margin-bottom: 10px;
     transition: transform .2s;
   }
 
-  .thumbnail {
-    border: 1px solid var(--thumbnail-border);
+  .thumbnail-container:hover {
+    transform: scale(1.05);
   }
 
-  .thumbnail-hover {
-    border: 1px solid var(--thumbnail-border-hover);
-    transform: scale(1.05);
+  .thumbnail {
+    height: 100%;
   }
 
   .doc-id {

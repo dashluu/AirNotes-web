@@ -1,11 +1,11 @@
 import "./AIImage.scss";
 import Status from "../status/Status.jsx";
 import {useEffect, useRef, useState} from "react";
-import StatusController from "../StatusController.js";
+import StatusController from "../ui_elements/StatusController.js";
 import {auth, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 
-function AIImage({sidebarDisplay, aiImgDisplay}) {
+function AIImage({aiImgDisplay}) {
     const [getUser, setUser] = useState(null);
     const [getImg, setImg] = useState(null);
     const [getImgDescription, setImgDescription] = useState("");
@@ -32,11 +32,11 @@ function AIImage({sidebarDisplay, aiImgDisplay}) {
     }, []);
 
     useEffect(() => {
-        if (sidebarDisplay !== "hidden" && aiImgDisplay !== "none") {
-            // If the sidebar and AI image UI are displayed, focus on the image description input
+        if (aiImgDisplay !== "none") {
+            // If the AI image UI are displayed, focus on the image description input
             imgDescriptionInput.current.focus();
         }
-    }, [sidebarDisplay, aiImgDisplay]);
+    }, [aiImgDisplay]);
 
     async function copyGeneratedImg(img) {
         statusController.displayProgress();
@@ -90,20 +90,20 @@ function AIImage({sidebarDisplay, aiImgDisplay}) {
     }
 
     return (
-        <div className="ai-img-container">
-            <div className="title">Notes AI Image</div>
-            <textarea className="img-description" placeholder="Enter the image description here..."
+        <div className="ai-img-container sidebar-container" style={{display: aiImgDisplay}}>
+            <div className="sidebar-title">Notes AI Image</div>
+            <textarea className="text-input img-description" placeholder="Enter the image description here..."
                       ref={imgDescriptionInput}
                       onChange={(e) => {
                           setImgDescription(e.target.value);
                       }}></textarea>
-            <button className="action-button text-to-img-button"
+            <button className="sidebar-action-button"
                     onClick={() => {
                         generateImg();
                     }}>
                 Generate image
             </button>
-            <button className="action-button add-generated-img-button"
+            <button className="sidebar-action-button"
                     onClick={() => {
                         copyGeneratedImg(getImg);
                     }}>

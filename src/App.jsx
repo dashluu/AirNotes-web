@@ -8,7 +8,7 @@ import {onAuthStateChanged} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 import Pagination from "./models/Pagination.js";
 import Status from "./status/Status.jsx";
-import StatusController from "./StatusController.js";
+import StatusController from "./ui_elements/StatusController.js";
 
 function App() {
     const navigate = useNavigate();
@@ -35,7 +35,7 @@ function App() {
             const page = await getPagination.fetchPage(userId, pageNum);
             const cardList = page.map((docSummary, i) => <Card key={i} docSummary={docSummary}/>);
             setCardList(cardList);
-            statusController.displaySuccess(statusMessages.loadedPageOk);
+            statusController.hideStatus();
         } catch (error) {
             navigate(paths.error);
         }
@@ -61,7 +61,7 @@ function App() {
                 const cardList = page.map((docSummary, i) => <Card key={i} docSummary={docSummary}/>);
                 setCardList(cardList);
                 setCurrPage(getPagination.currPage);
-                statusController.displaySuccess(statusMessages.loadedPageOk);
+                statusController.hideStatus();
             } catch (error) {
                 statusController.displayFailure(error.message);
             }
@@ -81,7 +81,7 @@ function App() {
                 const cardList = page.map((docSummary, i) => <Card key={i} docSummary={docSummary}/>);
                 setCardList(cardList);
                 setCurrPage(getPagination.currPage);
-                statusController.displaySuccess(statusMessages.loadedPageOk);
+                statusController.hideStatus();
             } catch (error) {
                 statusController.displayFailure(error.message);
             }
@@ -117,7 +117,7 @@ function App() {
 
     useEffect(() => {
         setNextPageDisabled(getCurrPage === getNumPages);
-    }, [getCurrPage]);
+    }, [getCurrPage, getNumPages]);
 
     return (
         <div className="home-page">
@@ -132,6 +132,7 @@ function App() {
                                 title="New">
                             <span className="material-symbols-outlined">edit_square</span>
                         </button>
+                        <input type="text" className="search-input text-input" placeholder="Search notes..."/>
                     </div>
                     <div className="page-navigator">
                         <button className="prev-page-button toolbar-button"

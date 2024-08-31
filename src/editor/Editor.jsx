@@ -7,7 +7,7 @@ import {auth, defaultThumbnail, docDAO, paths, statusMessages, storage} from "..
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import StatusController from "../StatusController.js";
+import StatusController from "../ui_elements/StatusController.js";
 import BubbleMenuWrapper from "./BubbleMenuWrapper.jsx";
 import FloatingMenuWrapper from "./FloatingMenuWrapper.jsx";
 import {Image} from "@tiptap/extension-image";
@@ -317,6 +317,13 @@ function Editor({
                         }}
                         title="AI Image">
                     <span className="material-symbols-outlined">brush</span>
+                </button>
+                <button className="editor-toolbar-button search-button"
+                        title="Search"
+                        onClick={() => {
+                            showOpenNote();
+                        }}>
+                    <span className="material-symbols-outlined">search</span>
                 </button>
                 <button className="editor-toolbar-button save-button" disabled={getSaveDisabled}
                         title="Save"

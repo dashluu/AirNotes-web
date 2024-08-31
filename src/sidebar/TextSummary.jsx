@@ -1,14 +1,12 @@
-import "./AIQA.scss";
+import "./TextSummary.scss";
 import Status from "../status/Status.jsx";
-import {useEffect, useRef, useState} from "react";
-import StatusController from "../StatusController.js";
+import {useEffect, useState} from "react";
+import StatusController from "../ui_elements/StatusController.js";
 import {auth, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 
-function AIQA({editor, sidebarDisplay, qaDisplay}) {
+function TextSummary({editor, triggered, summaryDisplay}) {
     const [getUser, setUser] = useState(null);
-    const [getQuestion, setQuestion] = useState("");
-    const questionInput = useRef(null);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
@@ -21,7 +19,6 @@ function AIQA({editor, sidebarDisplay, qaDisplay}) {
     );
 
     useEffect(() => {
-        // Disable the copy button if there is no text to be copied
         setCopyDisabled(getCopyText === "");
     }, [getCopyText]);
 
@@ -36,13 +33,12 @@ function AIQA({editor, sidebarDisplay, qaDisplay}) {
     }, []);
 
     useEffect(() => {
-        if (sidebarDisplay !== "hidden" && qaDisplay !== "none") {
-            // If the sidebar and QA UI are displayed, focus on the question input
-            questionInput.current.focus();
+        if (triggered) {
+            summarize();
         }
-    }, [sidebarDisplay, qaDisplay]);
+    }, [triggered]);
 
-    async function answerQuestion() {
+    async function summarize() {
         if (!getUser) {
             statusController.displayFailure(statusMessages.unauthorizedMessage);
             return;
@@ -55,30 +51,23 @@ function AIQA({editor, sidebarDisplay, qaDisplay}) {
         const text = state.doc.textBetween(from, to, " ")
         // If there is a selection of text, use that selection, otherwise, use the whole text
         const context = text === "" ? editor.getHTML() : text;
-        const qaModel = {
-            query: getQuestion,
-            context: context
+        const summaryModel = {
+            text: context
         };
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/qa`, {
+            const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/summarize`, {
                 method: "post",
-                body: JSON.stringify(qaModel),
+                body: JSON.stringify(summaryModel),
                 headers: {
                     "Content-Type": "application/json"
                 }
             });
 
             if (response.ok) {
-                statusController.displaySuccess(statusMessages.generatedAnswerOk);
-                let ans = "";
-
-                for await (const chunk of response.body) {
-                    for (const byte of chunk) {
-                        ans += String.fromCharCode(byte);
-                        setCopyText(ans);
-                    }
-                }
+                const summaryText = await response.json();
+                setCopyText(summaryText);
+                statusController.displaySuccess(statusMessages.generatedSummaryOk);
             } else {
                 statusController.displayFailure(await response.text());
             }
@@ -99,37 +88,33 @@ function AIQA({editor, sidebarDisplay, qaDisplay}) {
     }
 
     return (
-        <div className="ai-qa-container">
-            <div className="title">Notes Q&A</div>
-            <div className="instruction">
-                Instruction: select a piece of text to provide the context for the question. If no text is selected,
+        <div className="summary-container sidebar-container" style={{display: summaryDisplay}}>
+            <div className="sidebar-title">Notes Summary</div>
+            <div className="sidebar-instruction">
+                Instruction: select a piece of text to provide the context for the summary. If no text is selected,
                 the whole document will be provided as the context.
             </div>
-            <textarea className="question" placeholder="Enter the question here..." ref={questionInput}
-                      onChange={(e) => {
-                          setQuestion(e.target.value);
-                      }}></textarea>
-            <button className="action-button qa-button"
+            <button className="sidebar-action-button"
                     onClick={() => {
-                        answerQuestion();
+                        summarize();
                     }}>
-                Answer question
+                Summarize
             </button>
-            <button className="action-button copy-button"
+            <button className="sidebar-action-button"
                     disabled={getCopyDisabled}
                     onClick={() => {
                         copyText();
                     }}>
-                Copy answer
+                Copy summary
             </button>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}
                     messageClass={getStatusMessageClass}
                     icon={getStatusIcon}
                     message={getStatusMessage}/>
-            <div className="qa-text">Answer: {getCopyText}</div>
+            <div className="summary-text">Summary: {getCopyText}</div>
         </div>
     );
 }
 
-export default AIQA;
+export default TextSummary;

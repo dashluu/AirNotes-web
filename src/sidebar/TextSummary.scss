@@ -1,0 +1,25 @@
+@use "../LightTheme";
+@use "SidebarCommon";
+
+.summary-container {
+  .status-container {
+    width: 100%;
+    padding-left: 0;
+    margin-bottom: 10px;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .summary-text {
+    width: 97%;
+    height: 75vh;
+    background-color: var(--sidebar-output-background);
+    border: 1px solid var(--sidebar-output-border);
+    color: 1px solid var(--sidebar-output-color);
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0;
+    overflow-y: auto;
+  }
+}

@@ -1,6 +1,6 @@
 import "./Sidebar.scss";
-import AISummary from "./AISummary.jsx";
-import AIQA from "./AIQA.jsx";
+import TextSummary from "./TextSummary.jsx";
+import TextQA from "./TextQA.jsx";
 import ImageTools from "./ImageTools.jsx";
 import AIImage from "./AIImage.jsx";
 import OpenNote from "./OpenNote.jsx";
@@ -24,52 +24,57 @@ function Sidebar({
     const [getAIImgDisplay, setAIImgDisplay] = useState("none");
     const [getSummaryTriggered, setSummaryTriggered] = useState(false);
 
+    function hideContent() {
+        setOpenNoteDisplay("none");
+        setSummaryDisplay("none");
+        setQADisplay("none");
+        setImgToolsDisplay("none");
+        setAIImgDisplay("none");
+    }
+
     useEffect(() => {
-        if (mode) {
-            switch (mode.name) {
-                case "openNote":
-                    setOpenNoteDisplay("block");
-                    setSummaryDisplay("none");
-                    setQADisplay("none");
-                    setImgToolsDisplay("none");
-                    setAIImgDisplay("none");
-                    break;
-                case "summary":
-                    setSummaryDisplay("block");
-                    setSummaryTriggered(mode.triggered);
-                    setOpenNoteDisplay("none");
-                    setQADisplay("none");
-                    setImgToolsDisplay("none");
-                    setAIImgDisplay("none");
-                    break;
-                case "QA":
-                    setQADisplay("block");
-                    setOpenNoteDisplay("none");
-                    setSummaryDisplay("none");
-                    setImgToolsDisplay("none");
-                    setAIImgDisplay("none");
-                    break;
-                case "imgTools":
-                    setImgToolsDisplay("block");
-                    setOpenNoteDisplay("none");
-                    setSummaryDisplay("none");
-                    setQADisplay("none");
-                    setAIImgDisplay("none");
-                    break;
-                default:
-                    setAIImgDisplay("block");
-                    setOpenNoteDisplay("none");
-                    setSummaryDisplay("none");
-                    setQADisplay("none");
-                    setImgToolsDisplay("none");
-                    break;
-            }
-        } else {
-            setOpenNoteDisplay("none");
-            setSummaryDisplay("none");
-            setQADisplay("none");
-            setImgToolsDisplay("none");
-            setAIImgDisplay("none");
+        if (!mode) {
+            hideContent();
+            return;
+        }
+
+        switch (mode.name) {
+            case "openNote":
+                setOpenNoteDisplay("block");
+                setSummaryDisplay("none");
+                setQADisplay("none");
+                setImgToolsDisplay("none");
+                setAIImgDisplay("none");
+                break;
+            case "summary":
+                setSummaryDisplay("block");
+                setSummaryTriggered(mode.triggered);
+                setOpenNoteDisplay("none");
+                setQADisplay("none");
+                setImgToolsDisplay("none");
+                setAIImgDisplay("none");
+                break;
+            case "QA":
+                setQADisplay("block");
+                setOpenNoteDisplay("none");
+                setSummaryDisplay("none");
+                setImgToolsDisplay("none");
+                setAIImgDisplay("none");
+                break;
+            case "imgTools":
+                setImgToolsDisplay("block");
+                setOpenNoteDisplay("none");
+                setSummaryDisplay("none");
+                setQADisplay("none");
+                setAIImgDisplay("none");
+                break;
+            default:
+                setAIImgDisplay("block");
+                setOpenNoteDisplay("none");
+                setSummaryDisplay("none");
+                setQADisplay("none");
+                setImgToolsDisplay("none");
+                break;
         }
     }, [mode]);
 
@@ -79,29 +84,31 @@ function Sidebar({
                 <button className="sidebar-toolbar-button"
                         title="Close Sidebar"
                         onClick={() => {
+                            hideContent();
                             closeSidebar();
                         }}>
                     <span className="material-symbols-outlined">keyboard_double_arrow_left</span>
                 </button>
             </div>
             <div className="sidebar-ui-container">
-                <div className="sidebar-ui" style={{display: getSummaryDisplay}}>
-                    <AISummary editor={editor} triggered={getSummaryTriggered}/>
+                <div className="sidebar-ui">
+                    <TextSummary editor={editor} triggered={getSummaryTriggered} summaryDisplay={getSummaryDisplay}/>
                 </div>
-                <div className="sidebar-ui" style={{display: getQADisplay}}>
-                    <AIQA editor={editor} sidebarDisplay={sidebarDisplay} qaDisplay={getQADisplay}/>
+                <div className="sidebar-ui">
+                    <TextQA editor={editor} qaDisplay={getQADisplay}/>
                 </div>
-                <div className="sidebar-ui" style={{display: getImgToolsDisplay}}>
-                    <ImageTools editor={editor} sidebarDisplay={sidebarDisplay} imgToolsDisplay={getImgToolsDisplay}/>
+                <div className="sidebar-ui">
+                    <ImageTools editor={editor} imgToolsDisplay={getImgToolsDisplay}/>
                 </div>
-                <div className="sidebar-ui" style={{display: getAIImgDisplay}}>
-                    <AIImage sidebarDisplay={sidebarDisplay} aiImgDisplay={getAIImgDisplay}/>
+                <div className="sidebar-ui">
+                    <AIImage aiImgDisplay={getAIImgDisplay}/>
                 </div>
-                <div className="sidebar-ui" style={{display: getOpenNoteDisplay}}>
+                <div className="sidebar-ui">
                     <OpenNote docId={docId}
                               setFullDoc={setFullDoc}
                               getLoadRecent={getLoadRecent}
-                              setLoadRecent={setLoadRecent}/>
+                              setLoadRecent={setLoadRecent}
+                              openNoteDisplay={getOpenNoteDisplay}/>
                 </div>
             </div>
         </div>

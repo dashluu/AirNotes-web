@@ -1,4 +1,4 @@
-@use "../LightTheme.css";
+@use "../LightTheme";
 
 .floating-menu {
   & {
@@ -26,7 +26,7 @@
     text-align: center;
     line-height: 1.15;
     padding-top: 2px;
-    padding-bottom: 3px;
+    padding-bottom: 2px;
     transition: all .2s cubic-bezier(.65, .05, .36, 1);
     width: 36px;
   }
