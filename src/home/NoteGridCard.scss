@@ -1,0 +1,85 @@
+@use "../LightTheme.css";
+
+.note-grid-card-container {
+  & {
+    height: var(--note-grid-card-height);
+    width: auto;
+    display: block;
+    margin-bottom: 10px;
+    animation: card-load 0.5s ease-in;
+  }
+
+  .thumbnail-container {
+    height: 80%;
+    width: 100%;
+    padding: 0;
+    margin-bottom: 10px;
+    overflow: hidden;
+    display: inline-block;
+    box-shadow: var(--note-grid-card-thumbnail-shadow);
+    border-radius: 8px;
+  }
+
+  .thumbnail {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    transition: all .2s ease;
+  }
+
+  .doc-id {
+    display: none;
+  }
+
+  .summary-title {
+    color: var(--note-grid-card-summary-title-color);
+    font-size: 19px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    width: 100%;
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    text-align: center;
+    //-webkit-mask-image: linear-gradient(180deg, black 0%, transparent);
+    //mask-image: linear-gradient(180deg, black 0%, transparent);
+  }
+
+  .summary-date {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 5px;
+    width: 100%;
+    color: var(--note-grid-card-summary-date-color);
+  }
+
+  @keyframes card-load {
+    0% {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+}
+
+.note-grid-card-container:hover {
+  & {
+    cursor: pointer;
+  }
+
+  .thumbnail {
+    transform: scale(1.2);
+  }
+
+  .summary-date {
+    color: var(--note-grid-card-summary-date-color-hover);
+  }
+}

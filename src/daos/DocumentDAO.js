@@ -21,7 +21,7 @@ import FullDocument from "../models/FullDocument.js";
 import DocumentSummary from "../models/DocumentSummary.js";
 
 export default class DocumentDAO {
-    static docsPerPage = 3;
+    static docsPerPage = 2;
     static recentNumDocs = 4;
 
     async update(userId, docId, thumbnail, title, content) {

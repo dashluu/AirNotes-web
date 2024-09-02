@@ -80,14 +80,14 @@ function Sidebar({
 
     return (
         <div className="sidebar" style={{visibility: sidebarDisplay, animation: sidebarAnimation}}>
-            <div className="sidebar-toolbar">
-                <button className="sidebar-toolbar-button"
+            <div className="sidebar-toolbar toolbar">
+                <button className="toolbar-button"
                         title="Close Sidebar"
                         onClick={() => {
                             hideContent();
                             closeSidebar();
                         }}>
-                    <span className="material-symbols-outlined">keyboard_double_arrow_left</span>
+                    <span className="material-symbols-outlined">menu_open</span>
                 </button>
             </div>
             <div className="sidebar-ui-container">

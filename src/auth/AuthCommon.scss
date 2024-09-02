@@ -17,20 +17,22 @@
     }
 
     .auth-input-container {
-        width: 96%;
+        width: 100%;
         margin-bottom: 10px;
         padding: 0;
     }
 
     .auth-action-container {
-        width: 100%;
+        width: 60%;
         height: 50px;
-        margin-top: 10px;
+        margin-top: 20px;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .auth-action-button {
         width: 100%;
-        margin-bottom: 8px;
+        margin-bottom: 10px;
         padding-top: 7px;
         padding-bottom: 7px;
         border-radius: 5px;
@@ -47,14 +49,12 @@
         background-color: var(--auth-primary-button-background);
         border: 1px solid var(--auth-primary-button-border);
         color: var(--auth-primary-button-color);
-        filter: none;
     }
 
     .auth-primary-button:hover {
         background-color: var(--auth-primary-button-background-hover);
         border: 1px solid var(--auth-primary-button-border-hover);
         color: var(--auth-primary-button-color-hover);
-        filter: drop-shadow(0 0 10px var(--auth-primary-button-shadow));
     }
 
     .auth-secondary-button {
@@ -67,6 +67,5 @@
         background-color: var(--auth-secondary-button-background-hover);
         border: 1px solid var(--auth-secondary-button-border-hover);
         color: var(--auth-secondary-button-color-hover);
-        filter: drop-shadow(0 0 10px var(--auth-secondary-button-shadow));
     }
 }

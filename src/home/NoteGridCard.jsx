@@ -1,21 +1,13 @@
-import "./Card.scss";
-import {useState} from "react";
+import "./NoteGridCard.scss";
 import {useNavigate} from "react-router-dom";
 
-const Card = ({docSummary}) => {
+const NoteGridCard = ({docSummary}) => {
     const navigate = useNavigate();
-    const [getDateClass, setDateClass] = useState("summary-date");
 
     return (
-        <div className="card-container"
+        <div className="note-grid-card-container"
              onClick={() => {
                  navigate(`/notes/${docSummary.id}`);
-             }}
-             onMouseEnter={() => {
-                 setDateClass("summary-date-hover");
-             }}
-             onMouseLeave={() => {
-                 setDateClass("summary-date");
              }}
         >
             <div className="thumbnail-container">
@@ -24,10 +16,10 @@ const Card = ({docSummary}) => {
             <div className="summary-container">
                 <div className="doc-id">{docSummary.id}</div>
                 <div className="summary-title">{docSummary.title}</div>
-                <div className={getDateClass}>{docSummary.lastModified}</div>
+                <div className="summary-date">{docSummary.lastModified}</div>
             </div>
         </div>
     );
 }
 
-export default Card;
+export default NoteGridCard;

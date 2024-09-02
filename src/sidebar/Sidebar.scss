@@ -1,4 +1,4 @@
-@use "../LightTheme";
+@use "../ui_elements/Toolbar";
 
 .sidebar {
   @keyframes sidebar-in {
@@ -29,42 +29,7 @@
   }
 
   .sidebar-toolbar {
-    padding: 0;
-    margin-bottom: 0;
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-  }
-
-  .sidebar-toolbar-button {
-    background-color: transparent;
-    border: none;
-  }
-
-  .sidebar-toolbar-button:hover:not([disabled]) {
-    cursor: pointer;
-  }
-
-  .sidebar-toolbar-button span {
-    background-color: var(--sidebar-toolbar-button-background);
-    border: 1px solid var(--sidebar-toolbar-button-border);
-    border-radius: 5px;
-    color: var(--sidebar-toolbar-button-color);
-    padding: 3px 4px 3px 4px;
-    text-align: center;
-    margin: 0;
-  }
-
-  .sidebar-toolbar-button:disabled span {
-    color: var(--sidebar-toolbar-button-color-disabled);
-    background-color: var(--sidebar-toolbar-button-background-disabled);
-    border: 1px solid var(--sidebar-toolbar-button-border-disabled);
-  }
-
-  .sidebar-toolbar-button:hover:not([disabled]) span {
-    color: var(--sidebar-toolbar-button-color-hover);
-    background-color: var(--sidebar-toolbar-button-background-hover);
-    border: 1px solid var(--sidebar-toolbar-button-border-hover);
+    margin-bottom: 5px;
   }
 
   .status-container {

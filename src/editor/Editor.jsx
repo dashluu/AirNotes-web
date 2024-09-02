@@ -263,76 +263,76 @@ function Editor({
     return (
         <div className="editor-container">
             <div className="doc-id-container">{getDocId}</div>
-            <div className="editor-toolbar">
-                <button className="editor-toolbar-button new-button"
+            <div className="editor-toolbar toolbar">
+                <button className="toolbar-button new-button"
                         onClick={() => {
                             navigate(paths.newDoc);
                         }}
                         title="New">
                     <span className="material-symbols-outlined">edit_square</span>
                 </button>
-                <button className="editor-toolbar-button undo-button"
+                <button className="toolbar-button undo-button"
                         onClick={() => editor.chain().focus().undo().run()}
                         disabled={getUndoDisabled}
                         title="Undo">
                     <span className="material-symbols-outlined">undo</span>
                 </button>
-                <button className="editor-toolbar-button redo-button"
+                <button className="toolbar-button redo-button"
                         onClick={() => editor.chain().focus().redo().run()}
                         disabled={getRedoDisabled}
                         title="Redo">
                     <span className="material-symbols-outlined">redo</span>
                 </button>
-                <button className="editor-toolbar-button open-button"
+                <button className="toolbar-button open-button"
                         onClick={() => {
                             showOpenNote();
                         }}
                         title="Open Recent">
                     <span className="material-symbols-outlined">folder_open</span>
                 </button>
-                <button className="editor-toolbar-button summarize-button"
-                        onClick={() => {
-                            showSummary(false);
-                        }}
-                        title="Summarize">
-                    <span className="material-symbols-outlined">notes</span>
-                </button>
-                <button className="editor-toolbar-button qa-button"
-                        onClick={() => {
-                            showQA();
-                        }}
-                        title="Q&A">
-                    <span className="material-symbols-outlined">quiz</span>
-                </button>
-                <button className="editor-toolbar-button img-tools-button"
-                        onClick={() => {
-                            showImgTools();
-                        }}
-                        title="Image Tools">
-                    <span className="material-symbols-outlined">image</span>
-                </button>
-                <button className="editor-toolbar-button ai-img-button"
-                        onClick={() => {
-                            showAIImg();
-                        }}
-                        title="AI Image">
-                    <span className="material-symbols-outlined">brush</span>
-                </button>
-                <button className="editor-toolbar-button search-button"
+                <button className="toolbar-button search-button"
                         title="Search"
                         onClick={() => {
                             showOpenNote();
                         }}>
                     <span className="material-symbols-outlined">search</span>
                 </button>
-                <button className="editor-toolbar-button save-button" disabled={getSaveDisabled}
+                <button className="toolbar-button summarize-button"
+                        onClick={() => {
+                            showSummary(false);
+                        }}
+                        title="Summarize">
+                    <span className="material-symbols-outlined">notes</span>
+                </button>
+                <button className="toolbar-button qa-button"
+                        onClick={() => {
+                            showQA();
+                        }}
+                        title="Q&A">
+                    <span className="material-symbols-outlined">quiz</span>
+                </button>
+                <button className="toolbar-button img-tools-button"
+                        onClick={() => {
+                            showImgTools();
+                        }}
+                        title="Image Tools">
+                    <span className="material-symbols-outlined">image</span>
+                </button>
+                <button className="toolbar-button ai-img-button"
+                        onClick={() => {
+                            showAIImg();
+                        }}
+                        title="AI Image">
+                    <span className="material-symbols-outlined">brush</span>
+                </button>
+                <button className="toolbar-button save-button" disabled={getSaveDisabled}
                         title="Save"
                         onClick={() => {
                             afterSaveDoc();
                         }}>
                     <span className="material-symbols-outlined">save</span>
                 </button>
-                <button className="editor-toolbar-button delete-button"
+                <button className="toolbar-button delete-button"
                         style={{display: `${getDeleteDisplay}`}}
                         title="Delete"
                         onClick={() => {
@@ -346,7 +346,7 @@ function Editor({
                     messageClass={getStatusMessageClass}
                     icon={getStatusIcon}
                     message={getStatusMessage}/>
-            <input type="text" className="title" required placeholder="Enter title..."
+            <input type="text" className="editor-title" required placeholder="Enter title..."
                    value={getTitle}
                    onChange={(e) => {
                        setTitle(e.target.value);

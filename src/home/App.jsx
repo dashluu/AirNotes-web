@@ -1,14 +1,14 @@
 import "./App.scss";
-import NavBar from "./navbar/NavBar.jsx";
-import Card from "./card_grid/Card.jsx";
-import CardGrid from "./card_grid/CardGrid.jsx";
+import NavBar from "../navbar/NavBar.jsx";
+import NoteGridCard from "./NoteGridCard.jsx";
+import NoteGrid from "./NoteGrid.jsx";
 import {useEffect, useState} from "react";
-import {auth, docDAO, paths, statusMessages} from "./backend.js";
+import {auth, docDAO, paths, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
-import Pagination from "./models/Pagination.js";
-import Status from "./status/Status.jsx";
-import StatusController from "./ui_elements/StatusController.js";
+import Pagination from "../models/Pagination.js";
+import Status from "../status/Status.jsx";
+import StatusController from "../ui_elements/StatusController.js";
 
 function App() {
     const navigate = useNavigate();
@@ -33,7 +33,7 @@ function App() {
 
         try {
             const page = await getPagination.fetchPage(userId, pageNum);
-            const cardList = page.map((docSummary, i) => <Card key={i} docSummary={docSummary}/>);
+            const cardList = page.map((docSummary, i) => <NoteGridCard key={i} docSummary={docSummary}/>);
             setCardList(cardList);
             statusController.hideStatus();
         } catch (error) {
@@ -58,7 +58,7 @@ function App() {
 
             try {
                 const page = await getPagination.prevPage(getUser.uid);
-                const cardList = page.map((docSummary, i) => <Card key={i} docSummary={docSummary}/>);
+                const cardList = page.map((docSummary, i) => <NoteGridCard key={i} docSummary={docSummary}/>);
                 setCardList(cardList);
                 setCurrPage(getPagination.currPage);
                 statusController.hideStatus();
@@ -78,7 +78,7 @@ function App() {
 
             try {
                 const page = await getPagination.nextPage(getUser.uid);
-                const cardList = page.map((docSummary, i) => <Card key={i} docSummary={docSummary}/>);
+                const cardList = page.map((docSummary, i) => <NoteGridCard key={i} docSummary={docSummary}/>);
                 setCardList(cardList);
                 setCurrPage(getPagination.currPage);
                 statusController.hideStatus();
@@ -123,8 +123,8 @@ function App() {
         <div className="home-page">
             <NavBar/>
             <div className="home-container">
-                <div className="toolbar">
-                    <div className="toolbar-button-container">
+                <div className="toolbar-container">
+                    <div className="toolbar">
                         <button className="toolbar-button new-button"
                                 onClick={() => {
                                     navigate(paths.newDoc);
@@ -132,10 +132,10 @@ function App() {
                                 title="New">
                             <span className="material-symbols-outlined">edit_square</span>
                         </button>
-                        <input type="text" className="search-input text-input" placeholder="Search notes..."/>
+                        <input type="search" className="search-input text-input" placeholder="Search notes..."/>
                     </div>
-                    <div className="page-navigator">
-                        <button className="prev-page-button toolbar-button"
+                    <div className="page-nav">
+                        <button className="prev-page-button page-nav-button"
                                 disabled={getPrevPageDisabled}
                                 onClick={() => {
                                     prevPage();
@@ -143,7 +143,7 @@ function App() {
                             <span className="material-symbols-outlined">chevron_left</span>
                         </button>
                         <div className="page">{getCurrPage} - {getNumPages}</div>
-                        <button className="next-page-button toolbar-button"
+                        <button className="next-page-button page-nav-button"
                                 disabled={getNextPageDisabled}
                                 onClick={() => {
                                     nextPage();
@@ -157,7 +157,7 @@ function App() {
                         messageClass={getStatusMessageClass}
                         icon={getStatusIcon}
                         message={getStatusMessage}/>
-                <CardGrid cards={getCardList}/>
+                <NoteGrid cards={getCardList}/>
             </div>
         </div>
     )

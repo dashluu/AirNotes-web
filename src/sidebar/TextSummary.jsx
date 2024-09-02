@@ -12,15 +12,10 @@ function TextSummary({editor, triggered, summaryDisplay}) {
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
-    const [getCopyDisabled, setCopyDisabled] = useState(true);
     const [getCopyText, setCopyText] = useState("");
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
-
-    useEffect(() => {
-        setCopyDisabled(getCopyText === "");
-    }, [getCopyText]);
 
     useEffect(() => {
         const unsubUser = onAuthStateChanged(auth, (user) => {
@@ -101,7 +96,7 @@ function TextSummary({editor, triggered, summaryDisplay}) {
                 Summarize
             </button>
             <button className="sidebar-action-button"
-                    disabled={getCopyDisabled}
+                    disabled={getCopyText === ""}
                     onClick={() => {
                         copyText();
                     }}>

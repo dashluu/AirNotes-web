@@ -1,4 +1,4 @@
-@use "../LightTheme";
+@use "../ui_elements/Toolbar";
 
 .editor-container {
   & {
@@ -13,55 +13,14 @@
   }
 
   .editor-toolbar {
-    width: 100%;
-    padding: 0;
     margin-bottom: 5px;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-  }
-
-  .editor-toolbar-button-container {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
-  }
-
-  .editor-toolbar-button {
-    background-color: transparent;
-    border: none;
-  }
-
-  .editor-toolbar-button:hover:not([disabled]) {
-    cursor: pointer;
-  }
-
-  .editor-toolbar-button span {
-    background-color: var(--editor-toolbar-button-background);
-    border: 1px solid var(--editor-toolbar-button-border);
-    border-radius: 5px;
-    color: var(--editor-toolbar-button-color);
-    padding: 3px 4px 3px 4px;
-    text-align: center;
-    margin: 0;
-  }
-
-  .editor-toolbar-button:disabled span {
-    color: var(--editor-toolbar-button-color-disabled);
-    background-color: var(--editor-toolbar-button-background-disabled);
-    border: 1px solid var(--editor-toolbar-button-border-disabled);
-  }
-
-  .editor-toolbar-button:hover:not([disabled]) span {
-    color: var(--editor-toolbar-button-color-hover);
-    background-color: var(--editor-toolbar-button-background-hover);
-    border: 1px solid var(--editor-toolbar-button-border-hover);
   }
 
   .status-container {
     padding-left: 10px;
   }
 
-  .title {
+  .editor-title {
     width: 100%;
     padding: 3px 12px 5px 12px;
     outline: none;
@@ -106,7 +65,7 @@
 
   .img {
     max-width: 100%;
-    border-radius: 5px;
+    border-radius: 8px;
     display: block;
   }
 }

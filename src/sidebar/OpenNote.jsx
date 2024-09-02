@@ -1,7 +1,7 @@
 import "./OpenNote.scss";
 import "../ui_elements/TextInputCommon.scss"
 import {useEffect, useRef, useState} from "react";
-import RecentNote from "./RecentNote.jsx";
+import NoteListCard from "./NoteListCard.jsx";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth, docDAO} from "../backend.js";
 import DocumentDAO from "../daos/DocumentDAO.js";
@@ -31,10 +31,10 @@ function OpenNote({docId, setFullDoc, getLoadRecent, setLoadRecent, openNoteDisp
             );
 
             const recentNoteList = summaryList.map(
-                (summary, i) => <RecentNote key={i}
-                                            docSummary={summary}
-                                            setFullDoc={setFullDoc}
-                                            setLoadRecent={setLoadRecent}/>
+                (summary, i) => <NoteListCard key={i}
+                                              docSummary={summary}
+                                              setFullDoc={setFullDoc}
+                                              setLoadRecent={setLoadRecent}/>
             );
 
             setUnsubSummaryList(unsubSummaryList);

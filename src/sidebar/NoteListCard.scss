@@ -1,0 +1,104 @@
+@use "SidebarCommon";
+
+.note-list-card-container {
+  & {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 10px;
+    padding: 10px 1px 7px 10px;
+    display: flex;
+    align-items: center;
+    background-color: var(--note-list-card-background);
+    border: 1px solid var(--note-list-card-border);
+    border-radius: 8px;
+  }
+
+  .thumbnail-container {
+    width: 40%;
+    height: 100%;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .thumbnail {
+    height: 82%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    position: relative;
+    border-radius: 100%;
+    border: 2px solid var(--note-list-card-thumbnail-border);
+  }
+
+  .summary-container {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .summary-wrapper {
+    width: 80%;
+    height: auto;
+  }
+
+  .doc-id {
+    display: none;
+  }
+
+  .summary-title {
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--note-list-card-summary-title-color);
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    margin-bottom: 5px;
+  }
+
+  .summary-date {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: var(--note-list-card-summary-date-color);
+    width: 100%;
+  }
+
+  .sidebar-action-button {
+    background-color: var(--note-list-card-action-button-background);
+    border: var(--note-list-card-action-button-border);
+    color: var(--note-list-card-action-button-color);
+    margin-bottom: 0;
+  }
+}
+
+.note-list-card-container:hover {
+  & {
+    background-color: var(--note-list-card-background-hover);
+    border: 1px solid var(--note-list-card-border-hover);
+    cursor: pointer;
+  }
+
+  .thumbnail {
+    border: 2px solid var(--note-list-card-thumbnail-border-hover);
+  }
+
+  .summary-title {
+    color: var(--note-list-card-summary-title-color-hover);
+  }
+
+  .summary-date {
+    color: var(--note-list-card-summary-date-color-hover);
+  }
+
+  .sidebar-action-button {
+    background-color: var(--note-list-card-action-button-background-hover);
+    border: var(--note-list-card-action-button-border-hover);
+    color: var(--note-list-card-action-button-color-hover);
+  }
+}

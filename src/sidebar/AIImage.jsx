@@ -104,6 +104,7 @@ function AIImage({aiImgDisplay}) {
                 Generate image
             </button>
             <button className="sidebar-action-button"
+                    disabled={getImgGenUrl === ""}
                     onClick={() => {
                         copyGeneratedImg(getImg);
                     }}>

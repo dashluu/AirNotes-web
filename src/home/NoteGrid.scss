@@ -1,0 +1,16 @@
+@use "../LightTheme.css";
+
+.note-grid-container {
+  & {
+    width: 100%;
+    height: auto;
+  }
+
+  .note-grid {
+    height: auto;
+    width: 100%;
+    display: grid;
+    gap: 30px 30px;
+    grid-template-columns: repeat(auto-fill, minmax(var(--note-grid-card-width), 1fr));
+  }
+}

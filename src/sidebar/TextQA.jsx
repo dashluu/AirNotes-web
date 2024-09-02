@@ -14,16 +14,10 @@ function TextQA({editor, qaDisplay}) {
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
-    const [getCopyDisabled, setCopyDisabled] = useState(true);
     const [getCopyText, setCopyText] = useState("");
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
-
-    useEffect(() => {
-        // Disable the copy button if there is no text to be copied
-        setCopyDisabled(getCopyText === "");
-    }, [getCopyText]);
 
     useEffect(() => {
         const unsubUser = onAuthStateChanged(auth, (user) => {
@@ -116,7 +110,7 @@ function TextQA({editor, qaDisplay}) {
                 Answer question
             </button>
             <button className="sidebar-action-button"
-                    disabled={getCopyDisabled}
+                    disabled={getCopyText === ""}
                     onClick={() => {
                         copyText();
                     }}>
