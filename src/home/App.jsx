@@ -9,6 +9,7 @@ import {useNavigate} from "react-router-dom";
 import Pagination from "../models/Pagination.js";
 import Status from "../status/Status.jsx";
 import StatusController from "../ui_elements/StatusController.js";
+import ToolbarButton from "../ui_elements/ToolbarButton.jsx";
 
 function App() {
     const navigate = useNavigate();
@@ -125,13 +126,9 @@ function App() {
             <div className="home-container">
                 <div className="toolbar-container">
                     <div className="toolbar">
-                        <button className="toolbar-button new-button"
-                                onClick={() => {
-                                    navigate(paths.newDoc);
-                                }}
-                                title="New">
-                            <span className="material-symbols-outlined">edit_square</span>
-                        </button>
+                        <ToolbarButton title="New" icon="edit_square" click={() => {
+                            navigate(paths.newDoc);
+                        }}/>
                         <input type="search" className="search-input text-input" placeholder="Search notes..."/>
                     </div>
                     <div className="page-nav">

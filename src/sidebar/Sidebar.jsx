@@ -5,6 +5,7 @@ import ImageTools from "./ImageTools.jsx";
 import AIImage from "./AIImage.jsx";
 import OpenNote from "./OpenNote.jsx";
 import {useEffect, useState} from "react";
+import ToolbarButton from "../ui_elements/ToolbarButton.jsx";
 
 function Sidebar({
                      docId,
@@ -81,14 +82,10 @@ function Sidebar({
     return (
         <div className="sidebar" style={{visibility: sidebarDisplay, animation: sidebarAnimation}}>
             <div className="sidebar-toolbar toolbar">
-                <button className="toolbar-button"
-                        title="Close Sidebar"
-                        onClick={() => {
-                            hideContent();
-                            closeSidebar();
-                        }}>
-                    <span className="material-symbols-outlined">menu_open</span>
-                </button>
+                <ToolbarButton title="Close Sidebar" icon="menu_open" click={() => {
+                    hideContent();
+                    closeSidebar();
+                }}/>
             </div>
             <div className="sidebar-ui-container">
                 <div className="sidebar-ui">

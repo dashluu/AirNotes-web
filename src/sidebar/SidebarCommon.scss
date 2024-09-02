@@ -1,57 +1,47 @@
 @use "../ui_elements/TextInputCommon";
 
+@media screen and (min-width: 1400px) {
+  .sidebar-container {
+    .sidebar-button-container {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .sidebar-container {
+    .sidebar-button-container {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
 .sidebar {
-    .sidebar-container {
-        width: 100%;
-        margin-left: auto;
-        margin-right: auto;
-        padding-left: 10px;
-    }
+  .sidebar-container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+  }
 
-    .sidebar-title {
-        font-weight: bold;
-        font-size: 20px;
-        text-align: center;
-        padding-left: 0;
-        margin-left: 0;
-        margin-bottom: 10px;
-        width: 100%;
-    }
+  .sidebar-title {
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+    padding-left: 0;
+    margin-left: 0;
+    margin-bottom: 10px;
+    width: 100%;
+  }
 
-    .sidebar-instruction {
-        font-weight: 500;
-        font-size: 16px;
-        margin-bottom: 15px;
-        width: 100%;
-    }
+  .sidebar-instruction {
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 15px;
+    width: 100%;
+  }
 
-    .sidebar-action-button {
-        width: 100%;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        background-color: var(--sidebar-action-button-background);
-        border: 1px solid var(--sidebar-action-button-border);
-        color: var(--sidebar-action-button-color);
-        border-radius: 5px;
-        font-size: 16px;
-        font-weight: 500;
-        padding-top: 7px;
-        padding-bottom: 7px;
-        margin-bottom: 10px;
-    }
-
-    .sidebar-action-button:hover {
-        cursor: pointer;
-        background-color: var(--sidebar-action-button-background-hover);
-        border: 1px solid var(--sidebar-action-button-border-hover);
-        color: var(--sidebar-action-button-color-hover);
-    }
-
-    .sidebar-action-button:disabled {
-        cursor: auto;
-        background-color: var(--sidebar-action-button-background-disabled);
-        border: 1px solid var(--sidebar-action-button-border-disabled);
-        color: var(--sidebar-action-button-color-disabled);
-    }
+  .sidebar-button-container {
+    display: grid;
+  }
 }

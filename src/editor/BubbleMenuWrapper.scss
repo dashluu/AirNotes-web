@@ -1,52 +1,5 @@
-@use "../LightTheme";
-
-.bubble-menu {
-  & {
-    background-color: var(--editor-bubble-menu-background);
-    border: 1px solid var(--editor-bubble-menu-border);
-    border-radius: 5px;
-    display: flex;
-    padding: .2rem;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-  }
-
-  button span {
-    padding-top: 2px;
-  }
-
-  button {
-    background-color: unset;
-    border-radius: 5px;
-    border: none;
-    color: var(--editor-bubble-menu-button-color);
-    font-family: inherit;
-    font-size: .875rem;
-    font-weight: 500;
-    text-align: center;
-    line-height: 1.15;
-    padding-top: 2px;
-    padding-bottom: 2px;
-    transition: all .2s cubic-bezier(.65, .05, .36, 1);
-    width: 36px;
-  }
-
-  button:hover {
-    cursor: pointer;
-    background: var(--editor-bubble-menu-button-background-hover);
-    color: var(--editor-bubble-menu-button-color-hover);
-  }
-
-  .bubble-menu-button-is-active {
-    background: var(--editor-bubble-menu-button-background-hover);
-    color: var(--editor-bubble-menu-button-color-hover);
-  }
-
-  .italic-button {
-    font-style: italic;
-  }
-
-  .underline-button {
-    text-decoration: underline;
+.editor-menu {
+  .underline-button span {
+    padding-top: 5px;
   }
 }

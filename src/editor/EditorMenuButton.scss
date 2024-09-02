@@ -1,0 +1,33 @@
+.editor-menu {
+  .editor-menu-button span {
+    padding-top: 2px;
+  }
+
+  .editor-menu-button, .editor-menu-button-active {
+    border-radius: 5px;
+    border: none;
+    font-family: inherit;
+    font-size: .875rem;
+    font-weight: 500;
+    text-align: center;
+    line-height: 1.15;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    transition: all .2s cubic-bezier(.65, .05, .36, 1);
+    width: 36px;
+  }
+
+  .editor-menu-button {
+    background-color: unset;
+    color: var(--editor-bubble-menu-button-color);
+  }
+
+  .editor-menu-button:hover, .editor-menu-button-active {
+    background: var(--editor-bubble-menu-button-background-hover);
+    color: var(--editor-bubble-menu-button-color-hover);
+  }
+
+  .editor-menu-button:hover {
+    cursor: pointer;
+  }
+}

@@ -15,6 +15,7 @@ import {FileHandler} from "@tiptap-pro/extension-file-handler";
 import {onAuthStateChanged} from "firebase/auth";
 import FileDAO from "../daos/FileDAO.js";
 import {getDownloadURL, ref} from "firebase/storage";
+import ToolbarButton from "../ui_elements/ToolbarButton.jsx";
 // import css from "highlight.js/lib/languages/css";
 // import js from "highlight.js/lib/languages/javascript";
 // import ts from "highlight.js/lib/languages/typescript";
@@ -264,82 +265,39 @@ function Editor({
         <div className="editor-container">
             <div className="doc-id-container">{getDocId}</div>
             <div className="editor-toolbar toolbar">
-                <button className="toolbar-button new-button"
-                        onClick={() => {
-                            navigate(paths.newDoc);
-                        }}
-                        title="New">
-                    <span className="material-symbols-outlined">edit_square</span>
-                </button>
-                <button className="toolbar-button undo-button"
-                        onClick={() => editor.chain().focus().undo().run()}
-                        disabled={getUndoDisabled}
-                        title="Undo">
-                    <span className="material-symbols-outlined">undo</span>
-                </button>
-                <button className="toolbar-button redo-button"
-                        onClick={() => editor.chain().focus().redo().run()}
-                        disabled={getRedoDisabled}
-                        title="Redo">
-                    <span className="material-symbols-outlined">redo</span>
-                </button>
-                <button className="toolbar-button open-button"
-                        onClick={() => {
-                            showOpenNote();
-                        }}
-                        title="Open Recent">
-                    <span className="material-symbols-outlined">folder_open</span>
-                </button>
-                <button className="toolbar-button search-button"
-                        title="Search"
-                        onClick={() => {
-                            showOpenNote();
-                        }}>
-                    <span className="material-symbols-outlined">search</span>
-                </button>
-                <button className="toolbar-button summarize-button"
-                        onClick={() => {
-                            showSummary(false);
-                        }}
-                        title="Summarize">
-                    <span className="material-symbols-outlined">notes</span>
-                </button>
-                <button className="toolbar-button qa-button"
-                        onClick={() => {
-                            showQA();
-                        }}
-                        title="Q&A">
-                    <span className="material-symbols-outlined">quiz</span>
-                </button>
-                <button className="toolbar-button img-tools-button"
-                        onClick={() => {
-                            showImgTools();
-                        }}
-                        title="Image Tools">
-                    <span className="material-symbols-outlined">image</span>
-                </button>
-                <button className="toolbar-button ai-img-button"
-                        onClick={() => {
-                            showAIImg();
-                        }}
-                        title="AI Image">
-                    <span className="material-symbols-outlined">brush</span>
-                </button>
-                <button className="toolbar-button save-button" disabled={getSaveDisabled}
-                        title="Save"
-                        onClick={() => {
-                            afterSaveDoc();
-                        }}>
-                    <span className="material-symbols-outlined">save</span>
-                </button>
-                <button className="toolbar-button delete-button"
-                        style={{display: `${getDeleteDisplay}`}}
-                        title="Delete"
-                        onClick={() => {
-                            afterDeleteDoc();
-                        }}>
-                    <span className="material-symbols-outlined">delete</span>
-                </button>
+                <ToolbarButton title="New" icon="edit_square" click={() => {
+                    navigate(paths.newDoc);
+                }}/>
+                <ToolbarButton title="Undo" icon="undo" disabled={getUndoDisabled} click={() => {
+                    editor.chain().focus().undo().run();
+                }}/>
+                <ToolbarButton title="Redo" icon="redo" disabled={getRedoDisabled} click={() => {
+                    editor.chain().focus().redo().run();
+                }}/>
+                <ToolbarButton title="Open Recent" icon="folder_open" click={() => {
+                    showOpenNote();
+                }}/>
+                <ToolbarButton title="Search" icon="search" click={() => {
+                    showOpenNote();
+                }}/>
+                <ToolbarButton title="Summarize" icon="notes" click={() => {
+                    showSummary(false);
+                }}/>
+                <ToolbarButton title="Q&A" icon="quiz" click={() => {
+                    showQA();
+                }}/>
+                <ToolbarButton title="Image Tools" icon="image" click={() => {
+                    showImgTools();
+                }}/>
+                <ToolbarButton title="AI Image" icon="filter_vintage" click={() => {
+                    showAIImg();
+                }}/>
+                <ToolbarButton title="Save" icon="save" disabled={getSaveDisabled} click={() => {
+                    afterSaveDoc();
+                }}/>
+                <ToolbarButton title="Delete" icon="delete" style={{display: `${getDeleteDisplay}`}} click={() => {
+                    afterDeleteDoc();
+                }}/>
             </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}

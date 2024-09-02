@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import StatusController from "../ui_elements/StatusController.js";
 import {auth, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
+import SidebarActionButton from "./SidebarActionButton.jsx";
 
 function TextSummary({editor, triggered, summaryDisplay}) {
     const [getUser, setUser] = useState(null);
@@ -89,19 +90,14 @@ function TextSummary({editor, triggered, summaryDisplay}) {
                 Instruction: select a piece of text to provide the context for the summary. If no text is selected,
                 the whole document will be provided as the context.
             </div>
-            <button className="sidebar-action-button"
-                    onClick={() => {
-                        summarize();
-                    }}>
-                Summarize
-            </button>
-            <button className="sidebar-action-button"
-                    disabled={getCopyText === ""}
-                    onClick={() => {
-                        copyText();
-                    }}>
-                Copy summary
-            </button>
+            <div className="sidebar-button-container">
+                <SidebarActionButton icon="notes" text="Summarize" click={() => {
+                    summarize();
+                }}/>
+                <SidebarActionButton icon="content_copy" text="Copy summary" disabled={getCopyText === ""} click={() => {
+                    copyText();
+                }}/>
+            </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}
                     messageClass={getStatusMessageClass}

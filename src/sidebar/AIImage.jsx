@@ -4,6 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import StatusController from "../ui_elements/StatusController.js";
 import {auth, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
+import SidebarActionButton from "./SidebarActionButton.jsx";
 
 function AIImage({aiImgDisplay}) {
     const [getUser, setUser] = useState(null);
@@ -97,19 +98,15 @@ function AIImage({aiImgDisplay}) {
                       onChange={(e) => {
                           setImgDescription(e.target.value);
                       }}></textarea>
-            <button className="sidebar-action-button"
-                    onClick={() => {
-                        generateImg();
-                    }}>
-                Generate image
-            </button>
-            <button className="sidebar-action-button"
-                    disabled={getImgGenUrl === ""}
-                    onClick={() => {
-                        copyGeneratedImg(getImg);
-                    }}>
-                Copy image
-            </button>
+            <div className="sidebar-button-container">
+                <SidebarActionButton icon="filter_vintage" text="Generate image" disabled={getImgDescription === ""}
+                                     click={() => {
+                                   generateImg();
+                               }}/>
+                <SidebarActionButton icon="content_copy" text="Copy image" click={() => {
+                    copyGeneratedImg(getImg);
+                }}/>
+            </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}
                     messageClass={getStatusMessageClass}

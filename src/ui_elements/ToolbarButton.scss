@@ -1,0 +1,32 @@
+.toolbar {
+  .toolbar-button {
+    background-color: transparent;
+    border: none;
+  }
+
+  .toolbar-button:hover:not([disabled]) {
+    cursor: pointer;
+  }
+
+  .toolbar-button span {
+    background-color: var(--toolbar-button-background);
+    border: 1px solid var(--toolbar-button-border);
+    border-radius: 5px;
+    color: var(--toolbar-button-color);
+    padding: 3px 4px 3px 4px;
+    text-align: center;
+    margin: 0;
+  }
+
+  .toolbar-button:disabled span {
+    color: var(--toolbar-button-color-disabled);
+    background-color: var(--toolbar-button-background-disabled);
+    border: 1px solid var(--toolbar-button-border-disabled);
+  }
+
+  .toolbar-button:hover:not([disabled]) span {
+    color: var(--toolbar-button-color-hover);
+    background-color: var(--toolbar-button-background-hover);
+    border: 1px solid var(--toolbar-button-border-hover);
+  }
+}

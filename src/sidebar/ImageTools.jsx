@@ -5,6 +5,7 @@ import StatusController from "../ui_elements/StatusController.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {auth, statusMessages} from "../backend.js";
 import Status from "../status/Status.jsx";
+import SidebarActionButton from "./SidebarActionButton.jsx";
 
 function ImageTools({editor, imgToolsDisplay}) {
     const fileDAO = new FileDAO();
@@ -85,22 +86,18 @@ function ImageTools({editor, imgToolsDisplay}) {
                    onChange={(e) => {
                        setImgUrl(e.target.value);
                    }}/>
-            <button className="sidebar-action-button"
-                    onClick={() => {
-                        addImgByUrl(getImgUrl);
-                    }}>
-                Add image
-            </button>
+            <div className="sidebar-button-container">
+                <SidebarActionButton icon="link" text="Add image" disabled={getImgUrl === ""} click={() => {
+                    addImgByUrl(getImgUrl);
+                }}/>
+                <SidebarActionButton icon="upload" text="Upload images" click={() => {
+                    fileInput.current.click();
+                }}/>
+            </div>
             <input type="file" ref={fileInput} multiple accept="image/*" style={{display: "none"}}
                    onChange={(e) => {
                        uploadImg(e);
                    }}/>
-            <button className="sidebar-action-button"
-                    onClick={() => {
-                        fileInput.current.click();
-                    }}>
-                Upload images
-            </button>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}
                     messageClass={getStatusMessageClass}

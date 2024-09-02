@@ -4,6 +4,7 @@ import {useEffect, useRef, useState} from "react";
 import StatusController from "../ui_elements/StatusController.js";
 import {auth, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
+import SidebarActionButton from "./SidebarActionButton.jsx";
 
 function TextQA({editor, qaDisplay}) {
     const [getUser, setUser] = useState(null);
@@ -103,19 +104,14 @@ function TextQA({editor, qaDisplay}) {
                       onChange={(e) => {
                           setQuestion(e.target.value);
                       }}></textarea>
-            <button className="sidebar-action-button"
-                    onClick={() => {
-                        answerQuestion();
-                    }}>
-                Answer question
-            </button>
-            <button className="sidebar-action-button"
-                    disabled={getCopyText === ""}
-                    onClick={() => {
-                        copyText();
-                    }}>
-                Copy answer
-            </button>
+            <div className="sidebar-button-container">
+                <SidebarActionButton icon="quiz" text="Answer question" disabled={getQuestion === ""} click={() => {
+                    answerQuestion();
+                }}/>
+                <SidebarActionButton icon="content_copy" text="Copy answer" disabled={getCopyText === ""} click={() => {
+                    copyText();
+                }}/>
+            </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}
                     messageClass={getStatusMessageClass}

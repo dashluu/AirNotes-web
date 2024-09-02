@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {auth, docDAO, paths} from "../backend.js";
 import {useNavigate} from "react-router-dom";
 import {onAuthStateChanged} from "firebase/auth";
+import SidebarActionButton from "./SidebarActionButton.jsx";
 
 function NoteListCard({docSummary, setFullDoc, setLoadRecent}) {
     const navigate = useNavigate();
@@ -54,13 +55,10 @@ function NoteListCard({docSummary, setFullDoc, setLoadRecent}) {
                     <div className="doc-id">{docSummary.id}</div>
                     <div className="summary-title">{docSummary.title}</div>
                     <div className="summary-date">{docSummary.lastModified}</div>
-                    <button className="sidebar-action-button"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                window.open(`/notes/${docSummary.id}`, "_blank");
-                            }}>
-                        Open in new tab
-                    </button>
+                    <SidebarActionButton icon="open_in_new" text="Open in new tab" click={(e) => {
+                        e.stopPropagation();
+                        window.open(`/notes/${docSummary.id}`, "_blank");
+                    }}/>
                 </div>
             </div>
         </div>
