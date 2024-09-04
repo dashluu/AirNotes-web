@@ -36,11 +36,13 @@ export const paths = {
     signIn: "/sign-in",
     signUp: "/sign-up",
     error: "/error",
-    forgotPassword: "/forgot-password",
+    authResetEmail: "/auth-reset-email",
+    emailReset: "/email-reset",
+    passwordReset: "/password-reset",
     newDoc: "/new"
 };
 export const statusMessages = {
-    unauthorizedMessage: "Unauthorized access",
+    unauthorizedAccess: "Unauthorized access",
     loadedPageOk: "Loaded successfully",
     invalidClipboardDataType: "Invalid clipboard data",
     copiedOk: "Copied successfully",
@@ -50,4 +52,5 @@ export const statusMessages = {
     generatedImgOk: "Image generated",
     uploadedImgOk: "Image uploaded",
     imgOverSize: `Image over ${FileDAO.maxFileSize} MB`,
+    emailSent: "Email sent"
 };

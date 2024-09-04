@@ -1,5 +1,5 @@
 import "./OpenNote.scss";
-import "../ui_elements/TextInputCommon.scss"
+import "../ui_elements/TextInput.scss"
 import {useEffect, useRef, useState} from "react";
 import NoteListCard from "./NoteListCard.jsx";
 import {onAuthStateChanged} from "firebase/auth";

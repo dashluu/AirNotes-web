@@ -10,6 +10,7 @@ import Pagination from "../models/Pagination.js";
 import Status from "../status/Status.jsx";
 import StatusController from "../ui_elements/StatusController.js";
 import ToolbarButton from "../ui_elements/ToolbarButton.jsx";
+import PageNav from "./PageNav.jsx";
 
 function App() {
     const navigate = useNavigate();
@@ -131,23 +132,10 @@ function App() {
                         }}/>
                         <input type="search" className="search-input text-input" placeholder="Search notes..."/>
                     </div>
-                    <div className="page-nav">
-                        <button className="prev-page-button page-nav-button"
-                                disabled={getPrevPageDisabled}
-                                onClick={() => {
-                                    prevPage();
-                                }}>
-                            <span className="material-symbols-outlined">chevron_left</span>
-                        </button>
-                        <div className="page">{getCurrPage} - {getNumPages}</div>
-                        <button className="next-page-button page-nav-button"
-                                disabled={getNextPageDisabled}
-                                onClick={() => {
-                                    nextPage();
-                                }}>
-                            <span className="material-symbols-outlined">chevron_right</span>
-                        </button>
-                    </div>
+                    <PageNav currPage={getCurrPage} numPages={getNumPages}
+                             prevPageDisabled={getPrevPageDisabled} nextPageDisabled={getNextPageDisabled}
+                             prevPage={() => prevPage()}
+                             nextPage={() => nextPage()}/>
                 </div>
                 <Status display={getStatusDisplay}
                         iconClass={getStatusIconClass}

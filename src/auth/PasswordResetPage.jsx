@@ -1,41 +1,80 @@
 import "./AuthCommon.scss";
 import NavBar from "../navbar/NavBar.jsx";
-import {useRef, useState} from "react";
-import {signUpChecker} from "../backend.js";
+import {useEffect, useRef, useState} from "react";
+import {auth, paths, signUpChecker} from "../backend.js";
+import {onAuthStateChanged, confirmPasswordReset, signOut} from "firebase/auth";
 import Status from "../status/Status.jsx";
+import AuthButton from "./AuthButton.jsx";
+import StatusController from "../ui_elements/StatusController.js";
+import {useNavigate, useSearchParams} from "react-router-dom";
 
 function PasswordResetPage() {
+    const navigate = useNavigate();
+    const [getSearchParams, setSearchParams] = useSearchParams();
+    const [getCode, setCode] = useState(null);
     const passwordInput = useRef(null);
+    const [getUser, setUser] = useState(null);
     const [getPasswordStatusDisplay, setPasswordStatusDisplay] = useState("none");
     const [getPasswordStatusIcon, setPasswordStatusIcon] = useState("");
     const [getPasswordStatusMessage, setPasswordStatusMessage] = useState("");
     const [getPasswordStatusIconClass, setPasswordStatusIconClass] = useState("");
     const [getPasswordStatusMessageClass, setPasswordStatusMessageClass] = useState("");
+    const passwordStatusController = new StatusController(
+        setPasswordStatusDisplay, setPasswordStatusIconClass, setPasswordStatusMessageClass, setPasswordStatusIcon, setPasswordStatusMessage
+    );
+
+    useEffect(() => {
+        const unsubUser = onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                navigate(paths.signIn);
+            }
+
+            const mode = getSearchParams.get("mode");
+            const code = getSearchParams.get("oobCode");
+
+            // Check for action and code
+            if (!mode || !code) {
+                navigate(paths.error);
+            }
+
+            setUser(user);
+            setCode(code);
+        });
+
+        return () => {
+            unsubUser();
+        };
+    }, []);
 
     function validatePassword() {
         const status = signUpChecker.checkPassword(passwordInput.current);
-        return showPasswordMessage(status);
-    }
-
-    function showPasswordMessage(status) {
-        setPasswordStatusMessage(status.message);
-        setPasswordStatusDisplay("inline-flex");
-
-        if (!status.success) {
-            setPasswordStatusIcon("error");
-            setPasswordStatusIconClass("error-icon");
-            setPasswordStatusMessageClass("error-message");
-        } else {
-            setPasswordStatusIcon("check_circle");
-            setPasswordStatusIconClass("valid-icon");
-            setPasswordStatusMessageClass("valid-message");
-        }
-
-        return status.success;
+        return passwordStatusController.displayResult(status.success, status.message);
     }
 
     function resetPassword() {
+        if (!getUser) {
+            navigate(paths.signIn);
+        }
 
+        if (!validatePassword()) {
+            return;
+        }
+
+        passwordStatusController.displayProgress();
+
+        // Reset password
+        confirmPasswordReset(auth, getCode, passwordInput.current.value).then(() => {
+            passwordStatusController.hideStatus();
+
+            // Sign out and go back to sign in page
+            signOut(auth).then(() => {
+                navigate(paths.signIn);
+            }).catch(() => {
+                navigate(paths.error);
+            });
+        }).catch((error) => {
+            passwordStatusController.displayFailure(error.message);
+        });
     }
 
     return (
@@ -57,11 +96,9 @@ function PasswordResetPage() {
                             message={getPasswordStatusMessage}/>
                 </div>
                 <div className="auth-action-container">
-                    <button className="auth-action-button auth-primary-button"
-                            onClick={() => {
-                            }}>
-                        Reset password
-                    </button>
+                    <AuthButton icon="key" text="Reset password" className="auth-primary-button" click={() => {
+                        resetPassword();
+                    }}/>
                 </div>
             </div>
         </div>

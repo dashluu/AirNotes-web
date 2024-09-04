@@ -28,7 +28,6 @@
     object-fit: cover;
     position: relative;
     border-radius: 100%;
-    border: 2px solid var(--note-list-card-thumbnail-border);
   }
 
   .summary-container {
@@ -82,10 +81,6 @@
     background-color: var(--note-list-card-background-hover);
     border: 1px solid var(--note-list-card-border-hover);
     cursor: pointer;
-  }
-
-  .thumbnail {
-    border: 2px solid var(--note-list-card-thumbnail-border-hover);
   }
 
   .summary-title {

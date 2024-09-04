@@ -216,7 +216,7 @@ function Editor({
                 statusController.displayFailure(error.message);
             }
         } else {
-            statusController.displayFailure(statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedAccess);
         }
     }
 
@@ -232,7 +232,7 @@ function Editor({
                 statusController.displayFailure(error.message);
             }
         } else {
-            statusController.displayFailure(statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedAccess);
         }
     }
 

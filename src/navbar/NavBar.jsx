@@ -1,23 +1,19 @@
 import {useEffect, useRef, useState} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import "./NavBar.scss";
-import {signOut} from "firebase/auth";
+import {onAuthStateChanged, signOut} from "firebase/auth";
 import {auth, paths} from "../backend.js";
+import NavButton from "./NavButton.jsx";
 
 // Navigation bar component
 const NavBar = () => {
     const navigate = useNavigate();
     const navbar = useRef(null);
-    const [getTheme, setTheme] = useState("light_mode");
-
-    async function signOutApp() {
-        try {
-            await signOut(auth);
-            navigate(paths.signIn);
-        } catch (error) {
-            navigate(paths.error);
-        }
-    }
+    const [getUsername, setUsername] = useState("");
+    const [getUsernameDisplay, setUsernameDisplay] = useState("none");
+    const [getTheme, setTheme] = useState("Light");
+    const [getThemeIcon, setThemeIcon] = useState("light_mode");
+    const [getLogoutDisplay, setLogoutDisplay] = useState("none");
 
     useEffect(() => {
         if (navbar.current) {
@@ -29,42 +25,52 @@ const NavBar = () => {
         }
     });
 
+    useEffect(() => {
+        const unsubUser = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                const domain = user.email.split("@")[0];
+                setUsername(domain);
+                setUsernameDisplay("flex");
+                setLogoutDisplay("flex");
+            }
+        });
+
+        return () => {
+            unsubUser();
+        };
+    }, []);
+
+    function changeTheme() {
+        if (getTheme === "Light") {
+            setThemeIcon("dark_mode");
+            setTheme("Dark");
+        } else {
+            setThemeIcon("light_mode");
+            setTheme("Light");
+        }
+    }
+
+    async function signOutApp() {
+        try {
+            await signOut(auth);
+            navigate(paths.signIn);
+        } catch (error) {
+            navigate(paths.error);
+        }
+    }
+
     return (
         <nav className="navbar" ref={navbar}>
-            <ul>
-                <li>
-                    <Link to="/" className="title-nav-link">AirNotes</Link>
-                </li>
-                <li>
-                    <div className="nav-link"
-                         onClick={() => {
-                             if (getTheme === "light_mode") {
-                                 document.documentElement.className = "dark-theme";
-                                 setTheme("dark_mode");
-                             } else {
-                                 document.documentElement.className = "light-theme";
-                                 setTheme("light_mode");
-                             }
-                         }}>
-                        <div className="nav-div" title="Change Theme">
-                            <span className="material-symbols-outlined">{getTheme}</span>
-                        </div>
-                    </div>
-                    <Link to="/settings" className="nav-link">
-                        <div className="nav-div" title="Settings">
-                            <span className="material-symbols-outlined">settings</span>
-                        </div>
-                    </Link>
-                    <div className="nav-link"
-                         onClick={() => {
-                             signOutApp();
-                         }}>
-                        <div className="nav-div" title="Sign Out">
-                            <span className="material-symbols-outlined">logout</span>
-                        </div>
-                    </div>
-                </li>
-            </ul>
+            <div className="nav-title-container">
+                <Link to="/" className="title-nav-link">AirNotes</Link>
+            </div>
+            <div className="nav-button-container">
+                <NavButton icon={getThemeIcon} text={getTheme} click={() => changeTheme()}/>
+                <NavButton icon="account_circle" style={{display: getUsernameDisplay}} text={getUsername}
+                           click={() => navigate("/settings")}/>
+                <NavButton icon="logout" text="Log out" style={{display: getLogoutDisplay}}
+                           click={() => signOutApp()}/>
+            </div>
         </nav>
     );
 }

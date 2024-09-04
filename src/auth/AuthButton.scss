@@ -1,0 +1,26 @@
+@use "../LightTheme";
+
+.auth-action-button {
+  & {
+    width: 100%;
+    margin-bottom: 10px;
+    padding-top: 7px;
+    padding-bottom: 7px;
+    border-radius: 5px;
+    font-weight: 500;
+    font-size: 16px;
+    outline: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    column-gap: 2px;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  span {
+    margin-right: 3px;
+  }
+}

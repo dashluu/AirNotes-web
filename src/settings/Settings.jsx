@@ -24,6 +24,10 @@ function Settings() {
         };
     }, []);
 
+    function resetPassword() {
+        navigate("/auth-reset-email", {state: "resetPassword"});
+    }
+
     async function signOutApp() {
         try {
             await signOut(auth);
@@ -37,13 +41,14 @@ function Settings() {
         <div className="settings-page">
             <NavBar/>
             <div className="settings-container">
+                <div className="settings-title">Settings</div>
                 <div className="field-container">
                     <div className="field-left">
                         <div className="field-label">Email</div>
                         <div className="field-content">{getUser ? getUser.email : ""}</div>
                     </div>
                     <div className="field-right">
-                        <button className="settings-button field-button">Change email</button>
+                        <button className="settings-button field-button">Reset email</button>
                     </div>
                 </div>
                 <div className="field-container">
@@ -52,16 +57,15 @@ function Settings() {
                         <div className="field-content">Set the password for your account</div>
                     </div>
                     <div className="field-right">
-                        <button className="settings-button field-button">Change password</button>
+                        <button className="settings-button field-button" onClick={() => resetPassword()}>
+                            Reset password
+                        </button>
                     </div>
                 </div>
                 <div className="field-container">
                     <div className="field-left"></div>
                     <div className="field-right">
-                        <button className="settings-button sign-out-button"
-                                onClick={() => {
-                                    signOutApp();
-                                }}>
+                        <button className="settings-button sign-out-button" onClick={() => signOutApp()}>
                             Sign out
                         </button>
                     </div>

@@ -6,6 +6,7 @@ import {auth, paths} from "../backend.js"
 import {signInWithEmailAndPassword} from "firebase/auth";
 import Status from "../status/Status.jsx";
 import StatusController from "../ui_elements/StatusController.js";
+import AuthButton from "./AuthButton.jsx";
 
 function SignInPage() {
     const navigate = useNavigate();
@@ -49,7 +50,9 @@ function SignInPage() {
             .catch((error) => {
                 if (error.message.toLowerCase().indexOf("email") >= 0) {
                     emailStatusController.displayFailure(error.message);
+                    passwordStatusController.displayFailure("Email error");
                 } else {
+                    emailStatusController.displayFailure("Password error");
                     passwordStatusController.displayFailure(error.message);
                 }
             });
@@ -79,24 +82,15 @@ function SignInPage() {
                             message={getPasswordStatusMessage}/>
                 </div>
                 <div className="auth-action-container">
-                    <button className="auth-action-button auth-primary-button"
-                            onClick={() => {
-                                signIn(emailInput.current.value, passwordInput.current.value);
-                            }}>
-                        Sign in
-                    </button>
-                    <button className="auth-action-button auth-secondary-button"
-                            onClick={() => {
-                                navigate(paths.signUp);
-                            }}>
-                        Sign up
-                    </button>
-                    <button className="auth-action-button auth-secondary-button"
-                            onClick={() => {
-                                navigate(paths.forgotPassword);
-                            }}>
-                        Forgot password?
-                    </button>
+                    <AuthButton icon="login" text="Sign in" className="auth-primary-button" click={() => {
+                        signIn(emailInput.current.value, passwordInput.current.value);
+                    }}/>
+                    <AuthButton icon="person_add" text="Sign up" className="auth-secondary-button" click={() => {
+                        navigate(paths.signUp);
+                    }}/>
+                    <AuthButton icon="key" text="Forgot password?" className="auth-secondary-button" click={() => {
+                        navigate(paths.authResetEmail);
+                    }}/>
                 </div>
             </div>
         </div>

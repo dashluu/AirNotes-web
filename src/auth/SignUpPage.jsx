@@ -6,6 +6,7 @@ import {auth, signUpChecker, paths} from "../backend.js"
 import {createUserWithEmailAndPassword} from "firebase/auth";
 import Status from "../status/Status.jsx";
 import StatusController from "../ui_elements/StatusController.js";
+import AuthButton from "./AuthButton.jsx";
 
 function SignUpPage() {
     const navigate = useNavigate();
@@ -72,7 +73,9 @@ function SignUpPage() {
             .catch((error) => {
                 if (error.message.toLowerCase().indexOf("email") >= 0) {
                     emailStatusController.displayFailure(error.message);
+                    passwordStatusController.displayFailure("Email error");
                 } else {
+                    emailStatusController.displayFailure("Password error");
                     passwordStatusController.displayFailure(error.message);
                 }
             });
@@ -109,18 +112,12 @@ function SignUpPage() {
                             message={getPasswordStatusMessage}/>
                 </div>
                 <div className="auth-action-container">
-                    <button className="auth-action-button auth-primary-button"
-                            onClick={() => {
-                                signUp();
-                            }}>
-                        Sign up
-                    </button>
-                    <button className="auth-action-button auth-secondary-button"
-                            onClick={() => {
-                                navigate(paths.signIn);
-                            }}>
-                        Sign in
-                    </button>
+                    <AuthButton icon="person_add" text="Sign up" className="auth-primary-button" click={() => {
+                        signUp();
+                    }}/>
+                    <AuthButton icon="login" text="Sign in" className="auth-secondary-button" click={() => {
+                        navigate(paths.signIn);
+                    }}/>
                 </div>
             </div>
         </div>

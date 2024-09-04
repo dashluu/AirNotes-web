@@ -11,6 +11,8 @@ import SignInPage from "./auth/SignInPage.jsx";
 import AppRouter from "./app_router/AppRouter.jsx";
 import Settings from "./settings/Settings.jsx";
 import PasswordResetPage from "./auth/PasswordResetPage.jsx";
+import AuthResetEmailPage from "./auth/AuthResetEmailPage.jsx";
+import AuthActionRouter from "./auth/AuthActionRouter.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -21,6 +23,8 @@ const router = createBrowserRouter(
             <Route path="new" element={<NewDocumentPage/>}/>
             <Route path="notes/:docId" element={<EditDocumentPage/>} loader={editDocLoader}/>
             <Route path="settings" element={<Settings/>}/>
+            <Route path="auth-action" element={<AuthActionRouter/>}/>
+            <Route path="auth-reset-email" element={<AuthResetEmailPage/>}/>
             <Route path="password-reset" element={<PasswordResetPage/>}/>
             <Route path="*" element={<ErrorPage/>}/>
         </Route>

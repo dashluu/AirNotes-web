@@ -5,7 +5,7 @@ function SidebarActionButton({icon, text, click, disabled = false}) {
         <button className="sidebar-action-button" disabled={disabled}
                 onClick={click}>
             <span className="material-symbols-outlined">{icon}</span>
-            <span className="sidebar-action-button-text">{text}</span>
+            <span>{text}</span>
         </button>
     )
 }

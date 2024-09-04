@@ -1,4 +1,4 @@
-import {auth} from "../backend.js";
+import {auth, paths} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {useEffect, useState} from "react";
 import {Navigate, Outlet, useLocation} from "react-router-dom";
@@ -10,16 +10,16 @@ function AppRouter() {
     useEffect(() => {
         const unsubUser = onAuthStateChanged(auth, (user) => {
             if (user) {
-                if (location.pathname === "/sign-in" || location.pathname === "/sign-up") {
+                if (location.pathname === paths.signIn || location.pathname === paths.signUp) {
                     setRender(<Navigate to="/"></Navigate>);
                 } else {
                     setRender(<Outlet/>);
                 }
             } else {
-                if (location.pathname === "/sign-in" || location.pathname === "/sign-up") {
+                if (location.pathname === paths.signIn || location.pathname === paths.signUp) {
                     setRender(<Outlet/>);
                 } else {
-                    setRender(<Navigate to="/sign-in" state={{target: location.pathname}}></Navigate>);
+                    setRender(<Navigate to={paths.signIn} state={{target: location.pathname}}></Navigate>);
                 }
             }
         });

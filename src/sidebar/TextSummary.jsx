@@ -36,7 +36,7 @@ function TextSummary({editor, triggered, summaryDisplay}) {
 
     async function summarize() {
         if (!getUser) {
-            statusController.displayFailure(statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedAccess);
             return;
         }
 

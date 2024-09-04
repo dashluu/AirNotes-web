@@ -1,4 +1,4 @@
-@use "../ui_elements/TextInputCommon";
+@use "../ui_elements/TextInput";
 @use "../ui_elements/Toolbar";
 
 @media screen and (min-width: 800px) {
@@ -9,10 +9,6 @@
 
     .search-input {
       width: 50%;
-    }
-
-    .page-nav {
-      justify-content: right;
     }
   }
 }
@@ -25,10 +21,6 @@
 
     .search-input {
       width: 100%;
-    }
-
-    .page-nav {
-      justify-content: center;
     }
   }
 }
@@ -59,39 +51,6 @@
 
   .toolbar-button {
     margin-right: 10px;
-  }
-
-  .page-nav {
-    width: 100%;
-    padding: 5px 12px 5px 12px;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .page-nav-button {
-    background-color: var(--page-nav-button-background);
-    border: 1px solid var(--page-nav-button-border);
-    color: var(--page-nav-button-color);
-  }
-
-  .page-nav-button:disabled {
-    color: var(--page-nav-button-color-disabled);
-  }
-
-  .page-nav-button:hover:not([disabled]) {
-    cursor: pointer;
-    color: var(--page-nav-button-color-hover);
-  }
-
-  .page-nav-button span {
-    padding: 3px 4px 3px 4px;
-    text-align: center;
-    margin: 0;
-  }
-
-  .page {
-    padding: 2px 0 3px;
-    margin: 0;
   }
 
   .status-container {

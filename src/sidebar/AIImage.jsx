@@ -58,7 +58,7 @@ function AIImage({aiImgDisplay}) {
 
     async function generateImg() {
         if (!getUser) {
-            statusController.displayFailure(statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedAccess);
             return;
         }
 
@@ -101,11 +101,12 @@ function AIImage({aiImgDisplay}) {
             <div className="sidebar-button-container">
                 <SidebarActionButton icon="filter_vintage" text="Generate image" disabled={getImgDescription === ""}
                                      click={() => {
-                                   generateImg();
-                               }}/>
-                <SidebarActionButton icon="content_copy" text="Copy image" click={() => {
-                    copyGeneratedImg(getImg);
-                }}/>
+                                         generateImg();
+                                     }}/>
+                <SidebarActionButton icon="content_copy" text="Copy image" disabled={getImg === null}
+                                     click={() => {
+                                         copyGeneratedImg(getImg);
+                                     }}/>
             </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}

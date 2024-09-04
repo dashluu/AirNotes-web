@@ -1,4 +1,4 @@
-@use "../ui_elements/TextInputCommon";
+@use "../ui_elements/TextInput";
 
 .auth-form {
     & {
@@ -28,21 +28,6 @@
         margin-top: 20px;
         margin-left: auto;
         margin-right: auto;
-    }
-
-    .auth-action-button {
-        width: 100%;
-        margin-bottom: 10px;
-        padding-top: 7px;
-        padding-bottom: 7px;
-        border-radius: 5px;
-        font-weight: 500;
-        font-size: 16px;
-        outline: none;
-    }
-
-    .auth-action-button:hover {
-        cursor: pointer;
     }
 
     .auth-primary-button {

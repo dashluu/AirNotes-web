@@ -1,0 +1,31 @@
+.nav-button {
+  & {
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    border-radius: 5px;
+    background-color: var(--nav-button-background);
+    border: 1px solid var(--nav-button-border);
+    color: var(--nav-button-color);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    padding: 5px;
+  }
+
+  &:hover {
+    background-color: var(--nav-button-background-hover);
+    border: 1px solid var(--nav-button-border-hover);
+    color: var(--nav-button-color-hover);
+    cursor: pointer;
+  }
+
+  span {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    margin-right: 3px;
+  }
+}

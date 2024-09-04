@@ -47,7 +47,7 @@ function ImageTools({editor, imgToolsDisplay}) {
         e.preventDefault();
 
         if (!getUser) {
-            statusController.displayFailure(statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedAccess);
             return;
         }
 

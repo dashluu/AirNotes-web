@@ -1,40 +1,40 @@
-.sidebar {
-  .sidebar-action-button {
+@use "../LightTheme";
+
+.sidebar-action-button {
+  & {
     width: 94%;
     background-color: var(--sidebar-action-button-background);
     border: 1px solid var(--sidebar-action-button-border);
     color: var(--sidebar-action-button-color);
+    font-size: 16px;
+    font-weight: 500;
     border-radius: 5px;
-    padding-top: 7px;
-    padding-bottom: 7px;
+    padding-top: 5px;
+    padding-bottom: 5px;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-left: auto;
     margin-right: auto;
+    column-gap: 2px;
   }
 
-  .sidebar-action-button:hover {
+  &:hover {
     cursor: pointer;
     background-color: var(--sidebar-action-button-background-hover);
     border: 1px solid var(--sidebar-action-button-border-hover);
     color: var(--sidebar-action-button-color-hover);
   }
 
-  .sidebar-action-button:disabled {
+  &:disabled {
     cursor: auto;
     background-color: var(--sidebar-action-button-background-disabled);
     border: 1px solid var(--sidebar-action-button-border-disabled);
     color: var(--sidebar-action-button-color-disabled);
   }
 
-  .sidebar-action-button span {
-    margin-right: 5px;
-  }
-
-  .sidebar-action-button-text {
-    font-size: 16px;
-    font-weight: 500;
+  span {
+    margin-right: 3px;
   }
 }

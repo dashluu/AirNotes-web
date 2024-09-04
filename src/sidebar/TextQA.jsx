@@ -39,7 +39,7 @@ function TextQA({editor, qaDisplay}) {
 
     async function answerQuestion() {
         if (!getUser) {
-            statusController.displayFailure(statusMessages.unauthorizedMessage);
+            statusController.displayFailure(statusMessages.unauthorizedAccess);
             return;
         }
 

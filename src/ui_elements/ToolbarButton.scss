@@ -1,14 +1,16 @@
-.toolbar {
-  .toolbar-button {
+@use "../LightTheme";
+
+.toolbar-button {
+  & {
     background-color: transparent;
     border: none;
   }
 
-  .toolbar-button:hover:not([disabled]) {
+  &:hover:not([disabled]) {
     cursor: pointer;
   }
 
-  .toolbar-button span {
+  span {
     background-color: var(--toolbar-button-background);
     border: 1px solid var(--toolbar-button-border);
     border-radius: 5px;
@@ -18,13 +20,13 @@
     margin: 0;
   }
 
-  .toolbar-button:disabled span {
+  &:disabled span {
     color: var(--toolbar-button-color-disabled);
     background-color: var(--toolbar-button-background-disabled);
     border: 1px solid var(--toolbar-button-border-disabled);
   }
 
-  .toolbar-button:hover:not([disabled]) span {
+  &:hover:not([disabled]) span {
     color: var(--toolbar-button-color-hover);
     background-color: var(--toolbar-button-background-hover);
     border: 1px solid var(--toolbar-button-border-hover);
