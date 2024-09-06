@@ -127,9 +127,8 @@ function App() {
             <div className="home-container">
                 <div className="toolbar-container">
                     <div className="toolbar">
-                        <ToolbarButton title="New" icon="edit_square" click={() => {
-                            navigate(paths.newDoc);
-                        }}/>
+                        <ToolbarButton title="New" icon="edit_square"
+                                       click={() => navigate(paths.newDoc)}/>
                         <input type="search" className="search-input text-input" placeholder="Search notes..."/>
                     </div>
                     <PageNav currPage={getCurrPage} numPages={getNumPages}

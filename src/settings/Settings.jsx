@@ -65,7 +65,10 @@ function Settings() {
                 <div className="field-container">
                     <div className="field-left"></div>
                     <div className="field-right">
-                        <button className="settings-button sign-out-button" onClick={() => signOutApp()}>
+                        <button className="settings-button sign-out-button"
+                                onClick={() => {
+                                    signOutApp();
+                                }}>
                             Sign out
                         </button>
                     </div>

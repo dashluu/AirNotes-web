@@ -43,7 +43,7 @@ export const paths = {
 };
 export const statusMessages = {
     unauthorizedAccess: "Unauthorized access",
-    loadedPageOk: "Loaded successfully",
+    loadedOk: "Loaded successfully",
     invalidClipboardDataType: "Invalid clipboard data",
     copiedOk: "Copied successfully",
     savedOk: "Saved successfully",

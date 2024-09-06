@@ -69,7 +69,9 @@ const NavBar = () => {
                 <NavButton icon="account_circle" style={{display: getUsernameDisplay}} text={getUsername}
                            click={() => navigate("/settings")}/>
                 <NavButton icon="logout" text="Log out" style={{display: getLogoutDisplay}}
-                           click={() => signOutApp()}/>
+                           click={() => {
+                               signOutApp();
+                           }}/>
             </div>
         </nav>
     );

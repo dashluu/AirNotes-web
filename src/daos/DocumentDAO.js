@@ -9,7 +9,7 @@ import {
     getDoc,
     getDocs,
     limit,
-    onSnapshot,
+    // onSnapshot,
     orderBy,
     query,
     serverTimestamp,
@@ -53,15 +53,13 @@ export default class DocumentDAO {
         await deleteDoc(doc(db, "documents", docId));
     }
 
-    async accessFullDoc(userId, docId) {
+    async accessFullDoc(docId) {
         await updateDoc(
             doc(db, "documents", docId),
             {
                 lastAccessed: serverTimestamp()
             }
         );
-
-        return await this.getFullDoc(userId, docId);
     }
 
     async getFullDoc(userId, docId) {
@@ -98,7 +96,7 @@ export default class DocumentDAO {
         return await getDocs(docQuery);
     }
 
-    async getDocSummaryList(userId, excludedDocId, numItems) {
+    async getDocSummaryList(userId, numItems) {
         let docQuery = query(
             collection(db, "documents"),
             where("userId", "==", userId),
@@ -111,26 +109,28 @@ export default class DocumentDAO {
         let i = 0;
 
         docSnapshotList.forEach((docSnapshot) => {
-            if (i < docSnapshotList.size && docSnapshot.id !== excludedDocId) {
+            if (i < docSnapshotList.size) {
                 const docSummary = DocumentSummary.toDocSummary(docSnapshot);
                 docSummaryList.push(docSummary);
                 i++;
             }
         });
 
-        const unsub = onSnapshot(docQuery, (querySnapshot) => {
-            docSummaryList = [];
-            i = 0;
+        // Live update, not needed for now
+        // const unsub = onSnapshot(docQuery, (querySnapshot) => {
+        //     docSummaryList = [];
+        //     i = 0;
+        //
+        //     querySnapshot.forEach((docSnapshot) => {
+        //         if (i < querySnapshot.size) {
+        //             const docSummary = DocumentSummary.toDocSummary(docSnapshot);
+        //             docSummaryList.push(docSummary);
+        //         }
+        //     });
+        // });
 
-            querySnapshot.forEach((docSnapshot) => {
-                if (i < querySnapshot.size && docSnapshot.id !== excludedDocId) {
-                    const docSummary = DocumentSummary.toDocSummary(docSnapshot);
-                    docSummaryList.push(docSummary);
-                }
-            });
-        });
-
-        return [unsub, docSummaryList];
+        // return [unsub, docSummaryList];
+        return docSummaryList;
     }
 
     async countPages(userId) {

@@ -101,16 +101,22 @@ function TextQA({editor, qaDisplay}) {
                 the whole document will be provided as the context.
             </div>
             <textarea className="text-input question" placeholder="Enter the question here..." ref={questionInput}
-                      onChange={(e) => {
-                          setQuestion(e.target.value);
-                      }}></textarea>
+                      onChange={(e) => setQuestion(e.target.value)}
+                      onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                              answerQuestion();
+                          }
+                      }}>
+            </textarea>
             <div className="sidebar-button-container">
-                <SidebarActionButton icon="quiz" text="Answer question" disabled={getQuestion === ""} click={() => {
-                    answerQuestion();
-                }}/>
-                <SidebarActionButton icon="content_copy" text="Copy answer" disabled={getCopyText === ""} click={() => {
-                    copyText();
-                }}/>
+                <SidebarActionButton icon="quiz" text="Answer question" disabled={getQuestion === ""}
+                                     click={() => {
+                                         answerQuestion();
+                                     }}/>
+                <SidebarActionButton icon="content_copy" text="Copy answer" disabled={getCopyText === ""}
+                                     click={() => {
+                                         copyText();
+                                     }}/>
             </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}

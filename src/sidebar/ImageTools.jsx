@@ -83,16 +83,17 @@ function ImageTools({editor, imgToolsDisplay}) {
         <div className="img-tools-container sidebar-container" style={{display: imgToolsDisplay}}>
             <div className="sidebar-title">Notes Image</div>
             <input type="text" className="text-input img-url" placeholder="Enter URL..." ref={urlInput}
-                   onChange={(e) => {
-                       setImgUrl(e.target.value);
+                   onChange={(e) => setImgUrl(e.target.value)}
+                   onKeyDown={(e) => {
+                       if (e.key === "Enter") {
+                           addImgByUrl(getImgUrl);
+                       }
                    }}/>
             <div className="sidebar-button-container">
-                <SidebarActionButton icon="link" text="Add image" disabled={getImgUrl === ""} click={() => {
-                    addImgByUrl(getImgUrl);
-                }}/>
-                <SidebarActionButton icon="upload" text="Upload images" click={() => {
-                    fileInput.current.click();
-                }}/>
+                <SidebarActionButton icon="link" text="Add image" disabled={getImgUrl === ""}
+                                     click={() => addImgByUrl(getImgUrl)}/>
+                <SidebarActionButton icon="upload" text="Upload images"
+                                     click={() => fileInput.current.click()}/>
             </div>
             <input type="file" ref={fileInput} multiple accept="image/*" style={{display: "none"}}
                    onChange={(e) => {

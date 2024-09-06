@@ -5,7 +5,7 @@ import {useNavigate} from "react-router-dom";
 import {onAuthStateChanged} from "firebase/auth";
 import SidebarActionButton from "./SidebarActionButton.jsx";
 
-function NoteListCard({docSummary, setFullDoc, setLoadRecent}) {
+function NoteListCard({docSummary, setFullDoc}) {
     const navigate = useNavigate();
     const [getUser, setUser] = useState(null);
     const [getDocSummary, setDocSummary] = useState(docSummary);
@@ -26,9 +26,9 @@ function NoteListCard({docSummary, setFullDoc, setLoadRecent}) {
 
     async function fetchDoc(userId, docId) {
         try {
-            const fullDoc = await docDAO.accessFullDoc(userId, docId);
+            await docDAO.accessFullDoc(docId);
+            const fullDoc = await docDAO.getFullDoc(userId, docId);
             setFullDoc(fullDoc);
-            setLoadRecent(true);
         } catch (error) {
             navigate(paths.error);
         }
@@ -43,10 +43,7 @@ function NoteListCard({docSummary, setFullDoc, setLoadRecent}) {
     }
 
     return (
-        <div className="note-list-card-container"
-             onClick={() => {
-                 loadDoc();
-             }}>
+        <div className="note-list-card-container" onClick={() => loadDoc()}>
             <div className="thumbnail-container">
                 <img className="thumbnail" src={docSummary.thumbnail} alt="Thumbnail"/>
             </div>

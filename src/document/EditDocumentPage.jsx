@@ -15,13 +15,11 @@ function EditDocumentPage() {
     const [getFullDoc, setFullDoc] = useState(new FullDocument(
         "", "", "", "", "", "", ""
     ));
-    const [getLoadRecent, setLoadRecent] = useState(false);
 
     async function fetchDoc(userId, docId) {
         try {
-            const fullDoc = await docDAO.accessFullDoc(userId, docId);
+            const fullDoc = await docDAO.getFullDoc(userId, docId);
             setFullDoc(fullDoc);
-            setLoadRecent(true);
         } catch (error) {
             navigate(paths.error);
         }
@@ -42,9 +40,7 @@ function EditDocumentPage() {
     }, []);
 
     return (
-        <EditorPage fullDoc={getFullDoc}
-                    isNewDoc={false}
-                    loadRecent={getLoadRecent}/>
+        <EditorPage fullDoc={getFullDoc} isNewDoc={false}/>
     );
 }
 

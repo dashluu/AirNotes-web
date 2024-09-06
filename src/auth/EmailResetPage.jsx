@@ -39,6 +39,12 @@ function EmailResetPage() {
         return emailStatusController.displayResult(status.success, status.message);
     }
 
+    function resetEmailOnEnter(e) {
+        if (e.key === "Enter") {
+            resetEmail();
+        }
+    }
+
     function resetEmail() {
         if (!getUser) {
             navigate(paths.signIn);
@@ -72,9 +78,8 @@ function EmailResetPage() {
                 <div className="auth-title">Email Reset</div>
                 <div className="auth-input-container">
                     <input type="email" placeholder="Email" className="text-input" required ref={emailInput}
-                           onChange={
-                               (e) => validateEmail(e.target)
-                           }/>
+                           onChange={(e) => validateEmail(e.target)}
+                           onKeyDown={(e) => resetEmailOnEnter(e)}/>
                     <Status display={getEmailStatusDisplay}
                             iconClass={getEmailStatusIconClass}
                             messageClass={getEmailStatusMessageClass}
@@ -82,9 +87,8 @@ function EmailResetPage() {
                             message={getEmailStatusMessage}/>
                 </div>
                 <div className="auth-action-container">
-                    <AuthButton icon="mail" text="Reset email" className="auth-primary-button" click={() => {
-                        resetEmail();
-                    }}/>
+                    <AuthButton icon="mail" text="Reset email" className="auth-primary-button"
+                                click={() => resetEmail()}/>
                 </div>
             </div>
         </div>

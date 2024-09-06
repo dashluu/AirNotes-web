@@ -1,9 +1,10 @@
-import {Navigate, useNavigate, useSearchParams} from "react-router-dom";
+import {Navigate, useLocation, useNavigate, useSearchParams} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {onAuthStateChanged, verifyPasswordResetCode, checkActionCode} from "firebase/auth";
 import {auth, paths} from "../backend.js";
 
 function AuthActionRouter() {
+    const location = useLocation();
     const navigate = useNavigate();
     const [getSearchParams, setGetSearchParams] = useSearchParams();
     const [getRender, setRender] = useState(null);

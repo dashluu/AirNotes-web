@@ -95,9 +95,13 @@ function AIImage({aiImgDisplay}) {
             <div className="sidebar-title">Notes AI Image</div>
             <textarea className="text-input img-description" placeholder="Enter the image description here..."
                       ref={imgDescriptionInput}
-                      onChange={(e) => {
-                          setImgDescription(e.target.value);
-                      }}></textarea>
+                      onChange={(e) => setImgDescription(e.target.value)}
+                      onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                              generateImg();
+                          }
+                      }}>
+            </textarea>
             <div className="sidebar-button-container">
                 <SidebarActionButton icon="filter_vintage" text="Generate image" disabled={getImgDescription === ""}
                                      click={() => {

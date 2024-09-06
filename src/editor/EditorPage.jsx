@@ -4,9 +4,8 @@ import {useEffect, useState} from "react";
 import Editor from "./Editor.jsx";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
-function EditorPage({fullDoc, isNewDoc, loadRecent}) {
+function EditorPage({fullDoc, isNewDoc}) {
     const [getFullDoc, setFullDoc] = useState(fullDoc);
-    const [getLoadRecent, setLoadRecent] = useState(loadRecent);
     const [getGridLayout, setGridLayout] = useState("0fr 1fr");
     const [getSidebarDisplay, setSidebarDisplay] = useState("hidden");
     const [getSidebarAnimation, setSidebarAnimation] = useState("none");
@@ -16,10 +15,6 @@ function EditorPage({fullDoc, isNewDoc, loadRecent}) {
     useEffect(() => {
         setFullDoc(fullDoc);
     }, [fullDoc]);
-
-    useEffect(() => {
-        setLoadRecent(loadRecent);
-    }, [loadRecent]);
 
     function openSidebar() {
         setSidebarDisplay("visible");
@@ -37,10 +32,7 @@ function EditorPage({fullDoc, isNewDoc, loadRecent}) {
         <div className="editor-page">
             <NavBar/>
             <div className="editor-grid" style={{gridTemplateColumns: getGridLayout}}>
-                <Sidebar docId={getFullDoc.id}
-                         setFullDoc={setFullDoc}
-                         getLoadRecent={getLoadRecent}
-                         setLoadRecent={setLoadRecent}
+                <Sidebar setFullDoc={setFullDoc}
                          sidebarDisplay={getSidebarDisplay}
                          sidebarAnimation={getSidebarAnimation}
                          closeSidebar={closeSidebar}

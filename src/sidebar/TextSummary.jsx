@@ -91,12 +91,14 @@ function TextSummary({editor, triggered, summaryDisplay}) {
                 the whole document will be provided as the context.
             </div>
             <div className="sidebar-button-container">
-                <SidebarActionButton icon="notes" text="Summarize" click={() => {
-                    summarize();
-                }}/>
-                <SidebarActionButton icon="content_copy" text="Copy summary" disabled={getCopyText === ""} click={() => {
-                    copyText();
-                }}/>
+                <SidebarActionButton icon="notes" text="Summarize"
+                                     click={() => {
+                                         summarize();
+                                     }}/>
+                <SidebarActionButton icon="content_copy" text="Copy summary" disabled={getCopyText === ""}
+                                     click={() => {
+                                         copyText();
+                                     }}/>
             </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}

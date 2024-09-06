@@ -23,9 +23,7 @@ function BubbleMenuWrapper({editor, showSummary}) {
                                   className={editor.isActive("codeBlock") ? "editor-menu-button-active" : "editor-menu-button"}
                                   click={() => editor.chain().focus().toggleCodeBlock().run()}/>
                 <EditorMenuButton title="Summarize" icon="notes" className="editor-menu-button"
-                                  click={() => () => {
-                                      showSummary(true);
-                                  }}/>
+                                  click={() => showSummary(true)}/>
             </div>
         </BubbleMenu>
     );

@@ -51,6 +51,12 @@ function PasswordResetPage() {
         return passwordStatusController.displayResult(status.success, status.message);
     }
 
+    function resetPasswordOnEnter(e) {
+        if (e.key === "Enter") {
+            resetPassword();
+        }
+    }
+
     function resetPassword() {
         if (!getUser) {
             navigate(paths.signIn);
@@ -83,12 +89,10 @@ function PasswordResetPage() {
             <div className="auth-form">
                 <div className="auth-title">Password Reset</div>
                 <div className="auth-input-container">
-                    <input type="password" placeholder="Password" className="text-input"
-                           required
+                    <input type="password" placeholder="Password" className="text-input" required
                            minLength="6" maxLength="4096" ref={passwordInput}
-                           onChange={
-                               (e) => validatePassword(e.target)
-                           }/>
+                           onChange={(e) => validatePassword(e.target)}
+                           onKeyDown={(e) => resetPasswordOnEnter(e)}/>
                     <Status display={getPasswordStatusDisplay}
                             iconClass={getPasswordStatusIconClass}
                             messageClass={getPasswordStatusMessageClass}
@@ -96,9 +100,8 @@ function PasswordResetPage() {
                             message={getPasswordStatusMessage}/>
                 </div>
                 <div className="auth-action-container">
-                    <AuthButton icon="key" text="Reset password" className="auth-primary-button" click={() => {
-                        resetPassword();
-                    }}/>
+                    <AuthButton icon="key" text="Reset password" className="auth-primary-button"
+                                click={() => resetPassword()}/>
                 </div>
             </div>
         </div>

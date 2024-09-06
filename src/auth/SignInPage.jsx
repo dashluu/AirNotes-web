@@ -30,12 +30,18 @@ function SignInPage() {
         setPasswordStatusDisplay, setPasswordStatusIconClass, setPasswordStatusMessageClass, setPasswordStatusIcon, setPasswordStatusMessage
     );
 
-    function signIn(email, password) {
+    function signInOnEnter(e) {
+        if (e.key === "Enter") {
+            signIn();
+        }
+    }
+
+    function signIn() {
         emailStatusController.displayProgress();
         passwordStatusController.displayProgress();
 
         // Send sign-in data to the server
-        signInWithEmailAndPassword(auth, email, password)
+        signInWithEmailAndPassword(auth, emailInput.current.value, passwordInput.current.value)
             .then(() => {
                 emailStatusController.hideStatus();
                 passwordStatusController.hideStatus();
@@ -51,8 +57,11 @@ function SignInPage() {
                 if (error.message.toLowerCase().indexOf("email") >= 0) {
                     emailStatusController.displayFailure(error.message);
                     passwordStatusController.displayFailure("Email error");
-                } else {
+                } else if (error.message.toLowerCase().indexOf("password") >= 0) {
                     emailStatusController.displayFailure("Password error");
+                    passwordStatusController.displayFailure(error.message);
+                } else {
+                    emailStatusController.displayFailure(error.message);
                     passwordStatusController.displayFailure(error.message);
                 }
             });
@@ -64,8 +73,8 @@ function SignInPage() {
             <div className="auth-form">
                 <div className="auth-title">Sign In</div>
                 <div className="auth-input-container">
-                    <input type="email" placeholder="Email" className="text-input" required
-                           ref={emailInput}/>
+                    <input type="email" placeholder="Email" className="text-input" required ref={emailInput}
+                           onKeyDown={(e) => signInOnEnter(e)}/>
                     <Status display={getEmailStatusDisplay}
                             iconClass={getEmailStatusIconClass}
                             messageClass={getEmailStatusMessageClass}
@@ -74,7 +83,8 @@ function SignInPage() {
                 </div>
                 <div className="auth-input-container">
                     <input type="password" placeholder="Password" className="text-input"
-                           required minLength="6" maxLength="4096" ref={passwordInput}/>
+                           required minLength="6" maxLength="4096" ref={passwordInput}
+                           onKeyDown={(e) => signInOnEnter(e)}/>
                     <Status display={getPasswordStatusDisplay}
                             iconClass={getPasswordStatusIconClass}
                             messageClass={getPasswordStatusMessageClass}
@@ -82,15 +92,12 @@ function SignInPage() {
                             message={getPasswordStatusMessage}/>
                 </div>
                 <div className="auth-action-container">
-                    <AuthButton icon="login" text="Sign in" className="auth-primary-button" click={() => {
-                        signIn(emailInput.current.value, passwordInput.current.value);
-                    }}/>
-                    <AuthButton icon="person_add" text="Sign up" className="auth-secondary-button" click={() => {
-                        navigate(paths.signUp);
-                    }}/>
-                    <AuthButton icon="key" text="Forgot password?" className="auth-secondary-button" click={() => {
-                        navigate(paths.authResetEmail);
-                    }}/>
+                    <AuthButton icon="login" text="Sign in" className="auth-primary-button"
+                                click={() => signIn()}/>
+                    <AuthButton icon="person_add" text="Sign up" className="auth-secondary-button"
+                                click={() => navigate(paths.signUp)}/>
+                    <AuthButton icon="key" text="Forgot password?" className="auth-secondary-button"
+                                click={() => navigate(paths.authResetEmail)}/>
                 </div>
             </div>
         </div>

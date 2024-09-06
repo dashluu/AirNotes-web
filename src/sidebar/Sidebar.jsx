@@ -8,10 +8,7 @@ import {useEffect, useState} from "react";
 import ToolbarButton from "../ui_elements/ToolbarButton.jsx";
 
 function Sidebar({
-                     docId,
                      setFullDoc,
-                     getLoadRecent,
-                     setLoadRecent,
                      sidebarDisplay,
                      sidebarAnimation,
                      closeSidebar,
@@ -101,11 +98,7 @@ function Sidebar({
                     <AIImage aiImgDisplay={getAIImgDisplay}/>
                 </div>
                 <div className="sidebar-ui">
-                    <OpenNote docId={docId}
-                              setFullDoc={setFullDoc}
-                              getLoadRecent={getLoadRecent}
-                              setLoadRecent={setLoadRecent}
-                              openNoteDisplay={getOpenNoteDisplay}/>
+                    <OpenNote setFullDoc={setFullDoc} openNoteDisplay={getOpenNoteDisplay}/>
                 </div>
             </div>
         </div>

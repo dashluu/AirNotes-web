@@ -49,6 +49,12 @@ function SignUpPage() {
         return validatePassword();
     }
 
+    function signUpOnEnter(e) {
+        if (e.key === "Enter") {
+            signUp();
+        }
+    }
+
     function signUp() {
         if (!validateInput()) {
             return;
@@ -74,8 +80,11 @@ function SignUpPage() {
                 if (error.message.toLowerCase().indexOf("email") >= 0) {
                     emailStatusController.displayFailure(error.message);
                     passwordStatusController.displayFailure("Email error");
-                } else {
+                } else if (error.message.toLowerCase().indexOf("password") >= 0) {
                     emailStatusController.displayFailure("Password error");
+                    passwordStatusController.displayFailure(error.message);
+                } else {
+                    emailStatusController.displayFailure(error.message);
                     passwordStatusController.displayFailure(error.message);
                 }
             });
@@ -87,11 +96,9 @@ function SignUpPage() {
             <div className="auth-form">
                 <div className="auth-title">Sign Up</div>
                 <div className="auth-input-container">
-                    <input type="email" placeholder="Email" className="text-input" required
-                           ref={emailInput}
-                           onChange={
-                               (e) => validateEmail(e.target)
-                           }/>
+                    <input type="email" placeholder="Email" className="text-input" required ref={emailInput}
+                           onChange={(e) => validateEmail(e.target)}
+                           onKeyDown={(e) => signUpOnEnter(e)}/>
                     <Status display={getEmailStatusDisplay}
                             iconClass={getEmailStatusIconClass}
                             messageClass={getEmailStatusMessageClass}
@@ -99,12 +106,10 @@ function SignUpPage() {
                             message={getEmailStatusMessage}/>
                 </div>
                 <div className="auth-input-container">
-                    <input type="password" placeholder="Password" className="text-input"
-                           required
+                    <input type="password" placeholder="Password" className="text-input" required
                            minLength="6" maxLength="4096" ref={passwordInput}
-                           onChange={
-                               (e) => validatePassword(e.target)
-                           }/>
+                           onChange={(e) => validatePassword(e.target)}
+                           onKeyDown={(e) => signUpOnEnter(e)}/>
                     <Status display={getPasswordStatusDisplay}
                             iconClass={getPasswordStatusIconClass}
                             messageClass={getPasswordStatusMessageClass}
@@ -112,12 +117,10 @@ function SignUpPage() {
                             message={getPasswordStatusMessage}/>
                 </div>
                 <div className="auth-action-container">
-                    <AuthButton icon="person_add" text="Sign up" className="auth-primary-button" click={() => {
-                        signUp();
-                    }}/>
-                    <AuthButton icon="login" text="Sign in" className="auth-secondary-button" click={() => {
-                        navigate(paths.signIn);
-                    }}/>
+                    <AuthButton icon="person_add" text="Sign up" className="auth-primary-button"
+                                click={() => signUp()}/>
+                    <AuthButton icon="login" text="Sign in" className="auth-secondary-button"
+                                click={() => navigate(paths.signIn)}/>
                 </div>
             </div>
         </div>

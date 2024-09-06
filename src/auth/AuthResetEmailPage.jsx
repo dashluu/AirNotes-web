@@ -31,6 +31,12 @@ function AuthResetEmailPage() {
         };
     }, []);
 
+    function sendAuthResetEmailOnEnter(e) {
+        if (e.key === "Enter") {
+            sendAuthResetEmail();
+        }
+    }
+
     function sendAuthResetEmail() {
         if (!getUser) {
             navigate(paths.signIn);
@@ -54,7 +60,8 @@ function AuthResetEmailPage() {
             <div className="auth-form">
                 <div className="auth-title">Email Confirmation</div>
                 <div className="auth-input-container">
-                    <input type="email" placeholder="Email" className="text-input" required ref={emailInput}/>
+                    <input type="email" placeholder="Email" className="text-input" required ref={emailInput}
+                           onKeyDown={(e) => sendAuthResetEmailOnEnter(e)}/>
                     <Status display={getEmailStatusDisplay}
                             iconClass={getEmailStatusIconClass}
                             messageClass={getEmailStatusMessageClass}
@@ -62,9 +69,8 @@ function AuthResetEmailPage() {
                             message={getEmailStatusMessage}/>
                 </div>
                 <div className="auth-action-container">
-                    <AuthButton icon="mail" text="Send reset email" className="auth-primary-button" click={() => {
-                        sendAuthResetEmail();
-                    }}/>
+                    <AuthButton icon="mail" text="Send reset email" className="auth-primary-button"
+                                click={() => sendAuthResetEmail()}/>
                 </div>
             </div>
         </div>

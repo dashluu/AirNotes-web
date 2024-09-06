@@ -15,23 +15,23 @@ export default class SignUpChecker {
 
     public checkEmail(input: any) {
         if (input.validity.valueMissing) {
-            return new SignUpStatus(false, "Missing email address")
+            return new SignUpStatus(false, "Email: missing email address")
         } else if (input.validity.typeMismatch) {
-            return new SignUpStatus(false, "Expected a form of a@a")
+            return new SignUpStatus(false, "Email: expected a form of a@a")
         }
 
-        return new SignUpStatus(true, "Valid");
+        return new SignUpStatus(true, "Email: valid");
     }
 
     public checkPassword(input: any) {
         if (input.validity.valueMissing) {
-            return new SignUpStatus(false, "Missing password");
+            return new SignUpStatus(false, "Password: missing password");
         } else if (input.validity.tooShort) {
             return new SignUpStatus(false,
-                `Too short, must be at least ${SignUpChecker.minPasswordLength} characters`);
+                `Password: too short, must be at least ${SignUpChecker.minPasswordLength} characters`);
         } else if (input.validity.tooLong) {
             return new SignUpStatus(false,
-                `Too short, must be at most ${SignUpChecker.maxPasswordLength} characters`);
+                `Password: too short, must be at most ${SignUpChecker.maxPasswordLength} characters`);
         }
 
         let char: string;
@@ -58,15 +58,15 @@ export default class SignUpChecker {
         }
 
         if (!hasUppercase) {
-            return new SignUpStatus(false, "Missing at least 1 uppercase");
+            return new SignUpStatus(false, "Password: missing at least 1 uppercase");
         } else if (!hasLowercase) {
-            return new SignUpStatus(false, "Missing at least 1 lowercase");
+            return new SignUpStatus(false, "Password: missing at least 1 lowercase");
         } else if (!hasNumeric) {
-            return new SignUpStatus(false, "Missing at least 1 numeric");
+            return new SignUpStatus(false, "Password: missing at least 1 numeric");
         } else if (!hasSpecialChar) {
-            return new SignUpStatus(false, "Missing at least 1 special character");
+            return new SignUpStatus(false, "Password: missing at least 1 special character");
         }
 
-        return new SignUpStatus(true, "Valid");
+        return new SignUpStatus(true, "Password: valid");
     }
 }

@@ -36,9 +36,7 @@ function NewDocumentPage() {
     }, []);
 
     return (
-        <EditorPage fullDoc={getFullDoc}
-                    isNewDoc={true}
-                    loadRecent={true}/>
+        <EditorPage fullDoc={getFullDoc} isNewDoc={true}/>
     );
 }
 
