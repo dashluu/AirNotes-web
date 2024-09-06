@@ -39,11 +39,13 @@ export const paths = {
     authResetEmail: "/auth-reset-email",
     emailReset: "/email-reset",
     passwordReset: "/password-reset",
-    newDoc: "/new"
+    newDoc: "/new",
+    settings: "/settings"
 };
 export const statusMessages = {
     unauthorizedAccess: "Unauthorized access",
     loadedOk: "Loaded successfully",
+    searchedOk: "Searched successfully",
     invalidClipboardDataType: "Invalid clipboard data",
     copiedOk: "Copied successfully",
     savedOk: "Saved successfully",

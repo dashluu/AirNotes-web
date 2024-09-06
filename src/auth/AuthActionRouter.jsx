@@ -22,19 +22,19 @@ function AuthActionRouter() {
 
                 if (mode === "resetPassword") {
                     verifyPasswordResetCode(auth, code).then(() => {
-                        setRender(<Navigate to={`${paths.passwordReset}?mode=${mode}&oobCode=${code}`}></Navigate>);
+                        setRender(<Navigate to={`${paths.passwordReset}?mode=${mode}&oobCode=${code}`}/>);
                     }).catch(() => {
-                        navigate(paths.error);
+                        setRender(<Navigate to={paths.error}/>);
                     });
                 } else if (mode === "verifyEmail") {
                     checkActionCode(auth, code).then(() => {
-                        setRender(<Navigate to={paths.emailReset}></Navigate>);
+                        setRender(<Navigate to={paths.emailReset}/>);
                     }).catch(() => {
-                        navigate(paths.error);
+                        setRender(<Navigate to={paths.error}/>);
                     });
                 }
             } else {
-                setRender(<Navigate to={paths.signIn} state={{target: location.pathname}}></Navigate>);
+                setRender(<Navigate to={paths.signIn} state={{target: location.pathname}}/>);
             }
         });
 

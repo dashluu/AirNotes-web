@@ -8,9 +8,7 @@ import {getDownloadURL, ref} from "firebase/storage";
 
 function NewDocumentPage() {
     const navigate = useNavigate();
-    const [getFullDoc, setFullDoc] = useState(new FullDocument(
-        "", "", "", "", "", "", ""
-    ));
+    const [getFullDoc, setFullDoc] = useState(null);
 
     async function fetchThumbnail() {
         try {
@@ -36,7 +34,7 @@ function NewDocumentPage() {
     }, []);
 
     return (
-        <EditorPage fullDoc={getFullDoc} isNewDoc={true}/>
+        <EditorPage getFullDoc={getFullDoc} setFullDoc={setFullDoc} isNewDoc={true} loaded={getFullDoc !== null}/>
     );
 }
 

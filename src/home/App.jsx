@@ -3,7 +3,7 @@ import NavBar from "../navbar/NavBar.jsx";
 import NoteGridCard from "./NoteGridCard.jsx";
 import NoteGrid from "./NoteGrid.jsx";
 import {useEffect, useState} from "react";
-import {auth, docDAO, paths, statusMessages} from "../backend.js";
+import {auth, docDAO, paths} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 import Pagination from "../models/Pagination.js";
@@ -18,8 +18,8 @@ function App() {
     const [getCardList, setCardList] = useState([]);
     const [getNumPages, setNumPages] = useState(0);
     const [getCurrPage, setCurrPage] = useState(1);
-    const [getPrevPageDisabled, setPrevPageDisabled] = useState(true);
-    const [getNextPageDisabled, setNextPageDisabled] = useState(true);
+    const prevPageDisabled = getCurrPage === 1;
+    const nextPageDisabled = getCurrPage === getNumPages;
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
@@ -54,8 +54,6 @@ function App() {
 
     async function prevPage() {
         if (getUser) {
-            setPrevPageDisabled(true);
-            setNextPageDisabled(true);
             statusController.displayProgress();
 
             try {
@@ -74,8 +72,6 @@ function App() {
 
     async function nextPage() {
         if (getUser) {
-            setPrevPageDisabled(true);
-            setNextPageDisabled(true);
             statusController.displayProgress();
 
             try {
@@ -113,14 +109,6 @@ function App() {
         };
     }, []);
 
-    useEffect(() => {
-        setPrevPageDisabled(getCurrPage === 1);
-    }, [getCurrPage]);
-
-    useEffect(() => {
-        setNextPageDisabled(getCurrPage === getNumPages);
-    }, [getCurrPage, getNumPages]);
-
     return (
         <div className="home-page">
             <NavBar/>
@@ -132,7 +120,7 @@ function App() {
                         <input type="search" className="search-input text-input" placeholder="Search notes..."/>
                     </div>
                     <PageNav currPage={getCurrPage} numPages={getNumPages}
-                             prevPageDisabled={getPrevPageDisabled} nextPageDisabled={getNextPageDisabled}
+                             prevPageDisabled={prevPageDisabled} nextPageDisabled={nextPageDisabled}
                              prevPage={() => prevPage()}
                              nextPage={() => nextPage()}/>
                 </div>

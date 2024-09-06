@@ -13,6 +13,7 @@ import Settings from "./settings/Settings.jsx";
 import PasswordResetPage from "./auth/PasswordResetPage.jsx";
 import AuthResetEmailPage from "./auth/AuthResetEmailPage.jsx";
 import AuthActionRouter from "./auth/AuthActionRouter.jsx";
+import EmailResetPage from "./auth/EmailResetPage.jsx";
 
 const router = createBrowserRouter(
     createRoutesFromElements(
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
             <Route path="settings" element={<Settings/>}/>
             <Route path="auth-action" element={<AuthActionRouter/>}/>
             <Route path="auth-reset-email" element={<AuthResetEmailPage/>}/>
+            <Route path="email-reset" element={<EmailResetPage/>}/>
             <Route path="password-reset" element={<PasswordResetPage/>}/>
             <Route path="*" element={<ErrorPage/>}/>
         </Route>

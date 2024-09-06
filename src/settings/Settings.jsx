@@ -24,8 +24,12 @@ function Settings() {
         };
     }, []);
 
+    function resetEmail() {
+        navigate(paths.emailReset);
+    }
+
     function resetPassword() {
-        navigate("/auth-reset-email", {state: "resetPassword"});
+        navigate(paths.authResetEmail, {state: "resetPassword"});
     }
 
     async function signOutApp() {
@@ -48,7 +52,9 @@ function Settings() {
                         <div className="field-content">{getUser ? getUser.email : ""}</div>
                     </div>
                     <div className="field-right">
-                        <button className="settings-button field-button">Reset email</button>
+                        <button className="settings-button field-button" onClick={() => resetEmail()}>
+                            Reset email
+                        </button>
                     </div>
                 </div>
                 <div className="field-container">

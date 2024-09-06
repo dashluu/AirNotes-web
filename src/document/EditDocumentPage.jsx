@@ -3,7 +3,6 @@ import {useLoaderData, useNavigate} from "react-router-dom";
 import {auth, docDAO, paths} from "../backend.js";
 import {useEffect, useState} from "react";
 import {onAuthStateChanged} from "firebase/auth";
-import FullDocument from "../models/FullDocument.js";
 
 export async function loader({params}) {
     return params.docId;
@@ -12,9 +11,7 @@ export async function loader({params}) {
 function EditDocumentPage() {
     const navigate = useNavigate();
     const docId = useLoaderData();
-    const [getFullDoc, setFullDoc] = useState(new FullDocument(
-        "", "", "", "", "", "", ""
-    ));
+    const [getFullDoc, setFullDoc] = useState(null);
 
     async function fetchDoc(userId, docId) {
         try {
@@ -40,7 +37,7 @@ function EditDocumentPage() {
     }, []);
 
     return (
-        <EditorPage fullDoc={getFullDoc} isNewDoc={false}/>
+        <EditorPage getFullDoc={getFullDoc} setFullDoc={setFullDoc} isNewDoc={false} loaded={getFullDoc !== null}/>
     );
 }
 

@@ -55,7 +55,7 @@ function Editor({
     const [getUndoDisabled, setUndoDisabled] = useState(true);
     const [getRedoDisabled, setRedoDisabled] = useState(true);
     const [getSaveDisabled, setSaveDisabled] = useState(title === "");
-    const [getDeleteDisplay, setDeleteDisplay] = useState(isNewDoc ? "none" : "inline-block");
+    const deleteDisplay = isNewDoc || getDocId === "" ? "none" : "inline-block";
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
@@ -88,54 +88,35 @@ function Editor({
     ];
 
     let editor = useEditor({
-            extensions,
-            onUpdate({editor}) {
-                setContent(editor.getHTML());
-                setUndoDisabled(!editor.can().undo());
-                setRedoDisabled(!editor.can().redo());
-            }
-        })
-    ;
-
-    useEffect(() => {
-        const unsubUser = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-
-        return () => {
-            unsubUser();
-        };
-    }, []);
-
-    useEffect(() => {
-        setEditor(editor);
-    }, [editor]);
-
-    useEffect(() => {
-        setDocId(docId);
-    }, [docId]);
-
-    useEffect(() => {
-        setThumbnail(thumbnail);
-    }, [thumbnail]);
-
-    useEffect(() => {
-        setTitle(title);
-    }, [title]);
-
-    useEffect(() => {
-        if (editor) {
-            editor.commands.setContent(content);
-            setContent(content);
+        extensions,
+        content: content,
+        onUpdate({editor}) {
+            setUndoDisabled(!editor.can().undo());
+            setRedoDisabled(!editor.can().redo());
         }
-    }, [content]);
+    });
 
-    useEffect(() => {
-        setDeleteDisplay(getDocId === "" ? "none" : "inline-block");
-    }, [getDocId]);
+    if (getContent !== content) {
+        editor.commands.setContent(content);
+        setContent(content);
+    }
 
-    useEffect(() => {
-        if (getTitle === "") {
+    if (getDocId !== docId) {
+        setDocId(docId);
+    }
+
+    if (getThumbnail !== thumbnail) {
+        setThumbnail(thumbnail);
+    }
+
+    if (getTitle !== title) {
+        updateTitle(title);
+    }
+
+    function updateTitle(newTitle) {
+        setTitle(newTitle);
+
+        if (newTitle === "") {
             setSaveDisabled(true);
             setStatusMessage("Title cannot be empty");
             setStatusDisplay("inline-flex");
@@ -146,7 +127,21 @@ function Editor({
             setSaveDisabled(false);
             statusController.hideStatus();
         }
-    }, [getTitle]);
+    }
+
+    useEffect(() => {
+        setEditor(editor);
+    }, [editor]);
+
+    useEffect(() => {
+        const unsubUser = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+        });
+
+        return () => {
+            unsubUser();
+        };
+    }, []);
 
     async function addFileToEditor(editor, file, pos) {
         const reader = new FileReader();
@@ -295,7 +290,7 @@ function Editor({
                 <ToolbarButton title="Save" icon="save" disabled={getSaveDisabled} click={() => {
                     afterSaveDoc();
                 }}/>
-                <ToolbarButton title="Delete" icon="delete" style={{display: `${getDeleteDisplay}`}} click={() => {
+                <ToolbarButton title="Delete" icon="delete" style={{display: `${deleteDisplay}`}} click={() => {
                     afterDeleteDoc();
                 }}/>
             </div>
@@ -304,11 +299,8 @@ function Editor({
                     messageClass={getStatusMessageClass}
                     icon={getStatusIcon}
                     message={getStatusMessage}/>
-            <input type="text" className="editor-title" required placeholder="Enter title..."
-                   value={getTitle}
-                   onChange={(e) => {
-                       setTitle(e.target.value);
-                   }}/>
+            <input type="text" className="editor-title" required placeholder="Enter title..." value={getTitle}
+                   onChange={(e) => updateTitle(e.target.value)}/>
             {editor && <BubbleMenuWrapper editor={editor} showSummary={showSummary}/>}
             {editor && <FloatingMenuWrapper editor={editor}/>}
             <EditorContent editor={editor}/>

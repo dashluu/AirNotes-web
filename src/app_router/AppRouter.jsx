@@ -11,7 +11,7 @@ function AppRouter() {
         const unsubUser = onAuthStateChanged(auth, (user) => {
             if (user) {
                 if (location.pathname === paths.signIn || location.pathname === paths.signUp) {
-                    setRender(<Navigate to="/"></Navigate>);
+                    setRender(<Navigate to="/"/>);
                 } else {
                     setRender(<Outlet/>);
                 }
@@ -19,7 +19,7 @@ function AppRouter() {
                 if (location.pathname === paths.signIn || location.pathname === paths.signUp) {
                     setRender(<Outlet/>);
                 } else {
-                    setRender(<Navigate to={paths.signIn} state={{target: location.pathname}}></Navigate>);
+                    setRender(<Navigate to={paths.signIn} state={{target: location.pathname}}/>);
                 }
             }
         });
