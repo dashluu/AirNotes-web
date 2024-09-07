@@ -12,6 +12,9 @@ function FloatingMenuWrapper({editor}) {
                 <EditorMenuButton title="Code Block" icon="code"
                                   className={editor.isActive("codeBlock") ? "editor-menu-button-active" : "editor-menu-button"}
                                   click={() => editor.chain().focus().toggleCodeBlock().run()}/>
+                <EditorMenuButton title="Tasks" icon="task_alt"
+                                  className={editor.isActive("taskList") ? "editor-menu-button-active" : "editor-menu-button"}
+                                  click={() => editor.chain().focus().toggleTaskList().run()}/>
             </div>
         </FloatingMenu>
     );

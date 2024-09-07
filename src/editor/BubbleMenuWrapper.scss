@@ -1,4 +1,11 @@
 .editor-menu {
+  & {
+    column-gap: 2px;
+    max-width: none;
+    border: 1px solid red;
+    width: 500px;
+  }
+
   .underline-button span {
     padding-top: 5px;
   }

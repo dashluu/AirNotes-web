@@ -16,6 +16,10 @@ import {onAuthStateChanged} from "firebase/auth";
 import FileDAO from "../daos/FileDAO.js";
 import {getDownloadURL, ref} from "firebase/storage";
 import ToolbarButton from "../ui_elements/ToolbarButton.jsx";
+import {Heading} from "@tiptap/extension-heading";
+import {TextAlign} from "@tiptap/extension-text-align";
+import {TaskList} from "@tiptap/extension-task-list";
+import {TaskItem} from "@tiptap/extension-task-item";
 // import css from "highlight.js/lib/languages/css";
 // import js from "highlight.js/lib/languages/javascript";
 // import ts from "highlight.js/lib/languages/typescript";
@@ -37,10 +41,8 @@ import ToolbarButton from "../ui_elements/ToolbarButton.jsx";
 
 function Editor({
                     docId,
-                    thumbnail,
                     title,
                     content,
-                    isNewDoc,
                     openSidebar,
                     setEditor,
                     setSidebarMode
@@ -49,13 +51,12 @@ function Editor({
     const fileDAO = new FileDAO();
     const [getUser, setUser] = useState(null);
     const [getDocId, setDocId] = useState(docId);
-    const [getThumbnail, setThumbnail] = useState(thumbnail);
     const [getTitle, setTitle] = useState(title);
     const [getContent, setContent] = useState(content);
     const [getUndoDisabled, setUndoDisabled] = useState(true);
     const [getRedoDisabled, setRedoDisabled] = useState(true);
     const [getSaveDisabled, setSaveDisabled] = useState(title === "");
-    const deleteDisplay = isNewDoc || getDocId === "" ? "none" : "inline-block";
+    const deleteDisplay = getDocId === "" ? "none" : "inline-block";
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
@@ -72,6 +73,16 @@ function Editor({
             placeholder: "Write something...",
         }),
         Underline,
+        Heading.configure({
+            levels: [1, 2, 3],
+        }),
+        TextAlign.configure({
+            types: ["heading", "paragraph"],
+        }),
+        TaskList,
+        TaskItem.configure({
+            nested: true,
+        }),
         Image.configure({
             HTMLAttributes: {
                 class: "img"
@@ -89,29 +100,12 @@ function Editor({
 
     let editor = useEditor({
         extensions,
-        content: content,
         onUpdate({editor}) {
             setUndoDisabled(!editor.can().undo());
             setRedoDisabled(!editor.can().redo());
+            setContent(editor.getHTML());
         }
     });
-
-    if (getContent !== content) {
-        editor.commands.setContent(content);
-        setContent(content);
-    }
-
-    if (getDocId !== docId) {
-        setDocId(docId);
-    }
-
-    if (getThumbnail !== thumbnail) {
-        setThumbnail(thumbnail);
-    }
-
-    if (getTitle !== title) {
-        updateTitle(title);
-    }
 
     function updateTitle(newTitle) {
         setTitle(newTitle);
@@ -132,6 +126,21 @@ function Editor({
     useEffect(() => {
         setEditor(editor);
     }, [editor]);
+
+    useEffect(() => {
+        setDocId(docId);
+    }, [docId]);
+
+    useEffect(() => {
+        updateTitle(title);
+    }, [title]);
+
+    useEffect(() => {
+        if (editor) {
+            editor.commands.setContent(content);
+            setContent(content);
+        }
+    }, [editor, content]);
 
     useEffect(() => {
         const unsubUser = onAuthStateChanged(auth, (user) => {
@@ -194,11 +203,10 @@ function Editor({
         }
 
         const firstImg = imgList[0];
-        setThumbnail(firstImg.src);
         return firstImg.src;
     }
 
-    async function afterSaveDoc() {
+    async function saveDoc() {
         if (getUser) {
             statusController.displayProgress();
 
@@ -215,7 +223,7 @@ function Editor({
         }
     }
 
-    async function afterDeleteDoc() {
+    async function deleteDoc() {
         if (getUser) {
             statusController.displayProgress();
 
@@ -288,10 +296,10 @@ function Editor({
                     showAIImg();
                 }}/>
                 <ToolbarButton title="Save" icon="save" disabled={getSaveDisabled} click={() => {
-                    afterSaveDoc();
+                    saveDoc();
                 }}/>
                 <ToolbarButton title="Delete" icon="delete" style={{display: `${deleteDisplay}`}} click={() => {
-                    afterDeleteDoc();
+                    deleteDoc();
                 }}/>
             </div>
             <Status display={getStatusDisplay}

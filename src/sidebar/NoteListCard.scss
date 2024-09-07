@@ -23,7 +23,7 @@
   }
 
   .thumbnail {
-    height: 82%;
+    height: 86%;
     aspect-ratio: 1;
     object-fit: cover;
     position: relative;
@@ -39,7 +39,7 @@
   }
 
   .summary-wrapper {
-    width: 80%;
+    width: 90%;
     height: auto;
   }
 
@@ -58,21 +58,14 @@
     -webkit-line-clamp: 1;
     line-clamp: 1;
     -webkit-box-orient: vertical;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
   }
 
   .summary-date {
     font-size: 14px;
     font-weight: 500;
-    margin-bottom: 10px;
     color: var(--note-list-card-summary-date-color);
     width: 100%;
-  }
-
-  .sidebar-action-button {
-    width: 100%;
-    margin-bottom: 0;
-    border-radius: 100px;
   }
 }
 
@@ -89,11 +82,5 @@
 
   .summary-date {
     color: var(--note-list-card-summary-date-color-hover);
-  }
-
-  .sidebar-action-button {
-    background-color: var(--note-list-card-action-button-background-hover);
-    border: var(--note-list-card-action-button-border-hover);
-    color: var(--note-list-card-action-button-color-hover);
   }
 }

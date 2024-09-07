@@ -19,12 +19,11 @@ export default class FullDocument {
         last accessed: ${this.lastAccessed}\n`;
     }
 
-    static getDateStr(timestamp) {
-        const date = timestamp.toDate();
+    static getDateStr(date) {
         return `${date.toLocaleDateString("en-US")} ${date.toLocaleTimeString("en-US")}`;
     }
 
-    static toFullDoc(snapshot) {
+    static snapshotToFullDoc(snapshot) {
         const data = snapshot.data();
         return new FullDocument(
             snapshot.id,
@@ -32,8 +31,8 @@ export default class FullDocument {
             data.thumbnail,
             data.title,
             data.content,
-            this.getDateStr(data.lastModified),
-            this.getDateStr(data.lastAccessed)
+            this.getDateStr(data.lastModified.toDate()),
+            this.getDateStr(data.lastAccessed.toDate())
         );
     }
 }

@@ -15,19 +15,28 @@ export default class DocumentSummary {
         last accessed: ${this.lastAccessed}\n`;
     }
 
-    static getDateStr(timestamp) {
-        const date = timestamp.toDate();
+    static getDateStr(date) {
         return `${date.toLocaleDateString("en-US")} ${date.toLocaleTimeString("en-US")}`;
     }
 
-    static toDocSummary(snapshot) {
+    static snapshotToDocSummary(snapshot) {
         const data = snapshot.data();
         return new DocumentSummary(
             snapshot.id,
             data.thumbnail,
             data.title,
-            this.getDateStr(data.lastModified),
-            this.getDateStr(data.lastAccessed)
+            this.getDateStr(data.lastModified.toDate()),
+            this.getDateStr(data.lastAccessed.toDate())
+        );
+    }
+
+    static objToDocSummary(obj) {
+        return new DocumentSummary(
+            obj.id,
+            obj.thumbnail,
+            obj.title,
+            this.getDateStr(new Date(obj.lastModified)),
+            this.getDateStr(new Date(obj.lastAccessed))
         );
     }
 }

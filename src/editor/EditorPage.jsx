@@ -4,7 +4,7 @@ import {useState} from "react";
 import Editor from "./Editor.jsx";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
-function EditorPage({getFullDoc, setFullDoc, isNewDoc, loaded}) {
+function EditorPage({fullDoc, loaded}) {
     const [getGridLayout, setGridLayout] = useState("0fr 1fr");
     const [getSidebarDisplay, setSidebarDisplay] = useState("hidden");
     const [getSidebarAnimation, setSidebarAnimation] = useState("none");
@@ -27,17 +27,14 @@ function EditorPage({getFullDoc, setFullDoc, isNewDoc, loaded}) {
         <div className="editor-page">
             <NavBar/>
             <div className="editor-grid" style={{gridTemplateColumns: getGridLayout}}>
-                {loaded && <Sidebar setFullDoc={setFullDoc}
-                                    sidebarDisplay={getSidebarDisplay}
+                {loaded && <Sidebar sidebarDisplay={getSidebarDisplay}
                                     sidebarAnimation={getSidebarAnimation}
                                     closeSidebar={closeSidebar}
                                     editor={getEditor}
                                     mode={getSidebarMode}/>}
-                {loaded && <Editor docId={getFullDoc.id}
-                                   thumbnail={getFullDoc.thumbnail}
-                                   title={getFullDoc.title}
-                                   content={getFullDoc.content}
-                                   isNewDoc={isNewDoc}
+                {loaded && <Editor docId={fullDoc.id}
+                                   title={fullDoc.title}
+                                   content={fullDoc.content}
                                    openSidebar={openSidebar}
                                    setEditor={setEditor}
                                    setSidebarMode={setSidebarMode}/>}

@@ -1,44 +1,93 @@
 import {docDAO} from "../backend.js";
 import DocumentSummary from "./DocumentSummary.js";
+import DocumentDAO from "../daos/DocumentDAO.js";
 
 export default class Pagination {
     constructor() {
         this.currPage = 1;
-        this.numItems = 0;
         this.pageList = [];
-        this.docSnapshotList = null;
+        this.summaryList = null;
+        this.searchMode = false;
     }
 
-    async fetchPage(userId, pageNum) {
-        if (pageNum < 1 || pageNum > this.pageList.length + 1) {
-            throw new Error("Page out of bounds");
-        }
+    reset(searchMode) {
+        this.currPage = 1;
+        this.pageList = [];
+        this.summaryList = null;
+        this.searchMode = searchMode;
+    }
 
+    // This method loads results page by page using cursor
+    async fetchRecentNotesPage(userId, pageNum) {
         if (pageNum <= this.pageList.length) {
             return this.pageList[pageNum - 1];
         }
 
-        const cursor = this.pageList.length === 0 ? null : this.docSnapshotList.docs[this.docSnapshotList.docs.length - 1];
+        const cursor = this.pageList.length === 0 ? null : this.summaryList.docs[this.summaryList.docs.length - 1];
         let page = [];
-        let i = this.numItems;
-        this.docSnapshotList = await docDAO.getDocSummaryPage(userId, cursor);
+        this.summaryList = await docDAO.getDocSummaryPage(userId, cursor);
 
-        this.docSnapshotList.forEach((docSnapshot) => {
-            const docSummary = DocumentSummary.toDocSummary(docSnapshot);
+        this.summaryList.forEach((docSnapshot) => {
+            const docSummary = DocumentSummary.snapshotToDocSummary(docSnapshot);
             page.push(docSummary);
-            i++;
         });
 
-        this.numItems = i;
         this.pageList.push(page);
         return page;
     }
 
-    async prevPage(userId) {
-        return await this.fetchPage(userId, --this.currPage);
+    // This method loads the search result entirely and paginates the results using page number rather than cursor
+    // We speculated that the number of documents returned by search should be small enough for full search results
+    async fetchSearchPage(userId, query, pageNum) {
+        if (pageNum <= this.pageList.length) {
+            return this.pageList[pageNum - 1];
+        }
+
+        const searchModel = {
+            user_id: userId,
+            query: query,
+        };
+
+        const response = await fetch(`${import.meta.env.VITE_AI_SERVER}/search`, {
+            method: "post",
+            body: JSON.stringify(searchModel),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            this.summaryList = await response.json();
+            let page = null;
+
+            for (let i = 0; i < this.summaryList.length; i++) {
+                if (i % DocumentDAO.docsPerPage === 0) {
+                    page = [DocumentSummary.objToDocSummary(this.summaryList[i])];
+                    this.pageList.push(page);
+                } else {
+                    page.push(DocumentSummary.objToDocSummary(this.summaryList[i]));
+                }
+            }
+
+            return this.pageList[pageNum - 1];
+        } else {
+            throw new Error(await response.text());
+        }
     }
 
-    async nextPage(userId) {
-        return await this.fetchPage(userId, ++this.currPage);
+    async prevRecentNotesPage(userId) {
+        return await this.fetchRecentNotesPage(userId, --this.currPage);
+    }
+
+    async nextRecentNotesPage(userId) {
+        return await this.fetchRecentNotesPage(userId, ++this.currPage);
+    }
+
+    async prevSearchPage(userId, query) {
+        return await this.fetchSearchPage(userId, query, --this.currPage);
+    }
+
+    async nextSearchPage(userId, query) {
+        return await this.fetchSearchPage(userId, query, ++this.currPage);
     }
 }

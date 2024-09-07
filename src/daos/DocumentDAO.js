@@ -70,7 +70,7 @@ export default class DocumentDAO {
             return null;
         }
 
-        return FullDocument.toFullDoc(docSnapshot);
+        return FullDocument.snapshotToFullDoc(docSnapshot);
     }
 
     async getDocSummaryPage(userId, cursor) {
@@ -101,7 +101,7 @@ export default class DocumentDAO {
             collection(db, "documents"),
             where("userId", "==", userId),
             orderBy("lastAccessed", "desc"),
-            limit(numItems + 1)
+            limit(numItems)
         );
 
         let docSummaryList = [];
@@ -110,7 +110,7 @@ export default class DocumentDAO {
 
         docSnapshotList.forEach((docSnapshot) => {
             if (i < docSnapshotList.size) {
-                const docSummary = DocumentSummary.toDocSummary(docSnapshot);
+                const docSummary = DocumentSummary.snapshotToDocSummary(docSnapshot);
                 docSummaryList.push(docSummary);
                 i++;
             }

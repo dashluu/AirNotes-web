@@ -34,7 +34,7 @@ function NewDocumentPage() {
     }, []);
 
     return (
-        <EditorPage getFullDoc={getFullDoc} setFullDoc={setFullDoc} isNewDoc={true} loaded={getFullDoc !== null}/>
+        <EditorPage fullDoc={getFullDoc} loaded={getFullDoc !== null}/>
     );
 }
 

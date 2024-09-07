@@ -2,8 +2,8 @@ import "./App.scss";
 import NavBar from "../navbar/NavBar.jsx";
 import NoteGridCard from "./NoteGridCard.jsx";
 import NoteGrid from "./NoteGrid.jsx";
-import {useEffect, useState} from "react";
-import {auth, docDAO, paths} from "../backend.js";
+import {useEffect, useRef, useState} from "react";
+import {auth, docDAO, paths, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 import Pagination from "../models/Pagination.js";
@@ -15,8 +15,9 @@ import PageNav from "./PageNav.jsx";
 function App() {
     const navigate = useNavigate();
     const [getUser, setUser] = useState(null);
+    const searchInput = useRef(null);
     const [getCardList, setCardList] = useState([]);
-    const [getNumPages, setNumPages] = useState(0);
+    const [getNumPages, setNumPages] = useState(1);
     const [getCurrPage, setCurrPage] = useState(1);
     const prevPageDisabled = getCurrPage === 1;
     const nextPageDisabled = getCurrPage === getNumPages;
@@ -30,16 +31,16 @@ function App() {
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
 
-    async function fetchPage(userId, pageNum) {
+    async function fetchPage(userId) {
         statusController.displayProgress();
 
         try {
-            const page = await getPagination.fetchPage(userId, pageNum);
+            const page = await getPagination.fetchRecentNotesPage(userId, getCurrPage);
             const cardList = page.map((docSummary, i) => <NoteGridCard key={i} docSummary={docSummary}/>);
             setCardList(cardList);
             statusController.hideStatus();
         } catch (error) {
-            navigate(paths.error);
+            statusController.displayFailure(error.message);
         }
     }
 
@@ -48,7 +49,7 @@ function App() {
             const numPages = await docDAO.countPages(userId);
             setNumPages(numPages);
         } catch (error) {
-            navigate(paths.error);
+            statusController.displayFailure(error.message);
         }
     }
 
@@ -57,7 +58,14 @@ function App() {
             statusController.displayProgress();
 
             try {
-                const page = await getPagination.prevPage(getUser.uid);
+                let page;
+
+                if (!getPagination.searchMode) {
+                    page = await getPagination.prevRecentNotesPage(getUser.uid);
+                } else {
+                    page = await getPagination.prevSearchPage(getUser.uid, searchInput.current.value);
+                }
+
                 const cardList = page.map((docSummary, i) => <NoteGridCard key={i} docSummary={docSummary}/>);
                 setCardList(cardList);
                 setCurrPage(getPagination.currPage);
@@ -66,7 +74,7 @@ function App() {
                 statusController.displayFailure(error.message);
             }
         } else {
-            navigate(paths.signIn);
+            statusController.displayFailure(statusMessages.unauthorizedAccess);
         }
     }
 
@@ -75,7 +83,14 @@ function App() {
             statusController.displayProgress();
 
             try {
-                const page = await getPagination.nextPage(getUser.uid);
+                let page;
+
+                if (!getPagination.searchMode) {
+                    page = await getPagination.nextRecentNotesPage(getUser.uid);
+                } else {
+                    page = await getPagination.nextSearchPage(getUser.uid, searchInput.current.value);
+                }
+
                 const cardList = page.map((docSummary, i) => <NoteGridCard key={i} docSummary={docSummary}/>);
                 setCardList(cardList);
                 setCurrPage(getPagination.currPage);
@@ -84,12 +99,12 @@ function App() {
                 statusController.displayFailure(error.message);
             }
         } else {
-            navigate(paths.signIn);
+            statusController.displayFailure(statusMessages.unauthorizedAccess);
         }
     }
 
     async function loadFirstPage(userId) {
-        await fetchPage(userId, getCurrPage);
+        await fetchPage(userId);
         await fetchNumPages(userId);
     }
 
@@ -109,6 +124,26 @@ function App() {
         };
     }, []);
 
+    async function searchNotes() {
+        getPagination.reset(searchInput.current.value !== "");
+
+        if (!getPagination.searchMode) {
+            fetchPage(getUser.uid);
+            return;
+        }
+
+        statusController.displayProgress();
+
+        try {
+            const page = await getPagination.fetchSearchPage(getUser.uid, searchInput.current.value, getCurrPage);
+            const cardList = page.map((docSummary, i) => <NoteGridCard key={i} docSummary={docSummary}/>);
+            setCardList(cardList);
+            statusController.hideStatus();
+        } catch (error) {
+            statusController.displayFailure(error.message);
+        }
+    }
+
     return (
         <div className="home-page">
             <NavBar/>
@@ -117,7 +152,13 @@ function App() {
                     <div className="toolbar">
                         <ToolbarButton title="New" icon="edit_square"
                                        click={() => navigate(paths.newDoc)}/>
-                        <input type="search" className="search-input text-input" placeholder="Search notes..."/>
+                        <input type="search" className="search-input text-input" placeholder="Search notes..."
+                               ref={searchInput}
+                               onKeyDown={(e) => {
+                                   if (e.key === "Enter") {
+                                       searchNotes();
+                                   }
+                               }}/>
                     </div>
                     <PageNav currPage={getCurrPage} numPages={getNumPages}
                              prevPageDisabled={prevPageDisabled} nextPageDisabled={nextPageDisabled}

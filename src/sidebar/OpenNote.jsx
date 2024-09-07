@@ -7,12 +7,13 @@ import {auth, docDAO, statusMessages} from "../backend.js";
 import DocumentDAO from "../daos/DocumentDAO.js";
 import StatusController from "../ui_elements/StatusController.js";
 import Status from "../status/Status.jsx";
+import DocumentSummary from "../models/DocumentSummary.js";
 
-function OpenNote({setFullDoc, openNoteDisplay}) {
+function OpenNote({openNoteDisplay}) {
     const [getUser, setUser] = useState(null);
     const searchInput = useRef(null);
     // const [getUnsubSummaryList, setUnsubSummaryList] = useState(null);
-    const [getRecentNoteList, setRecentNoteList] = useState([]);
+    const [getNoteList, setNoteList] = useState([]);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
@@ -56,11 +57,11 @@ function OpenNote({setFullDoc, openNoteDisplay}) {
             //     userId, getDocId, DocumentDAO.recentNumDocs
             // );
             const summaryList = await docDAO.getDocSummaryList(userId, DocumentDAO.recentNumDocs);
-            const recentNoteList = summaryList.map(
-                (summary, i) => <NoteListCard key={i} docSummary={summary} setFullDoc={setFullDoc}/>
+            const noteList = summaryList.map(
+                (summary, i) => <NoteListCard key={i} docSummary={summary}/>
             );
             // setUnsubSummaryList(unsubSummaryList);
-            setRecentNoteList(recentNoteList);
+            setNoteList(noteList);
             statusController.displaySuccess(statusMessages.loadedOk);
         } catch (error) {
             // setUnsubSummaryList(null);
@@ -68,7 +69,7 @@ function OpenNote({setFullDoc, openNoteDisplay}) {
         }
     }
 
-    async function searchNote() {
+    async function searchNotes() {
         if (!getUser) {
             statusController.displayFailure(statusMessages.unauthorizedAccess);
             return;
@@ -96,10 +97,11 @@ function OpenNote({setFullDoc, openNoteDisplay}) {
 
             if (response.ok) {
                 const summaryList = await response.json();
-                const recentNoteList = summaryList.map(
-                    (summary, i) => <NoteListCard key={i} docSummary={summary} setFullDoc={setFullDoc}/>
+                const topSummaryList = summaryList.slice(0, DocumentDAO.recentNumDocs);
+                const noteList = topSummaryList.map(
+                    (summary, i) => <NoteListCard key={i} docSummary={DocumentSummary.objToDocSummary(summary)}/>
                 );
-                setRecentNoteList(recentNoteList);
+                setNoteList(noteList);
                 statusController.displaySuccess(statusMessages.searchedOk);
             } else {
                 statusController.displayFailure(await response.text());
@@ -112,10 +114,10 @@ function OpenNote({setFullDoc, openNoteDisplay}) {
     return (
         <div className="open-note-container sidebar-container" style={{display: openNoteDisplay}}>
             <div className="sidebar-title">Open Note</div>
-            <input type="text" className="search-input text-input" placeholder="Search notes..." ref={searchInput}
+            <input type="search" className="search-input text-input" placeholder="Search notes..." ref={searchInput}
                    onKeyDown={(e) => {
                        if (e.key === "Enter") {
-                           searchNote();
+                           searchNotes();
                        }
                    }}/>
             <Status display={getStatusDisplay}
@@ -124,7 +126,7 @@ function OpenNote({setFullDoc, openNoteDisplay}) {
                     icon={getStatusIcon}
                     message={getStatusMessage}/>
             <div className="note-list">
-                {getRecentNoteList}
+                {getNoteList}
             </div>
         </div>
     );

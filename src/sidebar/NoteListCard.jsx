@@ -1,14 +1,12 @@
 import "./NoteListCard.scss";
 import {useEffect, useState} from "react";
-import {auth, docDAO, paths} from "../backend.js";
+import {auth, paths} from "../backend.js";
 import {useNavigate} from "react-router-dom";
 import {onAuthStateChanged} from "firebase/auth";
-import SidebarActionButton from "./SidebarActionButton.jsx";
 
-function NoteListCard({docSummary, setFullDoc}) {
+function NoteListCard({docSummary}) {
     const navigate = useNavigate();
     const [getUser, setUser] = useState(null);
-    const [getDocSummary, setDocSummary] = useState(docSummary);
 
     useEffect(() => {
         const unsubUser = onAuthStateChanged(auth, (user) => {
@@ -20,23 +18,9 @@ function NoteListCard({docSummary, setFullDoc}) {
         };
     }, []);
 
-    useEffect(() => {
-        setDocSummary(docSummary);
-    }, [docSummary]);
-
-    async function fetchDoc(userId, docId) {
-        try {
-            await docDAO.accessFullDoc(docId);
-            const fullDoc = await docDAO.getFullDoc(userId, docId);
-            setFullDoc(fullDoc);
-        } catch (error) {
-            navigate(paths.error);
-        }
-    }
-
     function loadDoc() {
         if (getUser) {
-            fetchDoc(getUser.uid, getDocSummary.id);
+            window.open(`/notes/${docSummary.id}`, "_blank");
         } else {
             navigate(paths.signIn);
         }
@@ -52,10 +36,6 @@ function NoteListCard({docSummary, setFullDoc}) {
                     <div className="doc-id">{docSummary.id}</div>
                     <div className="summary-title">{docSummary.title}</div>
                     <div className="summary-date">{docSummary.lastModified}</div>
-                    <SidebarActionButton icon="open_in_new" text="Open in new tab" click={(e) => {
-                        e.stopPropagation();
-                        window.open(`/notes/${docSummary.id}`, "_blank");
-                    }}/>
                 </div>
             </div>
         </div>

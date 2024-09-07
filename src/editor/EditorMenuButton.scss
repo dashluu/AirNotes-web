@@ -4,10 +4,6 @@
     color: var(--editor-bubble-menu-button-color);
   }
 
-  &:hover {
-    cursor: pointer;
-  }
-
   span {
     padding-top: 2px;
   }
@@ -17,12 +13,11 @@
   border-radius: 5px;
   border: none;
   font-family: inherit;
-  font-size: .875rem;
+  font-size: 16px;
   font-weight: 500;
   text-align: center;
-  line-height: 1.15;
   padding-top: 2px;
-  padding-bottom: 2px;
+  padding-bottom: 0;
   transition: all .2s cubic-bezier(.65, .05, .36, 1);
   width: 36px;
 }
@@ -30,4 +25,5 @@
 .editor-menu-button:hover, .editor-menu-button-active {
   background: var(--editor-bubble-menu-button-background-hover);
   color: var(--editor-bubble-menu-button-color-hover);
+  cursor: pointer;
 }
