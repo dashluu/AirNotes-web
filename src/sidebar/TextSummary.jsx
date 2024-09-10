@@ -2,53 +2,37 @@ import "./TextSummary.scss";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import StatusController from "../ui_elements/StatusController.js";
-import {auth, statusMessages} from "../backend.js";
-import {onAuthStateChanged} from "firebase/auth";
+import {statusMessages} from "../backend.js";
 import SidebarActionButton from "./SidebarActionButton.jsx";
 
-function TextSummary({editor, triggered, summaryDisplay}) {
-    const [getUser, setUser] = useState(null);
+function TextSummary({user, docId, context, summaryDisplay}) {
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
+    const docContext = "document";
+    const [getContext, setContext] = useState(context);
     const [getCopyText, setCopyText] = useState("");
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
 
     useEffect(() => {
-        const unsubUser = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-
-        return () => {
-            unsubUser();
-        };
-    }, []);
-
-    useEffect(() => {
-        if (triggered) {
-            summarize();
-        }
-    }, [triggered]);
+        setContext(context);
+    }, [context]);
 
     async function summarize() {
-        if (!getUser) {
+        if (!user) {
             statusController.displayFailure(statusMessages.unauthorizedAccess);
             return;
         }
 
         statusController.displayProgress();
-        // API for text selection
-        const {view, state} = editor
-        const {from, to} = view.state.selection
-        const text = state.doc.textBetween(from, to, " ")
-        // If there is a selection of text, use that selection, otherwise, use the whole text
-        const context = text === "" ? editor.getHTML() : text;
         const summaryModel = {
-            text: context
+            user_id: user.uid,
+            doc_id: docId,
+            text: getContext
         };
 
         try {
@@ -61,9 +45,18 @@ function TextSummary({editor, triggered, summaryDisplay}) {
             });
 
             if (response.ok) {
-                const summaryText = await response.json();
-                setCopyText(summaryText);
+                // const summaryText = await response.json();
+                // setCopyText(summaryText);
+                // statusController.displaySuccess(statusMessages.generatedSummaryOk);
                 statusController.displaySuccess(statusMessages.generatedSummaryOk);
+                let ans = "";
+
+                for await (const chunk of response.body) {
+                    for (const byte of chunk) {
+                        ans += String.fromCharCode(byte);
+                        setCopyText(ans);
+                    }
+                }
             } else {
                 statusController.displayFailure(await response.text());
             }
@@ -90,15 +83,19 @@ function TextSummary({editor, triggered, summaryDisplay}) {
                 Instruction: select a piece of text to provide the context for the summary. If no text is selected,
                 the whole document will be provided as the context.
             </div>
+            <div className="summary-context">Context: {getContext}</div>
             <div className="sidebar-button-container">
                 <SidebarActionButton icon="notes" text="Summarize"
                                      click={() => {
                                          summarize();
                                      }}/>
-                <SidebarActionButton icon="content_copy" text="Copy summary" disabled={getCopyText === ""}
+                <SidebarActionButton icon="content_copy" text="Copy" disabled={getCopyText === ""}
                                      click={() => {
                                          copyText();
                                      }}/>
+                <SidebarActionButton icon="playlist_remove" text="Clear context"
+                                     disabled={getContext === docContext}
+                                     click={() => setContext(docContext)}/>
             </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}

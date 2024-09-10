@@ -8,24 +8,27 @@
     height: 50px;
   }
 
-  .status-container {
-    width: 100%;
-    padding-left: 0;
+  .qa-context {
+    width: calc(100% - 10px);
+    font-size: 16px;
+    font-weight: 500;
     margin-bottom: 10px;
-    text-align: center;
-    justify-content: center;
+    word-break: break-word;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
   }
 
   .qa-text {
-    width: 100%;
-    height: 60vh;
+    width: calc(100% - 10px);
     background-color: var(--sidebar-output-background);
     border: 1px solid var(--sidebar-output-border);
-    color: 1px solid var(--sidebar-output-color);
+    color: var(--sidebar-output-color);
     border-radius: 5px;
     font-size: 16px;
     font-weight: 500;
     padding: 0;
-    overflow-y: auto;
+    margin-top: 5px;
   }
 }

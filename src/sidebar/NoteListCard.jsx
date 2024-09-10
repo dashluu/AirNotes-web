@@ -1,25 +1,12 @@
 import "./NoteListCard.scss";
-import {useEffect, useState} from "react";
-import {auth, paths} from "../backend.js";
+import {paths} from "../backend.js";
 import {useNavigate} from "react-router-dom";
-import {onAuthStateChanged} from "firebase/auth";
 
-function NoteListCard({docSummary}) {
+function NoteListCard({user, docSummary}) {
     const navigate = useNavigate();
-    const [getUser, setUser] = useState(null);
-
-    useEffect(() => {
-        const unsubUser = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-
-        return () => {
-            unsubUser();
-        };
-    }, []);
 
     function loadDoc() {
-        if (getUser) {
+        if (user) {
             window.open(`/notes/${docSummary.id}`, "_blank");
         } else {
             navigate(paths.signIn);

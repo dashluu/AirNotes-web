@@ -3,7 +3,7 @@ import {EditorContent, useEditor} from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {Placeholder} from "@tiptap/extension-placeholder";
 import Underline from "@tiptap/extension-underline";
-import {auth, defaultThumbnail, docDAO, paths, statusMessages, storage} from "../backend.js";
+import {defaultThumbnail, docDAO, paths, statusMessages, storage} from "../backend.js";
 import Status from "../status/Status.jsx";
 import {useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -12,7 +12,6 @@ import BubbleMenuWrapper from "./BubbleMenuWrapper.jsx";
 import FloatingMenuWrapper from "./FloatingMenuWrapper.jsx";
 import {Image} from "@tiptap/extension-image";
 import {FileHandler} from "@tiptap-pro/extension-file-handler";
-import {onAuthStateChanged} from "firebase/auth";
 import FileDAO from "../daos/FileDAO.js";
 import {getDownloadURL, ref} from "firebase/storage";
 import ToolbarButton from "../ui_elements/ToolbarButton.jsx";
@@ -20,26 +19,11 @@ import {Heading} from "@tiptap/extension-heading";
 import {TextAlign} from "@tiptap/extension-text-align";
 import {TaskList} from "@tiptap/extension-task-list";
 import {TaskItem} from "@tiptap/extension-task-item";
-// import css from "highlight.js/lib/languages/css";
-// import js from "highlight.js/lib/languages/javascript";
-// import ts from "highlight.js/lib/languages/typescript";
-// import html from "highlight.js/lib/languages/xml";
-// import python from "highlight.js/lib/languages/python";
-// import cpp from "highlight.js/lib/languages/cpp";
-// import java from "highlight.js/lib/languages/java";
-// import {common, createLowlight} from "lowlight";
-// import {CodeBlockLowlight} from "@tiptap/extension-code-block-lowlight";
-//
-// const lowlight = createLowlight(common);
-// lowlight.register({html});
-// lowlight.register({css});
-// lowlight.register({js});
-// lowlight.register({ts});
-// lowlight.register({python});
-// lowlight.register({cpp});
-// lowlight.register({java});
+import {OrderedList} from "@tiptap/extension-ordered-list";
+import {ListItem} from "@tiptap/extension-list-item";
 
 function Editor({
+                    user,
                     docId,
                     title,
                     content,
@@ -49,13 +33,11 @@ function Editor({
                 }) {
     const navigate = useNavigate();
     const fileDAO = new FileDAO();
-    const [getUser, setUser] = useState(null);
     const [getDocId, setDocId] = useState(docId);
     const [getTitle, setTitle] = useState(title);
     const [getContent, setContent] = useState(content);
     const [getUndoDisabled, setUndoDisabled] = useState(true);
     const [getRedoDisabled, setRedoDisabled] = useState(true);
-    const [getSaveDisabled, setSaveDisabled] = useState(title === "");
     const deleteDisplay = getDocId === "" ? "none" : "inline-block";
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIcon, setStatusIcon] = useState("");
@@ -79,6 +61,8 @@ function Editor({
         TextAlign.configure({
             types: ["heading", "paragraph"],
         }),
+        OrderedList,
+        ListItem,
         TaskList,
         TaskItem.configure({
             nested: true,
@@ -93,13 +77,14 @@ function Editor({
             onPaste: pasteFile,
             onDrop: dropFile
         })
-        // CodeBlockLowlight.configure({
-        //     lowlight,
-        // }),
     ];
 
     let editor = useEditor({
         extensions,
+        content,
+        onCreate({editor}) {
+            setEditor(editor);
+        },
         onUpdate({editor}) {
             setUndoDisabled(!editor.can().undo());
             setRedoDisabled(!editor.can().redo());
@@ -111,21 +96,15 @@ function Editor({
         setTitle(newTitle);
 
         if (newTitle === "") {
-            setSaveDisabled(true);
             setStatusMessage("Title cannot be empty");
             setStatusDisplay("inline-flex");
             setStatusIcon("error");
             setStatusIconClass("error-icon");
             setStatusMessageClass("error-message");
         } else {
-            setSaveDisabled(false);
             statusController.hideStatus();
         }
     }
-
-    useEffect(() => {
-        setEditor(editor);
-    }, [editor]);
 
     useEffect(() => {
         setDocId(docId);
@@ -134,23 +113,6 @@ function Editor({
     useEffect(() => {
         updateTitle(title);
     }, [title]);
-
-    useEffect(() => {
-        if (editor) {
-            editor.commands.setContent(content);
-            setContent(content);
-        }
-    }, [editor, content]);
-
-    useEffect(() => {
-        const unsubUser = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-
-        return () => {
-            unsubUser();
-        };
-    }, []);
 
     async function addFileToEditor(editor, file, pos) {
         const reader = new FileReader();
@@ -207,35 +169,37 @@ function Editor({
     }
 
     async function saveDoc() {
-        if (getUser) {
-            statusController.displayProgress();
-
-            try {
-                const updatedThumbnail = await updateThumbnail();
-                const result = await docDAO.update(getUser.uid, getDocId, updatedThumbnail, getTitle, getContent);
-                setDocId(result.id);
-                statusController.displaySuccess(statusMessages.savedOk);
-            } catch (error) {
-                statusController.displayFailure(error.message);
-            }
-        } else {
+        if (!user) {
             statusController.displayFailure(statusMessages.unauthorizedAccess);
+            return;
+        }
+
+        statusController.displayProgress();
+
+        try {
+            const updatedThumbnail = await updateThumbnail();
+            const result = await docDAO.update(user.uid, getDocId, updatedThumbnail, getTitle, getContent);
+            setDocId(result.id);
+            statusController.displaySuccess(statusMessages.savedOk);
+        } catch (error) {
+            statusController.displayFailure(error.message);
         }
     }
 
     async function deleteDoc() {
-        if (getUser) {
-            statusController.displayProgress();
-
-            try {
-                await docDAO.delete(getDocId);
-                statusController.hideStatus();
-                navigate(paths.home);
-            } catch (error) {
-                statusController.displayFailure(error.message);
-            }
-        } else {
+        if (!user) {
             statusController.displayFailure(statusMessages.unauthorizedAccess);
+            return;
+        }
+
+        statusController.displayProgress();
+
+        try {
+            await docDAO.delete(getDocId);
+            statusController.hideStatus();
+            navigate(paths.home);
+        } catch (error) {
+            statusController.displayFailure(error.message);
         }
     }
 
@@ -244,14 +208,24 @@ function Editor({
         setSidebarMode({name: "openNote"});
     }
 
-    function showSummary(triggered) {
+    function getContext() {
+        // API for text selection
+        const {view, state} = editor;
+        const {from, to} = view.state.selection;
+        const text = state.doc.textBetween(from, to, " ");
+        // If there is a selection of text, use that selection, otherwise, use the whole text
+        const context = text === "" ? "document" : text;
+        return context;
+    }
+
+    function showSummary() {
         openSidebar();
-        setSidebarMode({name: "summary", triggered: triggered});
+        setSidebarMode({name: "summary", context: getContext()});
     }
 
     function showQA() {
         openSidebar();
-        setSidebarMode({name: "QA"});
+        setSidebarMode({name: "QA", context: getContext()});
     }
 
     function showImgTools() {
@@ -266,52 +240,56 @@ function Editor({
 
     return (
         <div className="editor-container">
-            <div className="doc-id-container">{getDocId}</div>
-            <div className="editor-toolbar toolbar">
-                <ToolbarButton title="New" icon="edit_square" click={() => {
-                    navigate(paths.newDoc);
-                }}/>
-                <ToolbarButton title="Undo" icon="undo" disabled={getUndoDisabled} click={() => {
-                    editor.chain().focus().undo().run();
-                }}/>
-                <ToolbarButton title="Redo" icon="redo" disabled={getRedoDisabled} click={() => {
-                    editor.chain().focus().redo().run();
-                }}/>
-                <ToolbarButton title="Open Recent" icon="folder_open" click={() => {
-                    showOpenNote();
-                }}/>
-                <ToolbarButton title="Search" icon="search" click={() => {
-                    showOpenNote();
-                }}/>
-                <ToolbarButton title="Summarize" icon="notes" click={() => {
-                    showSummary(false);
-                }}/>
-                <ToolbarButton title="Q&A" icon="quiz" click={() => {
-                    showQA();
-                }}/>
-                <ToolbarButton title="Image Tools" icon="image" click={() => {
-                    showImgTools();
-                }}/>
-                <ToolbarButton title="AI Image" icon="filter_vintage" click={() => {
-                    showAIImg();
-                }}/>
-                <ToolbarButton title="Save" icon="save" disabled={getSaveDisabled} click={() => {
-                    saveDoc();
-                }}/>
-                <ToolbarButton title="Delete" icon="delete" style={{display: `${deleteDisplay}`}} click={() => {
-                    deleteDoc();
-                }}/>
+            <div className="editor-title-toolbar-container">
+                <div className="doc-id-container">{getDocId}</div>
+                <div className="toolbar">
+                    <ToolbarButton title="New" icon="edit_square" click={() => {
+                        navigate(paths.newDoc);
+                    }}/>
+                    <ToolbarButton title="Undo" icon="undo" disabled={getUndoDisabled} click={() => {
+                        editor.chain().focus().undo().run();
+                    }}/>
+                    <ToolbarButton title="Redo" icon="redo" disabled={getRedoDisabled} click={() => {
+                        editor.chain().focus().redo().run();
+                    }}/>
+                    <ToolbarButton title="Open Recent" icon="folder_open" click={() => {
+                        showOpenNote();
+                    }}/>
+                    <ToolbarButton title="Search" icon="search" click={() => {
+                        showOpenNote();
+                    }}/>
+                    <ToolbarButton title="Summarize" icon="notes" click={() => {
+                        showSummary();
+                    }}/>
+                    <ToolbarButton title="Q&A" icon="quiz" click={() => {
+                        showQA();
+                    }}/>
+                    <ToolbarButton title="Image Tools" icon="image" click={() => {
+                        showImgTools();
+                    }}/>
+                    <ToolbarButton title="AI Image" icon="filter_vintage" click={() => {
+                        showAIImg();
+                    }}/>
+                    <ToolbarButton title="Save" icon="save" disabled={getTitle === ""} click={() => {
+                        saveDoc();
+                    }}/>
+                    <ToolbarButton title="Delete" icon="delete" style={{display: `${deleteDisplay}`}} click={() => {
+                        deleteDoc();
+                    }}/>
+                </div>
+                <div className="editor-title-container">
+                    <input type="text" className="editor-title" required placeholder="Enter title..." value={getTitle}
+                           onChange={(e) => updateTitle(e.target.value)}/>
+                    <Status display={getStatusDisplay}
+                            iconClass={getStatusIconClass}
+                            messageClass={getStatusMessageClass}
+                            icon={getStatusIcon}
+                            message={getStatusMessage}/>
+                </div>
             </div>
-            <Status display={getStatusDisplay}
-                    iconClass={getStatusIconClass}
-                    messageClass={getStatusMessageClass}
-                    icon={getStatusIcon}
-                    message={getStatusMessage}/>
-            <input type="text" className="editor-title" required placeholder="Enter title..." value={getTitle}
-                   onChange={(e) => updateTitle(e.target.value)}/>
-            {editor && <BubbleMenuWrapper editor={editor} showSummary={showSummary}/>}
+            {editor && <BubbleMenuWrapper editor={editor} showSummary={showSummary} showQA={showQA}/>}
             {editor && <FloatingMenuWrapper editor={editor}/>}
-            <EditorContent editor={editor}/>
+            <EditorContent editor={editor} style={{marginTop: `${getStatusDisplay !== "none" ? "140px" : "110px"}`}}/>
         </div>
     );
 }

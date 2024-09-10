@@ -16,8 +16,8 @@ export default class StatusController {
     }
 
     hideStatus() {
-        this.setStatusDisplay("none");
         this.displayStatus("", "", "", "");
+        this.setStatusDisplay("none");
     }
 
     displayProgress() {

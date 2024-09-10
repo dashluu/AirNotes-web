@@ -2,12 +2,10 @@ import "./AIImage.scss";
 import Status from "../status/Status.jsx";
 import {useEffect, useRef, useState} from "react";
 import StatusController from "../ui_elements/StatusController.js";
-import {auth, statusMessages} from "../backend.js";
-import {onAuthStateChanged} from "firebase/auth";
+import {statusMessages} from "../backend.js";
 import SidebarActionButton from "./SidebarActionButton.jsx";
 
-function AIImage({aiImgDisplay}) {
-    const [getUser, setUser] = useState(null);
+function AIImage({user, aiImgDisplay}) {
     const [getImg, setImg] = useState(null);
     const [getImgDescription, setImgDescription] = useState("");
     const imgDescriptionInput = useRef(null);
@@ -21,16 +19,6 @@ function AIImage({aiImgDisplay}) {
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
-
-    useEffect(() => {
-        const unsubUser = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-
-        return () => {
-            unsubUser();
-        };
-    }, []);
 
     useEffect(() => {
         if (aiImgDisplay !== "none") {
@@ -57,7 +45,7 @@ function AIImage({aiImgDisplay}) {
     }
 
     async function generateImg() {
-        if (!getUser) {
+        if (!user) {
             statusController.displayFailure(statusMessages.unauthorizedAccess);
             return;
         }
@@ -103,11 +91,11 @@ function AIImage({aiImgDisplay}) {
                       }}>
             </textarea>
             <div className="sidebar-button-container">
-                <SidebarActionButton icon="filter_vintage" text="Generate image" disabled={getImgDescription === ""}
+                <SidebarActionButton icon="filter_vintage" text="Generate" disabled={getImgDescription === ""}
                                      click={() => {
                                          generateImg();
                                      }}/>
-                <SidebarActionButton icon="content_copy" text="Copy image" disabled={getImg === null}
+                <SidebarActionButton icon="content_copy" text="Copy" disabled={getImg === null}
                                      click={() => {
                                          copyGeneratedImg(getImg);
                                      }}/>

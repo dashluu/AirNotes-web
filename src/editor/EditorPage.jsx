@@ -4,21 +4,21 @@ import {useState} from "react";
 import Editor from "./Editor.jsx";
 import Sidebar from "../sidebar/Sidebar.jsx";
 
-function EditorPage({fullDoc, loaded}) {
+function EditorPage({user, fullDoc}) {
     const [getGridLayout, setGridLayout] = useState("0fr 1fr");
-    const [getSidebarDisplay, setSidebarDisplay] = useState("hidden");
+    const [getSidebarLeft, setSidebarLeft] = useState("-400px");
     const [getSidebarAnimation, setSidebarAnimation] = useState("none");
     const [getEditor, setEditor] = useState(null);
-    const [getSidebarMode, setSidebarMode] = useState(null);
+    const [getSidebarMode, setSidebarMode] = useState("openNote");
 
     function openSidebar() {
-        setSidebarDisplay("visible");
+        setSidebarLeft("0px")
         setSidebarAnimation("sidebar-in 0.5s");
-        setGridLayout("1fr 3fr");
+        setGridLayout("380px 1fr");
     }
 
     function closeSidebar() {
-        setSidebarDisplay("hidden");
+        setSidebarLeft("-400px")
         setSidebarAnimation("sidebar-out 0.5s")
         setGridLayout("0fr 1fr");
     }
@@ -26,18 +26,22 @@ function EditorPage({fullDoc, loaded}) {
     return (
         <div className="editor-page">
             <NavBar/>
+            {getEditor && fullDoc && <Sidebar user={user}
+                                              docId={fullDoc.id}
+                                              sidebarLeft={getSidebarLeft}
+                                              sidebarAnimation={getSidebarAnimation}
+                                              closeSidebar={closeSidebar}
+                                              editor={getEditor}
+                                              mode={getSidebarMode}/>}
             <div className="editor-grid" style={{gridTemplateColumns: getGridLayout}}>
-                {loaded && <Sidebar sidebarDisplay={getSidebarDisplay}
-                                    sidebarAnimation={getSidebarAnimation}
-                                    closeSidebar={closeSidebar}
-                                    editor={getEditor}
-                                    mode={getSidebarMode}/>}
-                {loaded && <Editor docId={fullDoc.id}
-                                   title={fullDoc.title}
-                                   content={fullDoc.content}
-                                   openSidebar={openSidebar}
-                                   setEditor={setEditor}
-                                   setSidebarMode={setSidebarMode}/>}
+                {fullDoc && <div className="dummy"></div>}
+                {fullDoc && <Editor user={user}
+                                    docId={fullDoc.id}
+                                    title={fullDoc.title}
+                                    content={fullDoc.content}
+                                    openSidebar={openSidebar}
+                                    setEditor={setEditor}
+                                    setSidebarMode={setSidebarMode}/>}
             </div>
         </div>
     );

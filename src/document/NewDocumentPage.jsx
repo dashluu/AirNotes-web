@@ -8,6 +8,7 @@ import {getDownloadURL, ref} from "firebase/storage";
 
 function NewDocumentPage() {
     const navigate = useNavigate();
+    const [getUser, setUser] = useState(null);
     const [getFullDoc, setFullDoc] = useState(null);
 
     async function fetchThumbnail() {
@@ -23,6 +24,7 @@ function NewDocumentPage() {
         const unsubUser = onAuthStateChanged(auth, (user) => {
             if (user) {
                 fetchThumbnail();
+                setUser(user);
             } else {
                 navigate(paths.signIn);
             }
@@ -34,7 +36,7 @@ function NewDocumentPage() {
     }, []);
 
     return (
-        <EditorPage fullDoc={getFullDoc} loaded={getFullDoc !== null}/>
+        <EditorPage user={getUser} fullDoc={getFullDoc}/>
     );
 }
 

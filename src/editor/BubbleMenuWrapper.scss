@@ -1,12 +1,27 @@
 .editor-menu {
   & {
+    width: fit-content;
     column-gap: 2px;
-    max-width: none;
-    border: 1px solid red;
-    width: 500px;
+    border: 1px solid var(--editor-bubble-menu-border);
   }
 
   .underline-button span {
     padding-top: 5px;
+  }
+
+  select {
+    font-family: var(--app-font);
+    font-size: 16px;
+    font-weight: 500;
+    background: var(--editor-bubble-menu-dropdown-background);
+    border: none;
+    color: var(--editor-bubble-menu-dropdown-color);
+    border-radius: 5px;
+    outline: none;
+  }
+
+  select:hover {
+    background: var(--editor-bubble-menu-button-background-hover);
+    color: var(--editor-bubble-menu-button-color-hover);
   }
 }

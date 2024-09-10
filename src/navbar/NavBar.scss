@@ -3,17 +3,18 @@
 .navbar {
   & {
     background-color: var(--nav-background);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--nav-border);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
     display: flex;
     justify-content: space-between;
     align-items: center;
     overflow: hidden;
     height: auto;
-    z-index: 1000;
+    z-index: 10001;
     width: 100%;
-    padding-top: 10px;
-    padding-bottom: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
   }
 
   .nav-title-container {

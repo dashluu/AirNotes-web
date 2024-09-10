@@ -2,15 +2,13 @@ import "./OpenNote.scss";
 import "../ui_elements/TextInput.scss"
 import {useEffect, useRef, useState} from "react";
 import NoteListCard from "./NoteListCard.jsx";
-import {onAuthStateChanged} from "firebase/auth";
-import {auth, docDAO, statusMessages} from "../backend.js";
+import {docDAO, statusMessages} from "../backend.js";
 import DocumentDAO from "../daos/DocumentDAO.js";
 import StatusController from "../ui_elements/StatusController.js";
 import Status from "../status/Status.jsx";
 import DocumentSummary from "../models/DocumentSummary.js";
 
-function OpenNote({openNoteDisplay}) {
-    const [getUser, setUser] = useState(null);
+function OpenNote({user, openNoteDisplay}) {
     const searchInput = useRef(null);
     // const [getUnsubSummaryList, setUnsubSummaryList] = useState(null);
     const [getNoteList, setNoteList] = useState([]);
@@ -25,44 +23,33 @@ function OpenNote({openNoteDisplay}) {
 
     useEffect(() => {
         if (openNoteDisplay !== "none") {
-            // If the image tools are displayed, focus on the URL input
+            // If the note list is displayed, focus on the search input
             searchInput.current.focus();
         }
     }, [openNoteDisplay]);
 
     useEffect(() => {
-        const unsubUser = onAuthStateChanged(auth, (user) => {
-            if (user) {
-                fetchRecentNoteList(user.uid);
-                setUser(user);
-            } else {
-                statusController.displayFailure(statusMessages.unauthorizedAccess);
-            }
-        });
+        fetchRecentNoteList();
+    }, [user]);
 
-        return () => {
-            unsubUser();
-
-            // if (getUnsubSummaryList) {
-            //     getUnsubSummaryList();
-            // }
+    async function fetchRecentNoteList() {
+        if (!user) {
+            return;
         }
-    }, []);
 
-    async function fetchRecentNoteList(userId) {
         statusController.displayProgress();
 
         try {
             // const [unsubSummaryList, summaryList] = await docDAO.getDocSummaryList(
             //     userId, getDocId, DocumentDAO.recentNumDocs
             // );
-            const summaryList = await docDAO.getDocSummaryList(userId, DocumentDAO.recentNumDocs);
+            const summaryList = await docDAO.getDocSummaryList(user.uid, DocumentDAO.recentNumDocs);
             const noteList = summaryList.map(
                 (summary, i) => <NoteListCard key={i} docSummary={summary}/>
             );
             // setUnsubSummaryList(unsubSummaryList);
             setNoteList(noteList);
-            statusController.displaySuccess(statusMessages.loadedOk);
+            statusController.hideStatus();
         } catch (error) {
             // setUnsubSummaryList(null);
             statusController.displayFailure(error.message);
@@ -70,19 +57,19 @@ function OpenNote({openNoteDisplay}) {
     }
 
     async function searchNotes() {
-        if (!getUser) {
+        if (!user) {
             statusController.displayFailure(statusMessages.unauthorizedAccess);
             return;
         }
 
         if (searchInput.current.value === "") {
-            fetchRecentNoteList(getUser.uid);
+            fetchRecentNoteList();
             return;
         }
 
         statusController.displayProgress();
         const searchModel = {
-            user_id: getUser.uid,
+            user_id: user.uid,
             query: searchInput.current.value,
         };
 
@@ -99,10 +86,11 @@ function OpenNote({openNoteDisplay}) {
                 const summaryList = await response.json();
                 const topSummaryList = summaryList.slice(0, DocumentDAO.recentNumDocs);
                 const noteList = topSummaryList.map(
-                    (summary, i) => <NoteListCard key={i} docSummary={DocumentSummary.objToDocSummary(summary)}/>
+                    (summary, i) => <NoteListCard key={i} user={user}
+                                                  docSummary={DocumentSummary.objToDocSummary(summary)}/>
                 );
                 setNoteList(noteList);
-                statusController.displaySuccess(statusMessages.searchedOk);
+                statusController.hideStatus();
             } else {
                 statusController.displayFailure(await response.text());
             }

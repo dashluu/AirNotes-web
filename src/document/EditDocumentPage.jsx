@@ -11,6 +11,7 @@ export async function loader({params}) {
 function EditDocumentPage() {
     const navigate = useNavigate();
     const docId = useLoaderData();
+    const [getUser, setUser] = useState(null);
     const [getFullDoc, setFullDoc] = useState(null);
 
     async function fetchDoc(userId, docId) {
@@ -26,6 +27,7 @@ function EditDocumentPage() {
         const unsubUser = onAuthStateChanged(auth, (user) => {
             if (user) {
                 fetchDoc(user.uid, docId);
+                setUser(user);
             } else {
                 navigate(paths.signIn);
             }
@@ -37,7 +39,7 @@ function EditDocumentPage() {
     }, []);
 
     return (
-        <EditorPage fullDoc={getFullDoc} loaded={getFullDoc !== null}/>
+        <EditorPage user={getUser} fullDoc={getFullDoc}/>
     );
 }
 

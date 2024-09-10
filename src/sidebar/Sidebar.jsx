@@ -8,7 +8,9 @@ import {useEffect, useState} from "react";
 import ToolbarButton from "../ui_elements/ToolbarButton.jsx";
 
 function Sidebar({
-                     sidebarDisplay,
+                     user,
+                     docId,
+                     sidebarLeft,
                      sidebarAnimation,
                      closeSidebar,
                      editor,
@@ -19,22 +21,8 @@ function Sidebar({
     const [getQADisplay, setQADisplay] = useState("none");
     const [getImgToolsDisplay, setImgToolsDisplay] = useState("none");
     const [getAIImgDisplay, setAIImgDisplay] = useState("none");
-    const [getSummaryTriggered, setSummaryTriggered] = useState(false);
-
-    function hideContent() {
-        setOpenNoteDisplay("none");
-        setSummaryDisplay("none");
-        setQADisplay("none");
-        setImgToolsDisplay("none");
-        setAIImgDisplay("none");
-    }
 
     useEffect(() => {
-        if (!mode) {
-            hideContent();
-            return;
-        }
-
         switch (mode.name) {
             case "openNote":
                 setOpenNoteDisplay("block");
@@ -45,7 +33,6 @@ function Sidebar({
                 break;
             case "summary":
                 setSummaryDisplay("block");
-                setSummaryTriggered(mode.triggered);
                 setOpenNoteDisplay("none");
                 setQADisplay("none");
                 setImgToolsDisplay("none");
@@ -76,28 +63,27 @@ function Sidebar({
     }, [mode]);
 
     return (
-        <div className="sidebar" style={{visibility: sidebarDisplay, animation: sidebarAnimation}}>
-            <div className="sidebar-toolbar toolbar">
-                <ToolbarButton title="Close Sidebar" icon="menu_open" click={() => {
-                    hideContent();
-                    closeSidebar();
-                }}/>
+        <div className="sidebar" style={{left: sidebarLeft, animation: sidebarAnimation}}>
+            <div className="toolbar">
+                <ToolbarButton title="Close Sidebar" icon="menu_open" click={() => closeSidebar()}/>
             </div>
             <div className="sidebar-ui-container">
                 <div className="sidebar-ui">
-                    <TextSummary editor={editor} triggered={getSummaryTriggered} summaryDisplay={getSummaryDisplay}/>
+                    <TextSummary user={user} docId={docId} editor={editor} context={mode.context}
+                                 summaryDisplay={getSummaryDisplay}/>
                 </div>
                 <div className="sidebar-ui">
-                    <TextQA editor={editor} qaDisplay={getQADisplay}/>
+                    <TextQA user={user} docId={docId} editor={editor} context={mode.context}
+                            qaDisplay={getQADisplay}/>
                 </div>
                 <div className="sidebar-ui">
-                    <ImageTools editor={editor} imgToolsDisplay={getImgToolsDisplay}/>
+                    <ImageTools user={user} editor={editor} imgToolsDisplay={getImgToolsDisplay}/>
                 </div>
                 <div className="sidebar-ui">
-                    <AIImage aiImgDisplay={getAIImgDisplay}/>
+                    <AIImage user={user} aiImgDisplay={getAIImgDisplay}/>
                 </div>
                 <div className="sidebar-ui">
-                    <OpenNote openNoteDisplay={getOpenNoteDisplay}/>
+                    <OpenNote user={user} openNoteDisplay={getOpenNoteDisplay}/>
                 </div>
             </div>
         </div>

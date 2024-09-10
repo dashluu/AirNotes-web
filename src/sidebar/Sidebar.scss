@@ -1,34 +1,54 @@
 @use "../ui_elements/Toolbar";
 
+@media screen and (max-width: 600px) {
+  .sidebar {
+    width: 70% !important;
+  }
+}
+
 .sidebar {
   @keyframes sidebar-in {
     from {
-      opacity: 0;
+      left: -400px;
     }
 
     to {
-      opacity: 1;
+      left: 0;
     }
   }
 
   @keyframes sidebar-out {
     from {
-      opacity: 1;
+      left: 0;
     }
 
     to {
-      opacity: 0;
+      left: -400px;
     }
   }
 
   & {
-    padding-top: 5px;
-    width: 100%;
+    background-color: var(--sidebar-background);
+    border-right: 1px solid var(--sidebar-border);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    width: 360px;
+    height: 100%;
     margin-left: auto;
     margin-right: auto;
+    position: fixed;
+    z-index: 10001;
+    left: 0;
+    top: 47px;
+    overflow-y: auto;
   }
 
-  .sidebar-toolbar {
+  .sidebar-ui-container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .toolbar {
     margin-bottom: 5px;
   }
 

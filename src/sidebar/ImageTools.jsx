@@ -2,14 +2,12 @@ import "./ImageTools.scss";
 import {useEffect, useRef, useState} from "react";
 import FileDAO from "../daos/FileDAO.js";
 import StatusController from "../ui_elements/StatusController.js";
-import {onAuthStateChanged} from "firebase/auth";
-import {auth, statusMessages} from "../backend.js";
+import {statusMessages} from "../backend.js";
 import Status from "../status/Status.jsx";
 import SidebarActionButton from "./SidebarActionButton.jsx";
 
-function ImageTools({editor, imgToolsDisplay}) {
+function ImageTools({user, editor, imgToolsDisplay}) {
     const fileDAO = new FileDAO();
-    const [getUser, setUser] = useState(null);
     const fileInput = useRef(null);
     const [getImgUrl, setImgUrl] = useState("");
     const urlInput = useRef(null);
@@ -21,16 +19,6 @@ function ImageTools({editor, imgToolsDisplay}) {
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
-
-    useEffect(() => {
-        const unsubUser = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-
-        return () => {
-            unsubUser();
-        };
-    }, []);
 
     useEffect(() => {
         if (imgToolsDisplay !== "none") {
@@ -46,7 +34,7 @@ function ImageTools({editor, imgToolsDisplay}) {
     async function uploadImg(e) {
         e.preventDefault();
 
-        if (!getUser) {
+        if (!user) {
             statusController.displayFailure(statusMessages.unauthorizedAccess);
             return;
         }
@@ -90,9 +78,9 @@ function ImageTools({editor, imgToolsDisplay}) {
                        }
                    }}/>
             <div className="sidebar-button-container">
-                <SidebarActionButton icon="link" text="Add image" disabled={getImgUrl === ""}
+                <SidebarActionButton icon="link" text="Add by URL" disabled={getImgUrl === ""}
                                      click={() => addImgByUrl(getImgUrl)}/>
-                <SidebarActionButton icon="upload" text="Upload images"
+                <SidebarActionButton icon="upload" text="Upload"
                                      click={() => fileInput.current.click()}/>
             </div>
             <input type="file" ref={fileInput} multiple accept="image/*" style={{display: "none"}}

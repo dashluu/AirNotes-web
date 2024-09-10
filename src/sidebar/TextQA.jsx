@@ -2,12 +2,10 @@ import "./TextQA.scss";
 import Status from "../status/Status.jsx";
 import {useEffect, useRef, useState} from "react";
 import StatusController from "../ui_elements/StatusController.js";
-import {auth, statusMessages} from "../backend.js";
-import {onAuthStateChanged} from "firebase/auth";
+import {statusMessages} from "../backend.js";
 import SidebarActionButton from "./SidebarActionButton.jsx";
 
-function TextQA({editor, qaDisplay}) {
-    const [getUser, setUser] = useState(null);
+function TextQA({user, docId, context, qaDisplay}) {
     const [getQuestion, setQuestion] = useState("");
     const questionInput = useRef(null);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
@@ -15,20 +13,12 @@ function TextQA({editor, qaDisplay}) {
     const [getStatusMessageClass, setStatusMessageClass] = useState("");
     const [getStatusIcon, setStatusIcon] = useState("");
     const [getStatusMessage, setStatusMessage] = useState("");
+    const docContext = "document";
+    const [getContext, setContext] = useState(context);
     const [getCopyText, setCopyText] = useState("");
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
-
-    useEffect(() => {
-        const unsubUser = onAuthStateChanged(auth, (user) => {
-            setUser(user);
-        });
-
-        return () => {
-            unsubUser();
-        };
-    }, []);
 
     useEffect(() => {
         if (qaDisplay !== "none") {
@@ -37,22 +27,22 @@ function TextQA({editor, qaDisplay}) {
         }
     }, [qaDisplay]);
 
+    useEffect(() => {
+        setContext(context);
+    }, [context]);
+
     async function answerQuestion() {
-        if (!getUser) {
+        if (!user) {
             statusController.displayFailure(statusMessages.unauthorizedAccess);
             return;
         }
 
         statusController.displayProgress();
-        // API for text selection
-        const {view, state} = editor
-        const {from, to} = view.state.selection
-        const text = state.doc.textBetween(from, to, " ")
-        // If there is a selection of text, use that selection, otherwise, use the whole text
-        const context = text === "" ? editor.getHTML() : text;
         const qaModel = {
+            user_id: user.uid,
+            doc_id: docId,
             query: getQuestion,
-            context: context
+            context: getContext
         };
 
         try {
@@ -108,15 +98,19 @@ function TextQA({editor, qaDisplay}) {
                           }
                       }}>
             </textarea>
+            <div className="qa-context">Context: {getContext}</div>
             <div className="sidebar-button-container">
-                <SidebarActionButton icon="quiz" text="Answer question" disabled={getQuestion === ""}
+                <SidebarActionButton icon="quiz" text="Answer" disabled={getQuestion === ""}
                                      click={() => {
                                          answerQuestion();
                                      }}/>
-                <SidebarActionButton icon="content_copy" text="Copy answer" disabled={getCopyText === ""}
+                <SidebarActionButton icon="content_copy" text="Copy" disabled={getCopyText === ""}
                                      click={() => {
                                          copyText();
                                      }}/>
+                <SidebarActionButton icon="playlist_remove" text="Clear context"
+                                     disabled={getContext === docContext}
+                                     click={() => setContext(docContext)}/>
             </div>
             <Status display={getStatusDisplay}
                     iconClass={getStatusIconClass}
