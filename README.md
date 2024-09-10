@@ -40,7 +40,7 @@ Open http://localhost:5173 to see the web app!
 - [x] Add images via links, drag and drop, and uploading
 - [x] Summarizing the document using LLM
 - [x] Answer questions from the document using LLM
-- [x] Search all documents semantically
+- [x] Search all documents semantically using vector search and LLM(slow)
 - [x] Generate images with Stable Diffusion(slow)
 
 
