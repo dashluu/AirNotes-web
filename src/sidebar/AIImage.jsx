@@ -81,7 +81,7 @@ function AIImage({user, aiImgDisplay}) {
     return (
         <div className="ai-img-container sidebar-container" style={{display: aiImgDisplay}}>
             <div className="sidebar-title">Notes AI Image</div>
-            <textarea className="text-input img-description" placeholder="Enter the image description here..."
+            <textarea className="text-input img-description" placeholder="Enter the image description here"
                       ref={imgDescriptionInput}
                       onChange={(e) => setImgDescription(e.target.value)}
                       onKeyDown={(e) => {

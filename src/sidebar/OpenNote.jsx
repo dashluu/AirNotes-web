@@ -11,6 +11,7 @@ import DocumentSummary from "../models/DocumentSummary.js";
 function OpenNote({user, openNoteDisplay}) {
     const searchInput = useRef(null);
     // const [getUnsubSummaryList, setUnsubSummaryList] = useState(null);
+    const [getSearchResponse, setSearchResponse] = useState("");
     const [getNoteList, setNoteList] = useState([]);
     const [getStatusDisplay, setStatusDisplay] = useState("none");
     const [getStatusIconClass, setStatusIconClass] = useState("");
@@ -43,6 +44,7 @@ function OpenNote({user, openNoteDisplay}) {
             // const [unsubSummaryList, summaryList] = await docDAO.getDocSummaryList(
             //     userId, getDocId, DocumentDAO.recentNumDocs
             // );
+            setSearchResponse("");
             const summaryList = await docDAO.getDocSummaryList(user.uid, DocumentDAO.recentNumDocs);
             const noteList = summaryList.map(
                 (summary, i) => <NoteListCard key={i} docSummary={summary}/>
@@ -83,9 +85,12 @@ function OpenNote({user, openNoteDisplay}) {
             });
 
             if (response.ok) {
-                const summaryList = await response.json();
-                const topSummaryList = summaryList.slice(0, DocumentDAO.recentNumDocs);
-                const noteList = topSummaryList.map(
+                const searchResult = await response.json();
+                setSearchResponse(searchResult["answer"]);
+                const src = searchResult["src"];
+                // Only take the top hit
+                const topSrc = src.slice(0, 1);
+                const noteList = topSrc.map(
                     (summary, i) => <NoteListCard key={i} user={user}
                                                   docSummary={DocumentSummary.objToDocSummary(summary)}/>
                 );
@@ -102,7 +107,7 @@ function OpenNote({user, openNoteDisplay}) {
     return (
         <div className="open-note-container sidebar-container" style={{display: openNoteDisplay}}>
             <div className="sidebar-title">Open Note</div>
-            <input type="search" className="search-input text-input" placeholder="Search notes..." ref={searchInput}
+            <input type="search" className="search-input text-input" placeholder="Search notes" ref={searchInput}
                    onKeyDown={(e) => {
                        if (e.key === "Enter") {
                            searchNotes();
@@ -113,6 +118,7 @@ function OpenNote({user, openNoteDisplay}) {
                     messageClass={getStatusMessageClass}
                     icon={getStatusIcon}
                     message={getStatusMessage}/>
+            <div className="search-response">Search result: {getSearchResponse}</div>
             <div className="note-list">
                 {getNoteList}
             </div>

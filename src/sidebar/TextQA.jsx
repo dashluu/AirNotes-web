@@ -15,7 +15,7 @@ function TextQA({user, docId, context, qaDisplay}) {
     const [getStatusMessage, setStatusMessage] = useState("");
     const docContext = "document";
     const [getContext, setContext] = useState(context);
-    const [getCopyText, setCopyText] = useState("");
+    const [getAnswer, setAnswer] = useState("");
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
@@ -55,15 +55,17 @@ function TextQA({user, docId, context, qaDisplay}) {
             });
 
             if (response.ok) {
-                statusController.displaySuccess(statusMessages.generatedAnswerOk);
+                statusController.displaySuccess(statusMessages.generatingAnswer);
                 let ans = "";
 
                 for await (const chunk of response.body) {
                     for (const byte of chunk) {
                         ans += String.fromCharCode(byte);
-                        setCopyText(ans);
+                        setAnswer(ans);
                     }
                 }
+
+                statusController.displaySuccess(statusMessages.generatedAnswerOk);
             } else {
                 statusController.displayFailure(await response.text());
             }
@@ -76,7 +78,7 @@ function TextQA({user, docId, context, qaDisplay}) {
         statusController.displayProgress();
 
         try {
-            await navigator.clipboard.writeText(getCopyText);
+            await navigator.clipboard.writeText(getAnswer);
             statusController.displaySuccess(statusMessages.copiedOk);
         } catch (error) {
             statusController.displayFailure(error.message);
@@ -90,7 +92,7 @@ function TextQA({user, docId, context, qaDisplay}) {
                 Instruction: select a piece of text to provide the context for the question. If no text is selected,
                 the whole document will be provided as the context.
             </div>
-            <textarea className="text-input question" placeholder="Enter the question here..." ref={questionInput}
+            <textarea className="text-input question" placeholder="Enter the question here" ref={questionInput}
                       onChange={(e) => setQuestion(e.target.value)}
                       onKeyDown={(e) => {
                           if (e.key === "Enter") {
@@ -104,7 +106,7 @@ function TextQA({user, docId, context, qaDisplay}) {
                                      click={() => {
                                          answerQuestion();
                                      }}/>
-                <SidebarActionButton icon="content_copy" text="Copy" disabled={getCopyText === ""}
+                <SidebarActionButton icon="content_copy" text="Copy" disabled={getAnswer === ""}
                                      click={() => {
                                          copyText();
                                      }}/>
@@ -117,7 +119,7 @@ function TextQA({user, docId, context, qaDisplay}) {
                     messageClass={getStatusMessageClass}
                     icon={getStatusIcon}
                     message={getStatusMessage}/>
-            <div className="qa-text">Answer: {getCopyText}</div>
+            <div className="qa-text">Answer: {getAnswer}</div>
         </div>
     );
 }

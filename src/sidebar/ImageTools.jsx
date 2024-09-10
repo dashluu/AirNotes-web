@@ -70,7 +70,7 @@ function ImageTools({user, editor, imgToolsDisplay}) {
     return (
         <div className="img-tools-container sidebar-container" style={{display: imgToolsDisplay}}>
             <div className="sidebar-title">Notes Image</div>
-            <input type="text" className="text-input img-url" placeholder="Enter URL..." ref={urlInput}
+            <input type="text" className="text-input img-url" placeholder="Enter URL" ref={urlInput}
                    onChange={(e) => setImgUrl(e.target.value)}
                    onKeyDown={(e) => {
                        if (e.key === "Enter") {

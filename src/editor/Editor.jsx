@@ -52,7 +52,7 @@ function Editor({
     const extensions = [
         StarterKit,
         Placeholder.configure({
-            placeholder: "Write something...",
+            placeholder: "Write something",
         }),
         Underline,
         Heading.configure({
@@ -278,7 +278,7 @@ function Editor({
                     }}/>
                 </div>
                 <div className="editor-title-container">
-                    <input type="text" className="editor-title" required placeholder="Enter title..." value={getTitle}
+                    <input type="text" className="editor-title" required placeholder="Enter title" value={getTitle}
                            onChange={(e) => updateTitle(e.target.value)}/>
                     <Status display={getStatusDisplay}
                             iconClass={getStatusIconClass}

@@ -21,7 +21,7 @@ export default class StatusController {
     }
 
     displayProgress() {
-        this.displayStatus("pending-icon", "pending-message", "progress_activity", "Processing...");
+        this.displayStatus("pending-icon", "pending-message", "progress_activity", "On my way");
     }
 
     displayFailure(message) {

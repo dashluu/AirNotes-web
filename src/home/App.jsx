@@ -3,7 +3,7 @@ import NavBar from "../navbar/NavBar.jsx";
 import NoteGridCard from "./NoteGridCard.jsx";
 import NoteGrid from "./NoteGrid.jsx";
 import {useEffect, useRef, useState} from "react";
-import {auth, docDAO, paths, statusMessages} from "../backend.js";
+import {auth, paths, statusMessages} from "../backend.js";
 import {onAuthStateChanged} from "firebase/auth";
 import {useNavigate} from "react-router-dom";
 import Pagination from "../models/Pagination.js";
@@ -38,16 +38,8 @@ function App() {
             const page = await getPagination.fetchRecentNotesPage(userId, getCurrPage);
             const cardList = page.map((docSummary, i) => <NoteGridCard key={i} docSummary={docSummary}/>);
             setCardList(cardList);
+            setNumPages(getPagination.numPages);
             statusController.hideStatus();
-        } catch (error) {
-            statusController.displayFailure(error.message);
-        }
-    }
-
-    async function fetchNumPages(userId) {
-        try {
-            const numPages = await docDAO.countPages(userId);
-            setNumPages(numPages);
         } catch (error) {
             statusController.displayFailure(error.message);
         }
@@ -105,7 +97,6 @@ function App() {
 
     async function loadFirstPage(userId) {
         await fetchPage(userId);
-        await fetchNumPages(userId);
     }
 
     useEffect(() => {
@@ -135,9 +126,10 @@ function App() {
         statusController.displayProgress();
 
         try {
-            const page = await getPagination.fetchSearchPage(getUser.uid, searchInput.current.value, getCurrPage);
+            const page = await getPagination.fetchSearchPage(getUser.uid, searchInput.current.value);
             const cardList = page.map((docSummary, i) => <NoteGridCard key={i} docSummary={docSummary}/>);
             setCardList(cardList);
+            setNumPages(getPagination.numPages);
             statusController.hideStatus();
         } catch (error) {
             statusController.displayFailure(error.message);
@@ -152,7 +144,7 @@ function App() {
                     <div className="toolbar">
                         <ToolbarButton title="New" icon="edit_square"
                                        click={() => navigate(paths.newDoc)}/>
-                        <input type="search" className="search-input text-input" placeholder="Search notes..."
+                        <input type="search" className="search-input text-input" placeholder="Search notes"
                                ref={searchInput}
                                onKeyDown={(e) => {
                                    if (e.key === "Enter") {

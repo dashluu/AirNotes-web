@@ -13,7 +13,7 @@ function TextSummary({user, docId, context, summaryDisplay}) {
     const [getStatusMessage, setStatusMessage] = useState("");
     const docContext = "document";
     const [getContext, setContext] = useState(context);
-    const [getCopyText, setCopyText] = useState("");
+    const [getSummary, setSummary] = useState("");
     const statusController = new StatusController(
         setStatusDisplay, setStatusIconClass, setStatusMessageClass, setStatusIcon, setStatusMessage
     );
@@ -48,15 +48,17 @@ function TextSummary({user, docId, context, summaryDisplay}) {
                 // const summaryText = await response.json();
                 // setCopyText(summaryText);
                 // statusController.displaySuccess(statusMessages.generatedSummaryOk);
-                statusController.displaySuccess(statusMessages.generatedSummaryOk);
+                statusController.displaySuccess(statusMessages.generatingSummary);
                 let ans = "";
 
                 for await (const chunk of response.body) {
                     for (const byte of chunk) {
                         ans += String.fromCharCode(byte);
-                        setCopyText(ans);
+                        setSummary(ans);
                     }
                 }
+
+                statusController.displaySuccess(statusMessages.generatedSummaryOk);
             } else {
                 statusController.displayFailure(await response.text());
             }
@@ -69,7 +71,7 @@ function TextSummary({user, docId, context, summaryDisplay}) {
         statusController.displayProgress();
 
         try {
-            await navigator.clipboard.writeText(getCopyText);
+            await navigator.clipboard.writeText(getSummary);
             statusController.displaySuccess(statusMessages.copiedOk);
         } catch (error) {
             statusController.displayFailure(error.message);
@@ -89,7 +91,7 @@ function TextSummary({user, docId, context, summaryDisplay}) {
                                      click={() => {
                                          summarize();
                                      }}/>
-                <SidebarActionButton icon="content_copy" text="Copy" disabled={getCopyText === ""}
+                <SidebarActionButton icon="content_copy" text="Copy" disabled={getSummary === ""}
                                      click={() => {
                                          copyText();
                                      }}/>
@@ -102,7 +104,7 @@ function TextSummary({user, docId, context, summaryDisplay}) {
                     messageClass={getStatusMessageClass}
                     icon={getStatusIcon}
                     message={getStatusMessage}/>
-            <div className="summary-text">Summary: {getCopyText}</div>
+            <div className="summary-text">Summary: {getSummary}</div>
         </div>
     );
 }
