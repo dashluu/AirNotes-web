@@ -11,13 +11,13 @@ web app should not be used in production. Sample screenshots are included below.
 
 ![img.png](screenshots/screenshot4.png)
 
-## Requirement
+## :white_check_mark: Requirement
 * React
 * Vite
 * Firebase
 * Tiptap
 
-## Usage
+## :computer: Usage
 Clone the repository
 
 ```angular2html
@@ -35,7 +35,7 @@ npm run dev
 
 Open http://localhost:5173 to see the web app!
 
-## Features
+## :rocket: Features
 - [x] Basic editor with different types of lists, headings, formatting styles, and text alignment
 - [x] Add images via links, drag and drop, and uploading
 - [x] Summarizing the document using LLM
@@ -43,7 +43,7 @@ Open http://localhost:5173 to see the web app!
 - [x] Search all documents semantically using vector search and LLM
 - [x] Generate images with Stable Diffusion(slow)
 
-## Known issues
+## :warning: Known issues
 * Streaming response is not working for Safari
 * UI is not great for small-screen devices
 * Some UI elements do not animate smoothly
