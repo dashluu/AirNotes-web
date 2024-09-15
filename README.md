@@ -48,11 +48,11 @@ Open http://localhost:5173 to see the web app!
 
 ## :warning: Known issues
 
-* Streaming response is not working for Safari
-* UI is not great for small-screen devices
-* Some UI elements do not animate smoothly
-* Untested email and password reset
-* Pagination might work incorrectly if the data is updated(removed or inserted) continuously
-* Search is still limited, especially home page search
+* Streaming response is not working for Safari.
+* UI is not great for small-screen devices.
+* Some UI elements do not animate smoothly.
+* Untested email and password reset.
+* Pagination might work incorrectly if the data is updated(removed or inserted) continuously.
+* Search is still limited, especially home page search.
 
 
