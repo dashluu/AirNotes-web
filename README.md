@@ -16,7 +16,7 @@ web app should not be used in production. Sample screenshots are included below.
 * React
 * Vite
 * Firebase
-* Tiptap
+* Tiptap: some features need a Tiptap account, for example, adding a code block. 
 
 ## :computer: Usage
 
