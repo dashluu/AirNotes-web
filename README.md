@@ -3,13 +3,13 @@
 The frontend of a basic note taking app inspired by Notion. There are still bugs regarding the UI and features so this
 web app should not be used in production. Sample screenshots are included below.
 
-![img.png](screenshots/screenshot1.png)
+<img src="screenshots/screenshot1.png" width=500  alt="sign in page"/>
 
-![img.png](screenshots/screenshot2.png)
+<img src="screenshots/screenshot2.png" width=500  alt="home page"/>
 
-![img.png](screenshots/screenshot3.png)
+<img src="screenshots/screenshot3.png" width=500  alt="editor page"/>
 
-![img.png](screenshots/screenshot4.png)
+<img src="screenshots/screenshot4.png" width=500  alt="editor page"/>
 
 ## :white_check_mark: Requirement
 
